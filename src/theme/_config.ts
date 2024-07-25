@@ -9,6 +9,7 @@ const colorsLight = {
 	gray200: '#A1A1A1',
 	gray100: '#DFDFDF',
 	gray50: '#EFEFEF',
+	gray00: '#FFFFFF',
 	purple500: '#44427D',
 	purple100: '#E1E1EF',
 	purple50: '#1B1A23',
@@ -21,6 +22,7 @@ const colorsDark = {
 	gray200: '#BABABA',
 	gray100: '#000000',
 	gray50: '#EFEFEF',
+	gray00: '#000000',
 	purple500: '#A6A4F0',
 	purple100: '#252732',
 	purple50: '#1B1A23',
@@ -38,12 +40,12 @@ export const config = {
 	backgrounds: colorsLight,
 	borders: {
 		widths: [1, 2],
-		radius: [4, 16],
+		radius: [4, 16, 24, 32],
 		colors: colorsLight,
 	},
 	navigationColors: {
 		...DefaultTheme.colors,
-		background: colorsLight.gray50,
+		background: colorsLight.gray00,
 		card: colorsLight.gray50,
 	},
 	variants: {
