@@ -30,6 +30,64 @@ const colorsDark = {
 
 const sizes = [12, 16, 24, 32, 40, 80] as const;
 
+export const fontFamily = {
+	_900_Black: {
+		fontFamily: 'Poppins Black'
+	},
+	Black_italic : {
+		fontFamily: 'Poppins Black Italic'
+	},
+	_700_Bold: {
+		fontFamily: 'Poppins Bold'
+	},
+	Bold_Italic: {
+		fontFamily: 'Poppins Bold Italic'
+	},
+	_800_Extra_Bold: {
+		fontFamily: 'Poppins ExtraBold'
+	},
+	Extra_Bold_Italic: {
+		fontFamily: 'Poppins ExtraBold Italic'
+	},
+	_200_Extra_Light: {
+		fontFamily: 'Poppins ExtraLight'
+	},
+	Extra_Light_Italic: {
+		fontFamily: 'Poppins ExtraLight Italic'
+	},
+	Italic: {
+		fontFamily: 'Poppins Italic'
+	},
+	_300_Light: {
+		fontFamily: 'Poppins Light'
+	},
+	Light_Italic: {
+		fontFamily: 'Poppins Light Italic'
+	},
+	_500_Medium: {
+		fontFamily: 'Poppins Medium'
+	},
+	Medium_Italic: {
+		fontFamily: 'Poppins Medium Italic'
+	},
+	_400_Regular: {
+		fontFamily: 'Poppins Regular'
+	},
+	_600_SemiBold: {
+		fontFamily: 'Poppins SemiBold'
+	},
+	SemiBold_Italic: {
+		fontFamily: 'Poppins SemiBold Italic'
+	},
+	_100_Thin: {
+		fontFamily: 'Poppins Thin'
+	},
+	Thin_Italic: {
+		fontFamily: 'Poppins Thin Italic'
+	}
+} as const
+
+
 export const config = {
 	colors: colorsLight,
 	fonts: {
