@@ -60,7 +60,7 @@ const InputField = (props: IInputFieldProps) => {
           {secureText ? (
             <EyeSlash color={backgrounds.gray300.backgroundColor} />
           ) : (
-            <Eye color={backgrounds.gray300.backgroundColor} />
+            <Eye stroke={backgrounds.gray300.backgroundColor} />
           )}
         </TouchableOpacity>
       )}

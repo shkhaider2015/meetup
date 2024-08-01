@@ -5,7 +5,7 @@ import { SvgProps } from "react-native-svg";
 
 export interface IButton  {
     isCirculer?: boolean;
-    Icon?: React.FC<SvgProps>;
+    Icon?: React.ReactElement;
     label?: string;
     type?: "PRIMARY" | "SECONDARY"
     onPress?: () => void;

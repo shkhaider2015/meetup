@@ -25,11 +25,12 @@ const Button = (props: IButton) => {
   const { layout, backgrounds, borders, colors, fonts } = useTheme();
 
   const defaultStyles: StyleProp<ViewStyle> = [
+    layout.row,
     layout.justifyCenter,
     layout.itemsCenter,
     borders.rounded_32,
     {
-      height: 60,
+      height: 54,
     },
   ];
   const primaryStyles: StyleProp<ViewStyle> = [backgrounds.primary];
@@ -42,7 +43,7 @@ const Button = (props: IButton) => {
   const defaultTextStyles: StyleProp<TextStyle> = [
     fonts.gray00,
     fontFamily._500_Medium,
-    fonts.size_16,
+    fonts.size_14,
   ];
   const primaryTextStyles: StyleProp<TextStyle> = [fonts.gray00];
   const secondaryTextStyles: StyleProp<TextStyle> = [fonts.gray800];
@@ -59,6 +60,8 @@ const Button = (props: IButton) => {
     mainTextStyles.push(...secondaryTextStyles);
   }
 
+  if(Icon) mainTextStyles.push({marginLeft: 8})
+
   const _onPress = () => {
     onPress?.();
   };
@@ -67,8 +70,9 @@ const Button = (props: IButton) => {
     <TouchableOpacity
       style={[...mainStyles, ...containerStyle]}
       onPress={_onPress}
+      activeOpacity={.7}
     >
-      {Icon && <Icon />}
+      {Icon && Icon}
       {label && <Text style={[...mainTextStyles, ...textStyle]}>{label}</Text>}
     </TouchableOpacity>
   );

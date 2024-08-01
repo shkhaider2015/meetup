@@ -3,6 +3,7 @@ import { useTheme } from "@/theme";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { fontFamily } from "@/theme/_config";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { AppleLogo, GoogleLogo } from "@/assets/icon";
 
 const LoginScreen = () => {
   const { fonts, gutters, layout, backgrounds } = useTheme();
@@ -16,9 +17,9 @@ const LoginScreen = () => {
             gutters.paddingVertical_24,
           ]}
         >
-          <View style={[gutters.paddingTop_24]}>
-            <Text style={[fonts.size_32, fonts.gray800, fontFamily._700_Bold]}>
-              Welcome back! Glad to see you, again!
+          <View style={[gutters.paddingTop_24, gutters.paddingBottom_12]}>
+            <Text style={[fonts.size_24, fonts.gray800, fontFamily._700_Bold]}>
+              Welcome back! Glad to see you, Again!
             </Text>
           </View>
 
@@ -60,13 +61,25 @@ const LoginScreen = () => {
             </Text>
             <View style={[{ height: 1 }, backgrounds.gray70, layout.flex_1]} />
           </View>
-          <Button type="SECONDARY" label="Login With Google" />
+          <Button
+            type="SECONDARY"
+            label="Login With Google"
+            Icon={<GoogleLogo width={20} />}
+          />
           <Button
             type="SECONDARY"
             label="Login With Apple"
+            Icon={<AppleLogo width={20} />}
             containerStyle={[gutters.marginVertical_12]}
           />
-          <View style={[layout.row, layout.justifyCenter, layout.itemsCenter]}>
+          <View
+            style={[
+              layout.row,
+              layout.justifyCenter,
+              layout.itemsCenter,
+              gutters.marginVertical_24,
+            ]}
+          >
             <Text style={[fonts.gray500, fontFamily._400_Regular]}>
               Don't have an account?
             </Text>
