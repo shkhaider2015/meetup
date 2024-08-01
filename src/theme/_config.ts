@@ -1,15 +1,20 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 import type { ThemeConfiguration } from '@/types/theme/config';
-
 const colorsLight = {
 	primary: '#FE434E',
 	red500: '#C13333',
 	gray800: '#303030',
+	gray500: '#4A4B4E', // Forget Password color
 	gray400: '#4D4D4D',
+	gray300: '#6A707C', // password eye icon
+	gray250: '#8391A1', // Or text
 	gray200: '#A1A1A1',
+	gray150: '#DEDEDE', // Input Border
 	gray100: '#DFDFDF',
+	gray70: '#E8ECF4', // or lines
 	gray50: '#EFEFEF',
+	gray30: '#FAFAFA', // Input Background
 	gray00: '#FFFFFF',
 	purple500: '#44427D',
 	purple100: '#E1E1EF',
@@ -20,17 +25,23 @@ const colorsDark = {
 	primary: '#FE434E',
 	red500: '#C13333',
 	gray800: '#E0E0E0',
+	gray500: '#4A4B4E', // Forget Password color
 	gray400: '#969696',
+	gray300: '#6A707C', // password eye icon
+	gray250: '#8391A1', // Or text
 	gray200: '#BABABA',
+	gray_150: '#DEDEDE', // input border
 	gray100: '#000000',
+	gray70: '#E8ECF4', // or lines
 	gray50: '#EFEFEF',
+	gray30: '#FAFAFA',
 	gray00: '#000000',
 	purple500: '#A6A4F0',
 	purple100: '#252732',
 	purple50: '#1B1A23',
 } as const;
 
-const sizes = [12, 16, 24, 32, 40, 80] as const;
+const sizes = [12, 14, 16, 24, 32, 40, 80] as const;
 
 export const fontFamily = {
 	_900_Black: {

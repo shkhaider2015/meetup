@@ -30,16 +30,16 @@ const InputField = (props: IInputFieldProps) => {
   // Interpolate the border color value
   const interpolatedBorderColor = borderColor.interpolate({
     inputRange: [0, 1],
-    outputRange: [borders.gray100.borderColor, borders.purple500.borderColor], // Adjust these colors to match your theme
+    outputRange: [borders.gray150.borderColor, borders.gray400.borderColor], // Adjust these colors to match your theme
   });
   const _onPressEyeIcon = () => setSecureText((pS) => !pS);
 
   return (
     <Animated.View
       style={[
-        backgrounds.gray50,
+        backgrounds.gray30,
         borders.w_1,
-        borders.rounded_24,
+        borders.rounded_32,
         gutters.paddingHorizontal_12,
         layout.row,
         layout.itemsCenter,
@@ -57,7 +57,11 @@ const InputField = (props: IInputFieldProps) => {
       />
       {inputType === "PASSWORD" && (
         <TouchableOpacity onPress={_onPressEyeIcon}>
-          {secureText ? <EyeSlash c /> : <Eye />}
+          {secureText ? (
+            <EyeSlash color={backgrounds.gray300.backgroundColor} />
+          ) : (
+            <Eye color={backgrounds.gray300.backgroundColor} />
+          )}
         </TouchableOpacity>
       )}
     </Animated.View>
