@@ -4,6 +4,7 @@ import { useTheme } from "@/theme";
 import type { RootStackParamList } from "@/types/navigation";
 import LoginScreen from "@/screens/Login/Login";
 import SignupScreen from "@/screens/Signup/Signup";
+import ForgetPasswordScreen from "@/screens/ForgetPassword/ForgetPassword";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -14,6 +15,7 @@ function AuthNavigator() {
     <Stack.Navigator key={variant} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
     </Stack.Navigator>
   );
 }

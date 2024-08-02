@@ -1,33 +1,70 @@
 import { useTheme } from "@/theme";
 import { IInputFieldProps } from "@/types/templates/InputField";
-import { useState } from "react";
-import { Image, TextInput, View } from "react-native";
+import { useState, useRef, useEffect } from "react";
+import {
+  Image,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Animated,
+} from "react-native";
+import { Eye, EyeSlash } from "@/assets/icon";
 
-const InputField = (props:IInputFieldProps) => {
-  const { onPress, keyboardType, inputType="TEXT" } = props;
-  const { borders, backgrounds, gutters } = useTheme();
-  const [isActive, setIsActive] = useState<boolean>(false)
+const InputField = (props: IInputFieldProps) => {
+  const { inputType = "TEXT" } = props;
+  const { borders, backgrounds, gutters, layout } = useTheme();
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [secureText, setSecureText] = useState<boolean>(inputType === "PASSWORD");
+
+  // Create an animated value for the border color
+  const borderColor = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(borderColor, {
+      toValue: isActive ? 1 : 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [isActive]);
+
+  // Interpolate the border color value
+  const interpolatedBorderColor = borderColor.interpolate({
+    inputRange: [0, 1],
+    outputRange: [borders.gray150.borderColor, borders.gray400.borderColor], // Adjust these colors to match your theme
+  });
+  const _onPressEyeIcon = () => setSecureText((pS) => !pS);
 
   return (
-    <View
+    <Animated.View
       style={[
-        backgrounds.gray50,
+        backgrounds.gray30,
         borders.w_1,
-        isActive ? borders.purple500 : borders.gray100 ,
-        borders.rounded_24,
-        gutters.paddingHorizontal_12
+        borders.rounded_32,
+        gutters.paddingHorizontal_12,
+        layout.row,
+        layout.itemsCenter,
+        {
+          borderColor: interpolatedBorderColor,
+        },
       ]}
     >
       <TextInput
         {...props}
-        keyboardType={keyboardType}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
+        style={[layout.flex_1]}
+        secureTextEntry={inputType === "PASSWORD" ? secureText : false}
       />
-      {
-        inputType === 'PASSWORD' && <Image src="" />
-      }
-    </View>
+      {inputType === "PASSWORD" && (
+        <TouchableOpacity onPress={_onPressEyeIcon}>
+          {!secureText ? (
+            <EyeSlash color={backgrounds.gray300.backgroundColor} />
+          ) : (
+            <Eye stroke={backgrounds.gray300.backgroundColor} />
+          )}
+        </TouchableOpacity>
+      )}
+    </Animated.View>
   );
 };
 
