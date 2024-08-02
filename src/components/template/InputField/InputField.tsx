@@ -45,6 +45,7 @@ const InputField = (props: IInputFieldProps) => {
         layout.itemsCenter,
         {
           borderColor: interpolatedBorderColor,
+          height: 60
         },
       ]}
     >
