@@ -6,12 +6,21 @@ import { fontFamily } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
 import { userSignupSchema } from "@/types/schemas/user";
 import { useFormik } from "formik";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { useEffect, useRef, useState } from "react";
+import { Keyboard, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 
 const SignupScreen = ({ navigation }: SignupScreenType) => {
+
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
   const { fonts, gutters, layout, backgrounds } = useTheme();
+
+  const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
+
   const formik = useFormik<SignupFormValues>({
     initialValues: {
       full_name: "",
@@ -26,6 +35,24 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
     },
   });
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const _handleNext = (nextRef: React.RefObject<TextInput>) => {
+    nextRef.current?.focus();
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -36,21 +63,21 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             gutters.paddingVertical_24,
           ]}
         >
-          <View
-            style={[
-              gutters.paddingRight_16,
-            ]}
-          >
+          <View style={[gutters.paddingRight_16]}>
             <Text style={[fonts.size_24, fonts.gray800, fontFamily._700_Bold]}>
               Hello! Register to get started
             </Text>
           </View>
+
           <View style={[gutters.marginTop_40]}>
             <InputField
               placeholder="Full Name"
               onChangeText={formik.handleChange("full_name")}
               onBlur={formik.handleBlur("full_name")}
               value={formik.values.full_name}
+              onSubmitEditing={() => _handleNext(emailRef)}
+              returnKeyType="next"
+              blurOnSubmit={false}
             />
             {formik.touched.full_name && formik.errors.full_name ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -58,14 +85,19 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               </Text>
             ) : null}
           </View>
+
           <View style={[gutters.marginTop_12]}>
             <InputField
+              ref={emailRef}
               placeholder="Email Address"
               onChangeText={formik.handleChange("email")}
               onBlur={formik.handleBlur("email")}
               value={formik.values.email}
+              onSubmitEditing={() => _handleNext(passwordRef)}
+              returnKeyType="next"
               keyboardType="email-address"
               autoCapitalize="none"
+              blurOnSubmit={false}
             />
             {formik.touched.email && formik.errors.email ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -75,11 +107,15 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
           </View>
           <View style={[gutters.marginTop_12]}>
             <InputField
+              ref={passwordRef}
               placeholder="Password"
               inputType="PASSWORD"
               onChangeText={formik.handleChange("password")}
               onBlur={formik.handleBlur("password")}
               value={formik.values.password}
+              onSubmitEditing={() => _handleNext(confirmPasswordRef)}
+              returnKeyType="next"
+              blurOnSubmit={false}
             />
             {formik.touched.password && formik.errors.password ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -89,11 +125,13 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
           </View>
           <View style={[gutters.marginTop_12]}>
             <InputField
+              ref={confirmPasswordRef}
               placeholder="Confirm Password"
               inputType="PASSWORD"
               onChangeText={formik.handleChange("confirm_password")}
               onBlur={formik.handleBlur("confirm_password")}
               value={formik.values.confirm_password}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
             {formik.touched.confirm_password &&
             formik.errors.confirm_password ? (
@@ -107,7 +145,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               onChange={(val) =>
                 formik.setFieldValue("terms_and_condition", val)
               }
-              onBlur={()=> formik.handleBlur('terms_and_condition')}
+              onBlur={() => formik.handleBlur("terms_and_condition")}
               checked={formik.values.terms_and_condition}
             />
             <View
@@ -139,11 +177,11 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             </View>
           </View>
           {formik.touched.terms_and_condition &&
-            formik.errors.terms_and_condition ? (
-              <Text style={[gutters.marginLeft_24, fonts.size_12, fonts.error]}>
-                {formik.errors.terms_and_condition}
-              </Text>
-            ) : null}
+          formik.errors.terms_and_condition ? (
+            <Text style={[gutters.marginLeft_24, fonts.size_12, fonts.error]}>
+              {formik.errors.terms_and_condition}
+            </Text>
+          ) : null}
           <Button
             label="Sign Up"
             onPress={formik.handleSubmit}

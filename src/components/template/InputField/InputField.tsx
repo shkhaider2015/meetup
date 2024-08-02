@@ -1,6 +1,6 @@
 import { useTheme } from "@/theme";
 import { IInputFieldProps } from "@/types/templates/InputField";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import {
   Image,
   TextInput,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Eye, EyeSlash } from "@/assets/icon";
 
-const InputField = (props: IInputFieldProps) => {
+const InputField = forwardRef<TextInput, IInputFieldProps>((props: IInputFieldProps, ref) => {
   const { inputType = "TEXT" } = props;
   const { borders, backgrounds, gutters, layout } = useTheme();
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -51,6 +51,7 @@ const InputField = (props: IInputFieldProps) => {
     >
       <TextInput
         {...props}
+        ref={ref}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}
         style={[layout.flex_1]}
@@ -67,6 +68,6 @@ const InputField = (props: IInputFieldProps) => {
       )}
     </Animated.View>
   );
-};
+});
 
 export default InputField;
