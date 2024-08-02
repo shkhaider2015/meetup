@@ -14,7 +14,7 @@ const InputField = (props: IInputFieldProps) => {
   const { inputType = "TEXT" } = props;
   const { borders, backgrounds, gutters, layout } = useTheme();
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [secureText, setSecureText] = useState<boolean>(false);
+  const [secureText, setSecureText] = useState<boolean>(inputType === "PASSWORD");
 
   // Create an animated value for the border color
   const borderColor = useRef(new Animated.Value(0)).current;
@@ -57,7 +57,7 @@ const InputField = (props: IInputFieldProps) => {
       />
       {inputType === "PASSWORD" && (
         <TouchableOpacity onPress={_onPressEyeIcon}>
-          {secureText ? (
+          {!secureText ? (
             <EyeSlash color={backgrounds.gray300.backgroundColor} />
           ) : (
             <Eye stroke={backgrounds.gray300.backgroundColor} />
