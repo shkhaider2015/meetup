@@ -83,6 +83,7 @@ const LoginScreen = (props: LoginScreenType) => {
               keyboardType="email-address"
               autoCapitalize="none"
               blurOnSubmit={false}
+              isError={formik.touched.email && formik.errors.email ? true : false}
             />
             {formik.touched.email && formik.errors.email ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -99,6 +100,7 @@ const LoginScreen = (props: LoginScreenType) => {
               onBlur={formik.handleBlur("password")}
               value={formik.values.password}
               onSubmitEditing={() => Keyboard.dismiss()}
+              isError={formik.touched.password && formik.errors.password ? true : false}
             />
             {formik.touched.password && formik.errors.password ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>

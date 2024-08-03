@@ -78,6 +78,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               onSubmitEditing={() => _handleNext(emailRef)}
               returnKeyType="next"
               blurOnSubmit={false}
+              isError={formik.touched.full_name && formik.errors.full_name ? true : false}
             />
             {formik.touched.full_name && formik.errors.full_name ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -98,6 +99,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               keyboardType="email-address"
               autoCapitalize="none"
               blurOnSubmit={false}
+              isError={formik.touched.email && formik.errors.email ? true : false}
             />
             {formik.touched.email && formik.errors.email ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -116,6 +118,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               onSubmitEditing={() => _handleNext(confirmPasswordRef)}
               returnKeyType="next"
               blurOnSubmit={false}
+              isError={formik.touched.password && formik.errors.password ? true : false}
             />
             {formik.touched.password && formik.errors.password ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -132,6 +135,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               onBlur={formik.handleBlur("confirm_password")}
               value={formik.values.confirm_password}
               onSubmitEditing={() => Keyboard.dismiss()}
+              isError={formik.touched.confirm_password && formik.errors.confirm_password ? true : false}
             />
             {formik.touched.confirm_password &&
             formik.errors.confirm_password ? (
@@ -156,7 +160,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                 { columnGap: 3, marginLeft: 5 },
               ]}
             >
-              <Text style={[fontFamily._500_Medium, fonts.size_12]}>
+              <Text style={[fontFamily._500_Medium, fonts.size_12, fonts.gray500]}>
                 I agree to
               </Text>
               <TouchableOpacity activeOpacity={0.7}>
@@ -166,7 +170,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                   Terms and Services
                 </Text>
               </TouchableOpacity>
-              <Text style={[fontFamily._500_Medium, fonts.size_12]}>and</Text>
+              <Text style={[fontFamily._500_Medium, fonts.size_12, , fonts.gray500]}>and</Text>
               <TouchableOpacity activeOpacity={0.7}>
                 <Text
                   style={[fonts.primary, fontFamily._500_Medium, fonts.size_12]}

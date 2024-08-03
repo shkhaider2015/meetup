@@ -2,6 +2,7 @@ import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 import type { ThemeConfiguration } from '@/types/theme/config';
 const colorsLight = {
+	black: '#000000',
 	error: '#FF0000',
 	primary: '#FE434E',
 	red500: '#C13333',
@@ -23,6 +24,7 @@ const colorsLight = {
 } as const;
 
 const colorsDark = {
+	black: '#ffffff',
 	error: '#FF0000',
 	primary: '#FE434E',
 	red500: '#C13333',
