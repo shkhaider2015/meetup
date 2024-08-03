@@ -1,6 +1,6 @@
 import { SafeScreen, InputField, Button } from "@/components/template";
 import { useTheme } from "@/theme";
-import { ScrollView, Text, View } from "react-native";
+import { Keyboard, ScrollView, Text, TextInput, View } from "react-native";
 import { fontFamily } from "@/theme/_config";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AppleLogo, GoogleLogo } from "@/assets/icon";
@@ -8,10 +8,17 @@ import { NativeStackScreenProps } from "react-native-screens/lib/typescript/nati
 import { RootStackParamList } from "@/types/navigation";
 import { Formik, useFormik } from "formik";
 import { userLoginSchema } from "@/types/schemas/user";
+import { useEffect, useRef, useState } from "react";
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
+
+
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
   const { fonts, gutters, layout, backgrounds } = useTheme();
+
+  const passwordRef = useRef<TextInput>(null)
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
@@ -24,11 +31,29 @@ const LoginScreen = (props: LoginScreenType) => {
     },
   });
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const _navigateToSignup = () => {
     navigation.navigate("Signup");
   };
   const _navigateToForgetPassword = () => {
     navigation.navigate("ForgetPassword");
+  };
+
+  const _handleNext = (nextRef: React.RefObject<TextInput>) => {
+    nextRef.current?.focus();
   };
 
   return (
@@ -53,8 +78,12 @@ const LoginScreen = (props: LoginScreenType) => {
               onChangeText={formik.handleChange("email")}
               onBlur={formik.handleBlur("email")}
               value={formik.values.email}
+              onSubmitEditing={() => _handleNext(passwordRef)}
+              returnKeyType="next"
               keyboardType="email-address"
               autoCapitalize="none"
+              blurOnSubmit={false}
+              isError={formik.touched.email && formik.errors.email ? true : false}
             />
             {formik.touched.email && formik.errors.email ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -64,11 +93,14 @@ const LoginScreen = (props: LoginScreenType) => {
           </View>
           <View style={[gutters.marginTop_12]}>
             <InputField
+              ref={passwordRef}
               placeholder="Password"
               inputType="PASSWORD"
               onChangeText={formik.handleChange("password")}
               onBlur={formik.handleBlur("password")}
               value={formik.values.password}
+              onSubmitEditing={() => Keyboard.dismiss()}
+              isError={formik.touched.password && formik.errors.password ? true : false}
             />
             {formik.touched.password && formik.errors.password ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>

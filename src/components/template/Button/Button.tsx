@@ -30,7 +30,7 @@ const Button = (props: IButton) => {
     layout.itemsCenter,
     borders.rounded_32,
     {
-      height: 54,
+      height: 60,
     },
   ];
   const primaryStyles: StyleProp<ViewStyle> = [backgrounds.primary];
@@ -60,20 +60,34 @@ const Button = (props: IButton) => {
     mainTextStyles.push(...secondaryTextStyles);
   }
 
-  if(Icon) mainTextStyles.push({marginLeft: 8})
+  if (Icon) mainTextStyles.push({ marginLeft: 8 });
 
   const _onPress = () => {
     onPress?.();
   };
 
+  if (isCirculer && Icon) {
+    return (
+      <TouchableOpacity
+        style={[...mainStyles, { width: 50, height: 50, borderRadius: 40 }, ...containerStyle]}
+        onPress={_onPress}
+        activeOpacity={0.7}
+      >
+        {Icon}
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       style={[...mainStyles, ...containerStyle]}
       onPress={_onPress}
-      activeOpacity={.7}
+      activeOpacity={0.7}
     >
       {Icon && Icon}
-      {label && <Text style={[...mainTextStyles, ...textStyle]}>{label}</Text>}
+      {label && !isCirculer && (
+        <Text style={[...mainTextStyles, ...textStyle]}>{label}</Text>
+      )}
     </TouchableOpacity>
   );
 };

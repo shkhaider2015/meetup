@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "tom_dark@1x.png",
+      "filename" : "Meetup@1x.png",
       "idiom" : "iphone",
       "scale" : "1x"
     },
     {
-      "filename" : "tom_dark@2x.png",
+      "filename" : "Meetup@2x.png",
       "idiom" : "iphone",
       "scale" : "2x"
     },
     {
-      "filename" : "tom_dark@3x.png",
+      "filename" : "Meetup@3x.png",
       "idiom" : "iphone",
       "scale" : "3x"
     }
