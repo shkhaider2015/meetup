@@ -8,6 +8,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	About: undefined;
 	ForgetPassword: undefined;
+	Ineterests: undefined;
 };
 
 export type RootScreenProps<

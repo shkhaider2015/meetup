@@ -32,6 +32,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
     validationSchema: userSignupSchema,
     onSubmit: (values) => {
       console.log(values);
+      navigation.navigate("Ineterests");
     },
   });
 
@@ -188,7 +189,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
           ) : null}
           <Button
             label="Sign Up"
-            onPress={formik.handleSubmit}
+            // onPress={formik.handleSubmit}
+            onPress={() => navigation.navigate("Ineterests")}
             containerStyle={[gutters.marginVertical_16]}
           />
 

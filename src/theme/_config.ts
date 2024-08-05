@@ -5,6 +5,7 @@ const colorsLight = {
 	black: '#000000',
 	error: '#FF0000',
 	primary: '#FE434E',
+	primary04: '#FE434E1A',
 	red500: '#C13333',
 	gray800: '#303030',
 	gray500: '#4A4B4E', // Forget Password color
