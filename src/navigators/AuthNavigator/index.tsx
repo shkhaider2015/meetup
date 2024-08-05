@@ -9,12 +9,13 @@ import { Button } from "@/components/template";
 import { ChevronLeft } from "@/assets/icon";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Interests from "@/screens/Ineterests/Interests";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function AuthNavigator() {
   const navigation = useNavigation();
-  const { variant, gutters, backgrounds } = useTheme();
+  const { variant, gutters, backgrounds, layout } = useTheme();
 
   const _goBack = () => {
     navigation.goBack();
@@ -52,6 +53,33 @@ function AuthNavigator() {
         component={ForgetPasswordScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Ineterests"
+        component={Interests}
+        options={{
+          header: () => (
+            <View
+              style={[
+                gutters.paddingHorizontal_24,
+                gutters.paddingVertical_12,
+                backgrounds.primary04,
+                layout.row,
+                layout.itemsEnd,
+                {
+                  height: 130,
+                },
+              ]}
+            >
+              <Button
+                Icon={<ChevronLeft />}
+                isCirculer={true}
+                type="SECONDARY"
+                onPress={_goBack}
+              />
+            </View>
+          ),
         }}
       />
     </Stack.Navigator>
