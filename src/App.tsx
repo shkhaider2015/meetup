@@ -7,14 +7,14 @@ import { ThemeProvider } from "@/theme";
 import ApplicationNavigator from "./navigators/Application";
 import "./translations";
 import { Provider } from "react-redux";
-import store from "./store";
+import store from "@/store";
 import { StrictMode } from "react";
+import storage from "./storage";
 
 export const queryClient = new QueryClient();
 
-export const storage = new MMKV();
-
 function App() {
+
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
