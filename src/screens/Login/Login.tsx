@@ -9,18 +9,36 @@ import { RootStackParamList } from "@/types/navigation";
 import { Formik, useFormik } from "formik";
 import { userLoginSchema } from "@/types/schemas/user";
 import { useEffect, useRef, useState } from "react";
+import { Mutation, useMutation } from "@tanstack/react-query";
+import { IUserLoginForm, IUserReducer } from "@/types/templates/user";
+import { login } from "@/services/users";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { setUser } from "@/store/slices/userSlice";
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
-
-
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const dispatch:AppDispatch = useDispatch();
 
   const { fonts, gutters, layout, backgrounds } = useTheme();
+  const { isError, isPending, isSuccess, mutate } = useMutation({
+    mutationFn: (data:IUserLoginForm) => {
+      return login(data)
+    },
+    onSuccess(data, variables, context) {
+        console.log("Success : ", data, variables, context)
+        dispatch(setUser({
+          ...variables,
+          full_name: 'Shakeel',
+          isLoggedIn: true,
+          id: 'shk1735'
+        }))
+    },
+  })
 
   const passwordRef = useRef<TextInput>(null)
 
-  const formik = useFormik<LoginFormValues>({
+  const formik = useFormik<IUserLoginForm>({
     initialValues: {
       email: "",
       password: "",
@@ -28,22 +46,10 @@ const LoginScreen = (props: LoginScreenType) => {
     validationSchema: userLoginSchema,
     onSubmit: (values) => {
       console.log(values);
+      mutate(values)
+      
     },
   });
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   const _navigateToSignup = () => {
     navigation.navigate("Signup");
@@ -124,7 +130,7 @@ const LoginScreen = (props: LoginScreenType) => {
             </Text>
           </TouchableOpacity>
 
-          <Button label="Login" onPress={formik.handleSubmit} />
+          <Button label="Login" onPress={formik.handleSubmit} loading={isPending}  />
 
           <View
             style={[
@@ -192,9 +198,5 @@ const LoginScreen = (props: LoginScreenType) => {
 
 type LoginScreenType = NativeStackScreenProps<RootStackParamList, "Login">;
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
 
 export default LoginScreen;

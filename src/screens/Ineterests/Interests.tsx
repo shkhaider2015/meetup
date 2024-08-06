@@ -5,7 +5,10 @@ import {
   Cat_Gaming,
   Cat_Music,
   Cat_Painting,
+  Cat_PawPrint,
   Cat_Photography,
+  Cat_Reading,
+  Cat_Speech,
   Cat_Travel,
 } from "@/assets/icon";
 import { Button } from "@/components/template";
@@ -129,8 +132,8 @@ const Interests = ({ navigation }: InterestsScreenType) => {
               ]}
             >
               <Button
-                Icon={<Cat_Charity color={"white"} />}
-                label="Charity"
+                Icon={<Cat_Reading color={"white"} />}
+                label="Reading"
                 type="PRIMARY"
                 containerStyle={[...categoryStyle]}
               />
@@ -157,6 +160,27 @@ const Interests = ({ navigation }: InterestsScreenType) => {
               <Button
                 Icon={<Cat_Travel color={"black"} />}
                 label="Travel"
+                type="SECONDARY"
+                containerStyle={[...categoryStyle]}
+              />
+            </View>
+            <View
+              style={[
+                layout.row,
+                layout.justifyCenter,
+                layout.itemsCenter,
+                gutters.paddingVertical_12,
+              ]}
+            >
+              <Button
+                Icon={<Cat_PawPrint color={"white"} />}
+                label="Pets"
+                type="PRIMARY"
+                containerStyle={[...categoryStyle]}
+              />
+              <Button
+                Icon={<Cat_Speech color={"black"} />}
+                label="Politics"
                 type="SECONDARY"
                 containerStyle={[...categoryStyle]}
               />

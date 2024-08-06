@@ -49,7 +49,7 @@ function Example() {
 
 	useEffect(() => {
 		if (isSuccess) {
-			Alert.alert(t('example:welcome', data.name));
+			Alert.alert(t('example:welcome', data.full_name));
 		}
 	}, [isSuccess, data]);
 

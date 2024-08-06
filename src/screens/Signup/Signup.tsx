@@ -13,8 +13,6 @@ import { NativeStackScreenProps } from "react-native-screens/lib/typescript/nati
 
 const SignupScreen = ({ navigation }: SignupScreenType) => {
 
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-
   const { fonts, gutters, layout, backgrounds } = useTheme();
 
   const emailRef = useRef<TextInput>(null);
@@ -35,20 +33,6 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
       navigation.navigate("Ineterests");
     },
   });
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   const _handleNext = (nextRef: React.RefObject<TextInput>) => {
     nextRef.current?.focus();

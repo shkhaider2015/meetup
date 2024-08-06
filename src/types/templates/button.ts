@@ -11,4 +11,6 @@ export interface IButton  {
     onPress?: () => void;
     containerStyle?: RecursiveArray<Falsy | ViewStyle | RegisteredStyle<ViewStyle>>;
     textStyle?: RecursiveArray<Falsy | TextStyle | RegisteredStyle<TextStyle>>;
+    loading?: boolean;
+    disabled?: boolean;
 }

@@ -1,9 +1,11 @@
 import { z } from "zod";
 import * as yup from "yup";
 
-export const userSchema = z.object({
-  name: z.string(),
-});
+export const userSchema = yup.object().shape({
+  full_name: yup.string().required(),
+  email : yup.string().email().required(),
+  isLoggedIn: yup.boolean().required()
+})
 
 export const userLoginSchema = yup.object().shape({
   email: yup
@@ -34,5 +36,9 @@ export const userSignupSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), undefined], "Passwords must match")
     .required("Confirm Password is reqiuired"),
-  terms_and_condition: yup.boolean().oneOf([true], "You must agree to the terms and conditions")
+  terms_and_condition: yup
+    .boolean()
+    .oneOf([true], "You must agree to the terms and conditions"),
 });
+
+

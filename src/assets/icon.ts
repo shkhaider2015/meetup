@@ -11,6 +11,9 @@ import Cat_Music from "@/assets/icons/cat_music.svg";
 import Cat_Painting from "@/assets/icons/cat_painting.svg";
 import Cat_Photography from "@/assets/icons/cat_photography.svg";
 import Cat_Travel from "@/assets/icons/cat_travel.svg";
+import Cat_Reading from "@/assets/icons/cat_reading.svg";
+import Cat_Speech from "@/assets/icons/cat_speech.svg";
+import Cat_PawPrint from "@/assets/icons/cat_pawprint.svg";
 
 export {
     Eye,
@@ -25,5 +28,8 @@ export {
     Cat_Music,
     Cat_Painting,
     Cat_Photography, 
-    Cat_Travel
+    Cat_Travel,
+    Cat_Reading,
+    Cat_Speech,
+    Cat_PawPrint,
 }

@@ -9,6 +9,11 @@ export type RootStackParamList = {
 	About: undefined;
 	ForgetPassword: undefined;
 	Ineterests: undefined;
+	Explore: undefined;
+	Chat: undefined;
+	Post: undefined;
+	Notifications: undefined;
+	Profile: undefined;
 };
 
 export type RootScreenProps<
