@@ -1,0 +1,1 @@
+export { default as DummyUser } from "./images/dummy/dummyUser.png";

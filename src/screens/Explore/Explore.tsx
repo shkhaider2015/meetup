@@ -18,8 +18,6 @@ const Explore = ({}: ExploreScreenType) => {
           layout.justifyCenter,
           {
             height: screenHeight,
-            borderWidth: 2,
-            borderColor: "red",
           },
         ]}
       >

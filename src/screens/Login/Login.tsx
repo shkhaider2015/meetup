@@ -130,7 +130,7 @@ const LoginScreen = (props: LoginScreenType) => {
             </Text>
           </TouchableOpacity>
 
-          <Button label="Login" onPress={formik.handleSubmit}  />
+          <Button label="Login" onPress={formik.handleSubmit} loading={isPending}  />
 
           <View
             style={[

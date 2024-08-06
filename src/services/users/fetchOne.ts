@@ -37,3 +37,22 @@ export const login = async (data: IUserLoginForm) => {
     }
   }
 };
+
+export const logout = async () => {
+  try {
+
+	await new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("")
+		}, 2000)
+	})
+
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      console.error("Validation failed:", error.errors);
+    } else {
+      console.error("Failed to fetch user:", error);
+    }
+  }
+}
+

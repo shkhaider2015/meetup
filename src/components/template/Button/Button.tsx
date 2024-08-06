@@ -2,6 +2,7 @@ import { useTheme } from "@/theme";
 import { fontFamily } from "@/theme/_config";
 import { IButton } from "@/types/templates/button";
 import {
+  ActivityIndicator,
   Button as RNButton,
   StyleProp,
   Text,
@@ -20,6 +21,8 @@ const Button = (props: IButton) => {
     onPress,
     containerStyle = [],
     textStyle = [],
+    disabled = false,
+    loading = false,
   } = props;
 
   const { layout, backgrounds, borders, colors, fonts } = useTheme();
@@ -60,16 +63,21 @@ const Button = (props: IButton) => {
     mainTextStyles.push(...secondaryTextStyles);
   }
 
-  if (Icon) mainTextStyles.push({ marginLeft: 8 });
+  if (Icon || loading) mainTextStyles.push({ marginLeft: 8 });
 
   const _onPress = () => {
+    if(loading || disabled) return
     onPress?.();
   };
 
   if (isCirculer && Icon) {
     return (
       <TouchableOpacity
-        style={[...mainStyles, { width: 50, height: 50, borderRadius: 40 }, ...containerStyle]}
+        style={[
+          ...mainStyles,
+          { width: 50, height: 50, borderRadius: 40 },
+          ...containerStyle,
+        ]}
         onPress={_onPress}
         activeOpacity={0.7}
       >
@@ -84,7 +92,17 @@ const Button = (props: IButton) => {
       onPress={_onPress}
       activeOpacity={0.7}
     >
-      {Icon && Icon}
+      {loading && (
+        <ActivityIndicator
+          size={"small"}
+          color={
+            type === "PRIMARY"
+              ? backgrounds.gray00.backgroundColor
+              : backgrounds.primary.backgroundColor
+          }
+        />
+      )}
+      {Icon && !loading && Icon}
       {label && !isCirculer && (
         <Text style={[...mainTextStyles, ...textStyle]}>{label}</Text>
       )}
