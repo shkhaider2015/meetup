@@ -105,6 +105,11 @@ export const fontFamily = {
 	}
 } as const
 
+export const heights = {
+	tabNavigationHeader: 70,
+	bottomTabBarHeight: 80
+}
+
 
 export const config = {
 	colors: colorsLight,
