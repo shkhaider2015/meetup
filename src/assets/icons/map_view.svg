@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="map" transform="translate(0 -0.5)">
+    <path id="Path_1807" data-name="Path 1807" d="M32.023,272.066h-.918a.6.6,0,0,0-.553.364l-2.54,5.915,6.032-3.081A28.446,28.446,0,0,1,32.023,272.066Zm0,0" transform="translate(-26.892 -261.066)" fill="currentColor"/>
+    <path id="Path_1808" data-name="Path 1808" d="M180.027,272.431a.6.6,0,0,0-.553-.364h-.918a32.185,32.185,0,0,1-3.738,5.386,1.809,1.809,0,0,1-2.725,0c-.074-.084-.457-.529-.986-1.212l-1.088.556,4.114,4.106,7.8-4.041Zm0,0" transform="translate(-163.686 -261.175)" fill="currentColor"/>
+    <path id="Path_1809" data-name="Path 1809" d="M.377,407.507l-.328.764a.6.6,0,0,0,.553.837H9.436a2.435,2.435,0,0,1,.352-.192L5.668,404.8Zm0,0" transform="translate(0 -388.609)" fill="currentColor"/>
+    <path id="Path_1810" data-name="Path 1810" d="M309.372,422.6l-1.233-2.87-7.151,3.707h7.83A.6.6,0,0,0,309.372,422.6Zm0,0" transform="translate(-289.421 -402.942)" fill="currentColor"/>
+    <path id="Path_1811" data-name="Path 1811" d="M242.145,121.4a.6.6,0,1,0-.6.6A.6.6,0,0,0,242.145,121.4Zm0,0" transform="translate(-231.543 -115.604)" fill="currentColor"/>
+    <path id="Path_1812" data-name="Path 1812" d="M126.1,15.91c.194-.233,4.751-5.738,4.751-9.522,0-7.8-10.371-7.9-10.371,0,0,3.784,4.557,9.289,4.751,9.522a.561.561,0,0,0,.87,0Zm-2.163-10a1.73,1.73,0,1,1,3.457,0,1.73,1.73,0,1,1-3.457,0Zm0,0" transform="translate(-115.661 0)" fill="currentColor"/>
+  </g>
+</svg>
