@@ -1,3 +1,3 @@
 const google = {
-    API_KEY: 'AIzaSyDo0GR9qo2eeNWbxSS9e935vGURoBuqO5M'
+    API_KEY:process.env.GOOGLE_API_KEY
 }
