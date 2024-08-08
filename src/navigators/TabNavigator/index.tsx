@@ -40,7 +40,7 @@ function TabsNavigator() {
           backgroundColor: 'white',
           height: heights.tabNavigationHeader
         },
-        headerLeft: () => <Image source={ExploreHeader} />,
+        headerLeft: () => <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />,
         headerRight: () => <Image source={DummyUser} style={{ marginRight: 10, width: 40, height: 40}}  />
       }} />
       <Tab.Screen name="Chat" component={Chat} />

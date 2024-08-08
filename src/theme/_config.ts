@@ -109,7 +109,8 @@ export const fontFamily = {
 
 export const heights = {
 	tabNavigationHeader: 70,
-	bottomTabBarHeight: 80
+	bottomTabBarHeight: 80,
+	exploreTabsHeader: 60
 }
 
 

@@ -64,7 +64,7 @@ const SegmentButtons = (props: ISegmentButtons) => {
           layout.justifyCenter,
           layout.itemsCenter,
           borders.rounded_24,
-          { width: width / 2 - 1, height: height - 1, zIndex: 1 },
+          { width: width / 2 - 1, height: height - 1, zIndex: 10 },
         ]}
       >
         <MapView
@@ -84,7 +84,7 @@ const SegmentButtons = (props: ISegmentButtons) => {
           layout.justifyCenter,
           layout.itemsCenter,
           borders.rounded_24,
-          { width: width / 2 - 1, height: height - 1 },
+          { width: width / 2 - 1, height: height - 1, zIndex: 10 },
         ]}
       >
         <GridView

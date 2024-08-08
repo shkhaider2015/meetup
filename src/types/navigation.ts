@@ -16,6 +16,11 @@ export type RootStackParamList = {
 	Profile: undefined;
 };
 
+export type ExploreTabsParamList = {
+	MapView: undefined;
+	ListView: undefined;
+}
+
 export type RootScreenProps<
 	S extends keyof RootStackParamList = keyof RootStackParamList,
 > = StackScreenProps<RootStackParamList, S>;
