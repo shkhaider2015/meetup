@@ -18,25 +18,27 @@ import { setUser } from "@/store/slices/userSlice";
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
-  const dispatch:AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const { fonts, gutters, layout, backgrounds } = useTheme();
   const { isError, isPending, isSuccess, mutate } = useMutation({
-    mutationFn: (data:IUserLoginForm) => {
-      return login(data)
+    mutationFn: (data: IUserLoginForm) => {
+      return login(data);
     },
     onSuccess(data, variables, context) {
-        console.log("Success : ", data, variables, context)
-        dispatch(setUser({
+      console.log("Success : ", data, variables, context);
+      dispatch(
+        setUser({
           ...variables,
-          full_name: 'Shakeel',
+          full_name: "Shakeel",
           isLoggedIn: true,
-          id: 'shk1735'
-        }))
+          id: "shk1735",
+        })
+      );
     },
-  })
+  });
 
-  const passwordRef = useRef<TextInput>(null)
+  const passwordRef = useRef<TextInput>(null);
 
   const formik = useFormik<IUserLoginForm>({
     initialValues: {
@@ -46,8 +48,7 @@ const LoginScreen = (props: LoginScreenType) => {
     validationSchema: userLoginSchema,
     onSubmit: (values) => {
       console.log(values);
-      mutate(values)
-      
+      mutate(values);
     },
   });
 
@@ -89,7 +90,9 @@ const LoginScreen = (props: LoginScreenType) => {
               keyboardType="email-address"
               autoCapitalize="none"
               blurOnSubmit={false}
-              isError={formik.touched.email && formik.errors.email ? true : false}
+              isError={
+                formik.touched.email && formik.errors.email ? true : false
+              }
             />
             {formik.touched.email && formik.errors.email ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -106,7 +109,9 @@ const LoginScreen = (props: LoginScreenType) => {
               onBlur={formik.handleBlur("password")}
               value={formik.values.password}
               onSubmitEditing={() => Keyboard.dismiss()}
-              isError={formik.touched.password && formik.errors.password ? true : false}
+              isError={
+                formik.touched.password && formik.errors.password ? true : false
+              }
             />
             {formik.touched.password && formik.errors.password ? (
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -114,23 +119,31 @@ const LoginScreen = (props: LoginScreenType) => {
               </Text>
             ) : null}
           </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={_navigateToForgetPassword}
-          >
-            <Text
-              style={[
-                { textAlign: "right" },
-                gutters.marginVertical_12,
-                fonts.gray500,
-                fontFamily._400_Regular,
-              ]}
+          <View style={[
+            layout.row,
+            layout.justifyEnd
+          ]} >
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={_navigateToForgetPassword}
             >
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  gutters.marginVertical_12,
+                  fonts.gray500,
+                  fontFamily._400_Regular,
+                ]}
+              >
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-          <Button label="Login" onPress={formik.handleSubmit} loading={isPending}  />
+          <Button
+            label="Login"
+            onPress={formik.handleSubmit}
+            loading={isPending}
+          />
 
           <View
             style={[
@@ -197,6 +210,5 @@ const LoginScreen = (props: LoginScreenType) => {
 };
 
 type LoginScreenType = NativeStackScreenProps<RootStackParamList, "Login">;
-
 
 export default LoginScreen;

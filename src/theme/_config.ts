@@ -13,6 +13,7 @@ const colorsLight = {
 	gray300: '#6A707C', // password eye icon
 	gray250: '#8391A1', // Or text
 	gray200: '#A1A1A1',
+	gray180: '#ABABAC',
 	gray150: '#DEDEDE', // Input Border
 	gray100: '#DFDFDF',
 	gray70: '#E8ECF4', // or lines
@@ -35,6 +36,7 @@ const colorsDark = {
 	gray300: '#6A707C', // password eye icon
 	gray250: '#8391A1', // Or text
 	gray200: '#BABABA',
+	gray180: '#ABABAC',
 	gray_150: '#DEDEDE', // input border
 	gray100: '#000000',
 	gray70: '#E8ECF4', // or lines
@@ -46,7 +48,7 @@ const colorsDark = {
 	purple50: '#1B1A23',
 } as const;
 
-const sizes = [12, 14, 16, 24, 32, 40, 80] as const;
+const sizes = [ 4, 6, 8, 10, 12, 14, 16, 24, 32, 40, 80] as const;
 
 export const fontFamily = {
 	_900_Black: {
@@ -104,6 +106,12 @@ export const fontFamily = {
 		fontFamily: 'Poppins Thin Italic'
 	}
 } as const
+
+export const heights = {
+	tabNavigationHeader: 70,
+	bottomTabBarHeight: 80,
+	exploreTabsHeader: 60
+}
 
 
 export const config = {
