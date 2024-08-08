@@ -33,3 +33,4 @@ export { default as Share } from "@/assets/icons/share.svg";
 export { default as Cat_Swimming } from "@/assets/icons/cat_swimming.svg";
 export { default as Trash } from "@/assets/icons/trash.svg";
 export { default as Edit } from "@/assets/icons/edit.svg";
+export { default as Search } from "@/assets/icons/search.svg";
