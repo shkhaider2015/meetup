@@ -64,7 +64,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
           onRegionChange={_onRegionChange}
         >
           {data.map((item) => (
-            <CustomMarker {...item} />
+            <CustomMarker key={item.latitude} {...item} />
           ))}
         </RNMapView>
       </View>

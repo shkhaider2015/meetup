@@ -1,4 +1,5 @@
 import type { StackScreenProps } from '@react-navigation/stack';
+import { ImageSourcePropType } from 'react-native';
 
 export type RootStackParamList = {
 	Startup: undefined;
@@ -14,6 +15,11 @@ export type RootStackParamList = {
 	Post: undefined;
 	Notifications: undefined;
 	Profile: undefined;
+	Carousel: {
+		images: ImageSourcePropType[],
+		selectedIndex?: number
+	};
+	Tabs: undefined
 };
 
 export type ExploreTabsParamList = {

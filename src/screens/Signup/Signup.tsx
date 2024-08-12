@@ -7,8 +7,7 @@ import { RootStackParamList } from "@/types/navigation";
 import { userSignupSchema } from "@/types/schemas/user";
 import { useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
-import { Keyboard, SafeAreaView, ScrollView, Text, View } from "react-native";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { Keyboard, SafeAreaView, ScrollView, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 
 const SignupScreen = ({ navigation }: SignupScreenType) => {

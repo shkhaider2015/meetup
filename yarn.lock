@@ -1942,6 +1942,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gorhom/bottom-sheet@npm:^4.6.4":
+  version: 4.6.4
+  resolution: "@gorhom/bottom-sheet@npm:4.6.4"
+  dependencies:
+    "@gorhom/portal": 1.0.14
+    invariant: ^2.2.4
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-native": "*"
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: ">=1.10.1"
+    react-native-reanimated: ">=2.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-native":
+      optional: true
+  checksum: 2cea033c4f321b93fdbf61470b507b5efd51425a8ab927b49d7aaa1d9f0568cbcfb188e385311389dbffbafe47b941dbd3e60f74b1d663a1a2d73262e2719f85
+  languageName: node
+  linkType: hard
+
+"@gorhom/portal@npm:1.0.14":
+  version: 1.0.14
+  resolution: "@gorhom/portal@npm:1.0.14"
+  dependencies:
+    nanoid: ^3.3.1
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 227bb96a2db854ab29bb9da8d4f3823c7f7448358de459709dd1b78522110da564c9a8734c6bc7d7153ed7c99320e0fb5d60b420c2ebb75ecaf2f0d757f410f9
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -8089,6 +8123,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@gorhom/bottom-sheet": ^4.6.4
     "@react-native-masked-view/masked-view": ^0.3.1
     "@react-native/babel-preset": 0.74.83
     "@react-native/eslint-config": 0.74.83
@@ -8131,6 +8166,7 @@ __metadata:
     react-native-mmkv: ^2.12.2
     react-native-pager-view: ^6.3.3
     react-native-reanimated: ^3.9.0-rc.1
+    react-native-reanimated-carousel: ^3.5.1
     react-native-safe-area-context: ^4.10.1
     react-native-screens: 3.31.1
     react-native-svg: ^15.4.0
@@ -8633,7 +8669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.23":
+"nanoid@npm:^3.1.23, nanoid@npm:^3.3.1":
   version: 3.3.7
   resolution: "nanoid@npm:3.3.7"
   bin:
@@ -9523,6 +9559,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: b4f6ef33a7de34c254aa0cfdcdb7231c256e5d2b5c5d16f16a7c54379829bae7ec1d86e7daf23ef89dbac6088cf36e9678c3009a20e4ba786498848c86113399
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated-carousel@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-reanimated-carousel@npm:3.5.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.6.0"
+    react-native-gesture-handler: ">=2.0.0"
+    react-native-reanimated: ">=3.0.0"
+  checksum: a2eb640453fa35f659c1fb5575f903364d513fb7f621104afa14fee2284132674dfaf0d87cb29e8c119f7513094a5967d5193f3dfa24043af167c6f26abcfe73
   languageName: node
   linkType: hard
 
