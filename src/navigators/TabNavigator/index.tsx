@@ -59,6 +59,7 @@ function TabsNavigator() {
         },
         tabBarLabelPosition: "below-icon",
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
+        tabBarHideOnKeyboard: true
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />

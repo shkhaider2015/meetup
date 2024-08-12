@@ -41,3 +41,8 @@ export { default as Star } from "@/assets/icons/star.svg";
 export { default as Cat_Drinking } from "@/assets/icons/cat_drinking.svg";
 export { default as Close } from "@/assets/icons/Close.svg";
 export { default as Signout } from "@/assets/icons/Sign_out_squre.svg";
+export { default as Cat_Fitness } from "@/assets/icons/cat_fitness.svg";
+export { default as Cat_Mountain_Climb } from "@/assets/icons/cat_mountain_climb.svg";
+export { default as Cat_Others } from "@/assets/icons/cat_others.svg";
+export { default as Cat_Skateboarding } from "@/assets/icons/cat_skatboarding.svg";
+export { default as Cat_Sports } from "@/assets/icons/cat_sports.svg";
