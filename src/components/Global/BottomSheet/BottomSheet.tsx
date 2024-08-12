@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useRef } from "react";
-import BottomSheet, {
+import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@/theme";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 
 type GlobalBottomSheetContextType = {
   openBottomSheet: (content: React.ReactNode, snapPoints?: string[]) => void;
@@ -21,19 +20,19 @@ export const GlobalBottomSheetProvider: React.FC<{
 }> = ({ children }) => {
   const { backgrounds } = useTheme();
   const [content, setContent] = useState<React.ReactNode>(null);
-  const [snapPoints, setSnapPoints] = useState<string[]>([])
-  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const [snapPoints, setSnapPoints] = useState<string[]>([]);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const openBottomSheet = (content: React.ReactNode, snapPoints:string[]=['50%']) => {
+  const openBottomSheet = (
+    content: React.ReactNode,
+    snapPoints: string[] = ["50%"]
+  ) => {
     setContent(content);
-    setSnapPoints(snapPoints)
-    setIsVisible(true)
+    setSnapPoints(snapPoints);
     bottomSheetModalRef.current?.present();
   };
 
   const closeBottomSheet = () => {
-    setIsVisible(false)
     bottomSheetModalRef.current?.dismiss();
     setContent(null);
   };
@@ -42,21 +41,20 @@ export const GlobalBottomSheetProvider: React.FC<{
     <GlobalBottomSheetContext.Provider
       value={{ openBottomSheet, closeBottomSheet }}
     >
-      {/* {isVisible && <TouchableWithoutFeedback>
-          <View style={{
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1
-          }} />
-        </TouchableWithoutFeedback>
-      } */}
       {children}
       <BottomSheetModalProvider>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
-          backdropComponent={(props) => <BottomSheetBackdrop {...props} />}
+          backdropComponent={(props) => (
+            <BottomSheetBackdrop
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              pressBehavior={"close"}
+              {...props}
+            />
+          )}
           handleStyle={{
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
