@@ -1,8 +1,7 @@
 import { SafeScreen, InputField, Button } from "@/components/template";
 import { useTheme } from "@/theme";
-import { Keyboard, ScrollView, Text, TextInput, View } from "react-native";
+import { Keyboard, ScrollView, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { fontFamily } from "@/theme/_config";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { AppleLogo, GoogleLogo } from "@/assets/icon";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/types/navigation";

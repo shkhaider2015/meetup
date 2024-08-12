@@ -13,6 +13,7 @@ import { getItem } from "@/storage";
 import { USER } from "@/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import ProtectedScreens from "./Protected";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -25,7 +26,7 @@ function ApplicationNavigator() {
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={navigationTheme}>
-        {user.isLoggedIn ? <TabsNavigator /> : <AuthNavigator />}
+        {user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

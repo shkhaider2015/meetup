@@ -10,18 +10,25 @@ import { Provider } from "react-redux";
 import store from "@/store";
 import { StrictMode } from "react";
 import storage from "./storage";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { GlobalBottomSheetProvider, LoaderProvider } from "./components/Global";
 
 export const queryClient = new QueryClient();
 
 function App() {
-
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider storage={storage}>
-          <Provider store={store}>
-            <ApplicationNavigator />
-          </Provider>
+          <GestureHandlerRootView>
+            <GlobalBottomSheetProvider>
+              <Provider store={store}>
+                <LoaderProvider>
+                  <ApplicationNavigator />
+                </LoaderProvider>
+              </Provider>
+            </GlobalBottomSheetProvider>
+          </GestureHandlerRootView>
         </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>

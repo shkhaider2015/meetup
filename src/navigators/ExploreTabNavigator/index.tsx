@@ -29,7 +29,7 @@ function ExploreTabs() {
         tabBarIconStyle: {
             
         }
-    })} >
+    })} initialRouteName="ListView" >
       <Tab.Screen name="MapView" component={MapView} />
       <Tab.Screen name="ListView" component={ListView} />
     </Tab.Navigator>
