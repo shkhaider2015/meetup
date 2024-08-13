@@ -13,6 +13,7 @@ export type RootStackParamList = {
 	Explore: undefined;
 	Chat: undefined;
 	Post: undefined;
+	PostTab: undefined;
 	PostLocation: undefined;
 	Notifications: undefined;
 	Profile: undefined;

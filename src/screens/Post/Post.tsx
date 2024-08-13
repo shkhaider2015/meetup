@@ -11,8 +11,9 @@ import {
   Cat_Swimming,
   Close,
 } from "@/assets/icon";
-import { useGlobalBottomSheet } from "@/components/Global";
+import { DatePicker } from "@/components";
 import { Button, SafeScreen } from "@/components/template";
+import { useGlobalBottomSheet } from "@/hooks";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
@@ -38,9 +39,11 @@ const Post = ({}: PostScreenType) => {
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { height } = Dimensions.get("window");
   const screenHeight = height - heights.bottomTabBarHeight;
+  const [showDate, setShowDate] = useState(false);
 
   const _onNext = () => {
-    openBottomSheet(<ActivityForSheet />, ["50%"]);
+    // openBottomSheet(<ActivityForSheet />, ["50%"]);
+    setShowDate(true)
   };
 
   return (
@@ -60,6 +63,7 @@ const Post = ({}: PostScreenType) => {
         <View>
           <Button label="Next" type="PRIMARY" onPress={_onNext} />
         </View>
+        <DatePicker open={showDate} onClose={() => setShowDate(false)} />
       </View>
     </SafeScreen>
   );

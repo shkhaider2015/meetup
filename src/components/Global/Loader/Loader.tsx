@@ -1,16 +1,8 @@
+import { LoaderContext } from '@/context';
 import { useTheme } from '@/theme';
-import React, { createContext, useContext, useState } from 'react';
+import { LoaderProps } from '@/types/loader';
+import React, { useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
-
-interface LoaderProps {
-  isVisible: boolean;
-}
-
-interface LoaderContextProps {
-    isLoading: boolean;
-    showLoader: () => void;
-    hideLoader: () => void;
-  }
 
 const Loader: React.FC<LoaderProps> = ({ isVisible }) => {
     const {colors} = useTheme();
@@ -23,13 +15,6 @@ const Loader: React.FC<LoaderProps> = ({ isVisible }) => {
     </View>
   );
 };
-
-
-const LoaderContext = createContext<LoaderContextProps>({
-  isLoading: false,
-  showLoader: () => {},
-  hideLoader: () => {},
-});
 
 export const LoaderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +30,6 @@ export const LoaderProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-export const useLoader = () => useContext(LoaderContext);
 
 const styles = StyleSheet.create({
   overlay: {

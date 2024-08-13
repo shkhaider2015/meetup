@@ -17,7 +17,6 @@ import {
   Tab_Profile_Selected,
 } from "@/assets/icon";
 import { ExploreHeader, MeetupIcon } from "@/assets/images";
-import { useGlobalBottomSheet, useLoader } from "@/components/Global";
 import { Button } from "@/components/template";
 import { Chat, Explore, Notifications, Post, Profile } from "@/screens";
 import { logout } from "@/services/users/fetchOne";
@@ -37,6 +36,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import PostNavigator from "../Post";
+import { useGlobalBottomSheet, useLoader } from "@/hooks";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -59,18 +59,18 @@ function TabsNavigator() {
         },
         tabBarLabelPosition: "below-icon",
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
-        tabBarHideOnKeyboard: true
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Post" component={PostNavigator} options={postOptions} />
+      <Tab.Screen name="PostTab"  component={PostNavigator} options={postOptions} />
       <Tab.Screen
         name="Notifications"
         component={Notifications}
         options={notificationOptions}
       />
-      <Tab.Screen name="Profile" component={Profile} options={profileOptions} />
+      <Tab.Screen name="Profile"  component={Profile} options={profileOptions} />
     </Tab.Navigator>
   );
 }
@@ -88,7 +88,7 @@ const tabBarIconOption = (
     case "Chat":
       Icon = focused ? Tab_Chat_Selected : Tab_Chat_Default;
       break;
-    case "Post":
+    case "PostTab":
       Icon = Tab_Post_Default;
       break;
     case "Notifications":
@@ -178,6 +178,7 @@ const profileOptions: BottomTabNavigationOptions = {
     const { mutate } = useMutation({
       mutationFn: () => {
         return logout();
+       
       },
       onSuccess: () => {
         hideLoader();
@@ -278,6 +279,7 @@ const profileOptions: BottomTabNavigationOptions = {
 
 const postOptions: BottomTabNavigationOptions = {
   headerShown: false,
+  tabBarLabel: "Post"
 };
 
 export default TabsNavigator;

@@ -1,19 +1,11 @@
-import React, { createContext, useContext, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@/theme";
-
-type GlobalBottomSheetContextType = {
-  openBottomSheet: (content: React.ReactNode, snapPoints?: string[]) => void;
-  closeBottomSheet: () => void;
-};
-
-const GlobalBottomSheetContext = createContext<
-  GlobalBottomSheetContextType | undefined
->(undefined);
+import { GlobalBottomSheetContext } from "@/context";
 
 export const GlobalBottomSheetProvider: React.FC<{
   children: React.ReactNode;
@@ -67,14 +59,4 @@ export const GlobalBottomSheetProvider: React.FC<{
       </BottomSheetModalProvider>
     </GlobalBottomSheetContext.Provider>
   );
-};
-
-export const useGlobalBottomSheet = (): GlobalBottomSheetContextType => {
-  const context = useContext(GlobalBottomSheetContext);
-  if (!context) {
-    throw new Error(
-      "useGlobalBottomSheet must be used within a GlobalBottomSheetProvider"
-    );
-  }
-  return context;
 };
