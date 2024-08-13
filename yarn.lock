@@ -4926,7 +4926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.10":
+"dayjs@npm:^1.11.10, dayjs@npm:^1.11.12":
   version: 1.11.12
   resolution: "dayjs@npm:1.11.12"
   checksum: 40a4f67c2df3af125ae0ddec68d3a6d806d3009a7414bf45479aaf82f1dd82f3e139e6642e72391abccc37488897830c56afcabb4c819014130d283644df8128
@@ -8173,6 +8173,7 @@ __metadata:
     babel-plugin-inline-dotenv: ^1.7.0
     babel-plugin-module-resolver: ^5.0.0
     babel-plugin-root-import: ^6.6.0
+    dayjs: ^1.11.12
     dotenv: ^16.3.1
     eslint: ^8.19.0
     eslint-config-airbnb: ^19.0.4
@@ -8185,12 +8186,12 @@ __metadata:
     jest: ^29.6.3
     ky: ^1.2.4
     lodash: ^4.17.21
-    moment: ^2.30.1
     prettier: 2.8.8
     react: 18.2.0
     react-i18next: ^14.1.0
     react-native: 0.74.1
     react-native-gesture-handler: ^2.16.0
+    react-native-limit-timepicker: ^1.2.0
     react-native-maps: ^1.17.3
     react-native-mmkv: ^2.12.2
     react-native-pager-view: ^6.3.3
@@ -8675,13 +8676,6 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
-  languageName: node
-  linkType: hard
-
-"moment@npm:^2.30.1":
-  version: 2.30.1
-  resolution: "moment@npm:2.30.1"
-  checksum: 859236bab1e88c3e5802afcf797fc801acdbd0ee509d34ea3df6eea21eb6bcc2abd4ae4e4e64aa7c986aa6cba563c6e62806218e6412a765010712e5fa121ba6
   languageName: node
   linkType: hard
 
@@ -9560,6 +9554,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 44338af64e4bd2ec2ad7e7f417c24258bcca4885dc70935735aa481c3689ca89bf99562c379d0f0ccab1c6e31621ffcdfe170c92c76f0a0860730b892363d0c1
+  languageName: node
+  linkType: hard
+
+"react-native-limit-timepicker@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "react-native-limit-timepicker@npm:1.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 2b357f938231ab55ce6b7d71b578bb9d098ffa4a87688ad68d6816c752bc945b77f49231d19130b1c7e23e1a884592d6861ca17e052060e4135414c3ecc85cbc
   languageName: node
   linkType: hard
 

@@ -34,16 +34,19 @@ import {
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import { SvgProps } from "react-native-svg";
 
-const Post = ({}: PostScreenType) => {
+const Post = ({ navigation }: PostScreenType) => {
   const { layout, gutters, backgrounds, fonts } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { height } = Dimensions.get("window");
   const screenHeight = height - heights.bottomTabBarHeight;
   const [showDate, setShowDate] = useState(false);
+  const [showTime, setShowTime] = useState(false);
 
   const _onNext = () => {
     // openBottomSheet(<ActivityForSheet />, ["50%"]);
-    setShowDate(true)
+    // setShowTime(true)
+    // setShowDate(true)
+    // navigation.navigate("PostLocation")
   };
 
   return (
@@ -63,7 +66,8 @@ const Post = ({}: PostScreenType) => {
         <View>
           <Button label="Next" type="PRIMARY" onPress={_onNext} />
         </View>
-        <DatePicker open={showDate} onClose={() => setShowDate(false)} />
+        <DatePicker open={showDate} type="DATE" onClose={() => setShowDate(false)} />
+        <DatePicker open={showTime} type="TIME" onClose={() => setShowTime(false)} />
       </View>
     </SafeScreen>
   );

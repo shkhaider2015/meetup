@@ -50,7 +50,7 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
-          paddingBottom: 0,
+          paddingBottom: 0
         },
         tabBarLabelStyle: {
           fontSize: 12,
