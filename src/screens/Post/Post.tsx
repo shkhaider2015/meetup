@@ -9,7 +9,11 @@ import {
   Cat_Skateboarding,
   Cat_Sports,
   Cat_Swimming,
+  Clock,
   Close,
+  DateIcon,
+  ImageIcon,
+  LocationIcon,
 } from "@/assets/icon";
 import { DatePicker } from "@/components";
 import { Button, SafeScreen } from "@/components/template";
@@ -17,6 +21,7 @@ import { useGlobalBottomSheet } from "@/hooks";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
+import { PostInputMenu, PostInputProps } from "@/types/screens/post";
 import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
@@ -42,11 +47,55 @@ const Post = ({ navigation }: PostScreenType) => {
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
 
+  const [keyboardVisible, setKeyBoardVisible] = useState(false);
+
+  useEffect(() => {
+    const showKeyboardListener = Keyboard.addListener(
+      "keyboardDidShow",
+      _showKeyboard
+    );
+    const hideKeyboardListener = Keyboard.addListener(
+      "keyboardDidHide",
+      _hideKeyboard
+    );
+
+    return () => {
+      showKeyboardListener.remove();
+      hideKeyboardListener.remove();
+    };
+  }, []);
+
+  const _showKeyboard = () => {
+    setKeyBoardVisible(true);
+  };
+  const _hideKeyboard = () => {
+    setKeyBoardVisible(false);
+  };
+
   const _onNext = () => {
     // openBottomSheet(<ActivityForSheet />, ["50%"]);
     // setShowTime(true)
     // setShowDate(true)
-    // navigation.navigate("PostLocation")
+    navigation.navigate("PostLocation");
+  };
+
+  const _onPressInput = () => {
+    if (!keyboardVisible) Keyboard.dismiss();
+  };
+
+  const _OnShowCalender = () => {
+    Keyboard.dismiss();
+
+    setShowDate(true);
+  };
+  const _OnShowTime = () => {
+    Keyboard.dismiss();
+
+    setShowTime(true);
+  };
+
+  const _onGoToLocation = () => {
+    navigation.navigate("PostLocation");
   };
 
   return (
@@ -57,17 +106,36 @@ const Post = ({ navigation }: PostScreenType) => {
           gutters.paddingVertical_12,
           backgrounds.gray00,
           {
-            height: screenHeight,
+            height: "100%",
           },
         ]}
       >
         <PostHeader />
-        <PostInput />
-        <View>
-          <Button label="Next" type="PRIMARY" onPress={_onNext} />
-        </View>
-        <DatePicker open={showDate} type="DATE" onClose={() => setShowDate(false)} />
-        <DatePicker open={showTime} type="TIME" onClose={() => setShowTime(false)} />
+        <PostInput onPress={_onPressInput} />
+        {keyboardVisible && (
+          <PostMenu
+            onPressDateIcon={_OnShowCalender}
+            onPressTimeIcon={_OnShowTime}
+            onPressLocationIcon={_onGoToLocation}
+          />
+        )}
+
+        {!keyboardVisible && (
+          <View>
+            <Button label="Next" type="PRIMARY" onPress={_onNext} />
+          </View>
+        )}
+
+        <DatePicker
+          open={showDate}
+          type="DATE"
+          onClose={() => setShowDate(false)}
+        />
+        <DatePicker
+          open={showTime}
+          type="TIME"
+          onClose={() => setShowTime(false)}
+        />
       </View>
     </SafeScreen>
   );
@@ -102,31 +170,12 @@ const PostHeader = () => {
   );
 };
 
-const PostInput = () => {
+const PostInput = ({ onPress }: PostInputProps) => {
   const { fonts, layout, gutters, colors } = useTheme();
   const inputRef = useRef<TextInput>(null);
 
-  const [keyboardVisible, setKeyBoardVisible] = useState(false);
-
-  const _showKeyboard = () => {
-    setKeyBoardVisible(true);
-  };
-  const _hideKeyboard = () => {
-    setKeyBoardVisible(false);
-  };
-
-  useEffect(() => {
-    const show = Keyboard.addListener("keyboardDidShow", _showKeyboard);
-    const hide = Keyboard.addListener("keyboardDidHide", _hideKeyboard);
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
-
   const _onPress = () => {
-    if (!keyboardVisible) Keyboard.dismiss();
+    onPress?.();
 
     setTimeout(() => {
       inputRef.current?.focus();
@@ -143,7 +192,6 @@ const PostInput = () => {
         onPress={_onPress}
         activeOpacity={1}
       >
-        {/* <ScrollView> */}
         <TextInput
           ref={inputRef}
           style={[fonts.gray800, fonts.size_14]}
@@ -152,7 +200,6 @@ const PostInput = () => {
           selectionColor={colors.gray800}
           scrollEnabled={true}
         />
-        {/* </ScrollView> */}
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -229,6 +276,61 @@ const TimeSheet = () => {
       <View style={[gutters.paddingHorizontal_16]}>
         <Button label="Next" type="PRIMARY" onPress={() => {}} />
       </View>
+    </View>
+  );
+};
+
+const PostMenu = (props: PostInputMenu) => {
+  const {
+    onPressDateIcon,
+    onPressImageIcon,
+    onPressLocationIcon,
+    onPressTimeIcon,
+  } = props;
+  const { layout, colors, gutters } = useTheme();
+
+  const _onPressIcon = (value: "TIME" | "DATE" | "LOCATION" | "IMAGE") => {
+    switch (value) {
+      case "DATE":
+        onPressDateIcon?.();
+        break;
+      case "IMAGE":
+        onPressImageIcon?.();
+        break;
+      case "LOCATION":
+        onPressLocationIcon?.();
+        break;
+      case "TIME":
+        onPressTimeIcon?.();
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <View
+      style={[
+        layout.row,
+        layout.justifyEnd,
+        layout.itemsCenter,
+        gutters.gap_24,
+        gutters.paddingRight_24,
+        { height: 50 },
+      ]}
+    >
+      <TouchableOpacity onPress={() => _onPressIcon("IMAGE")}>
+        <ImageIcon width={30} height={30} color={colors.gray800} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => _onPressIcon("LOCATION")}>
+        <LocationIcon width={30} height={30} color={colors.gray800} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => _onPressIcon("DATE")}>
+        <DateIcon width={30} height={30} color={colors.gray800} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => _onPressIcon("TIME")}>
+        <Clock width={30} height={30} color={colors.gray800} />
+      </TouchableOpacity>
     </View>
   );
 };

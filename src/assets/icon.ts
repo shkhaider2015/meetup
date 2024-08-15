@@ -46,3 +46,7 @@ export { default as Cat_Mountain_Climb } from "@/assets/icons/cat_mountain_climb
 export { default as Cat_Others } from "@/assets/icons/cat_others.svg";
 export { default as Cat_Skateboarding } from "@/assets/icons/cat_skatboarding.svg";
 export { default as Cat_Sports } from "@/assets/icons/cat_sports.svg";
+export { default as DateIcon } from "@/assets/icons/Date_range.svg";
+export { default as ImageIcon } from "@/assets/icons/Img_box_fill.svg";
+export { default as LocationIcon } from "@/assets/icons/Pin_alt_fill.svg";
+export { default as Clock  } from "@/assets/icons/Time.svg";

@@ -1,5 +1,6 @@
 import { GridView, MapView as MapViewIcon } from '@/assets/icon';
 import { ListView, MapView } from '@/screens';
+import { useTheme } from '@/theme';
 import { ExploreTabsParamList } from '@/types/navigation';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { RouteProp } from '@react-navigation/native';
@@ -9,6 +10,8 @@ import { SvgProps } from 'react-native-svg';
 const Tab = createMaterialTopTabNavigator<ExploreTabsParamList>();
 
 function ExploreTabs() {
+  const { colors } = useTheme();
+
   return (
     <Tab.Navigator screenOptions={({route}) => ({
         tabBarIcon: ({focused}) => tabBarIconOption(route, focused),
@@ -21,14 +24,14 @@ function ExploreTabs() {
         tabBarStyle: {
             width: 200,
             alignSelf: 'center',
-            backgroundColor: '#FFFFFF',
+            backgroundColor: colors.gray00,
             height: 60,
             marginVertical: 10,
             borderRadius: 20
         },
         tabBarIconStyle: {
             
-        }
+        },
     })} initialRouteName="ListView" >
       <Tab.Screen name="MapView" component={MapView} />
       <Tab.Screen name="ListView" component={ListView} />
