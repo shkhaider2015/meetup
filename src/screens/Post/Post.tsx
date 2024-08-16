@@ -212,7 +212,7 @@ const Post = ({ navigation }: PostScreenType) => {
 const PostHeader = ({ onCancel }: PostHeaderProps) => {
   const { fonts, layout, gutters } = useTheme();
   return (
-    <View style={[layout.row, layout.justifyBetween, layout.itemsCenter]}>
+    <View style={[layout.row, layout.justifyBetween, layout.itemsCenter, { height: 50 }]}>
       <View
         style={[
           layout.row,
@@ -251,10 +251,10 @@ const PostInput = ({ onPress }: PostInputProps) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={[layout.flex_1]}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    // <KeyboardAvoidingView
+    //   style={[layout.flex_1]}
+    //   behavior={Platform.OS === "ios" ? "padding" : "height"}
+    // >
       <TouchableOpacity
         style={[layout.flex_1, { paddingBottom: 60 }]}
         onPress={_onPress}
@@ -269,7 +269,7 @@ const PostInput = ({ onPress }: PostInputProps) => {
           scrollEnabled={true}
         />
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    // </KeyboardAvoidingView>
   );
 };
 
@@ -381,7 +381,7 @@ const PostMenu = (props: PostInputMenu) => {
       style={[
         layout.row,
         layout.justifyEnd,
-        layout.itemsCenter,
+        layout.itemsStart,
         gutters.gap_24,
         gutters.paddingRight_24,
         { height: 50 },

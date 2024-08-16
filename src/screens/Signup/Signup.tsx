@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, SafeAreaView, ScrollView, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
+import Toast from "react-native-toast-message";
 
 const SignupScreen = ({ navigation }: SignupScreenType) => {
 
@@ -29,7 +30,12 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
     validationSchema: userSignupSchema,
     onSubmit: (values) => {
       console.log(values);
-      navigation.navigate("Ineterests");
+      Toast.show({
+        type: "success",
+        text1: "Your account has been created successfully",
+        text2: "Activation link has been sent to your email"
+      })
+      navigation.goBack()
     },
   });
 
