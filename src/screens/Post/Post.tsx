@@ -21,13 +21,19 @@ import { useGlobalBottomSheet } from "@/hooks";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
-import { PostInputMenu, PostInputProps } from "@/types/screens/post";
+import {
+  PostHeaderProps,
+  PostInputMenu,
+  PostInputProps,
+} from "@/types/screens/post";
+import { requestLocationPermission, requestLocationPermissionIOS } from "@/utils";
 import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  PermissionsAndroid,
   Platform,
   ScrollView,
   Text,
@@ -36,16 +42,22 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import {
+  ImageLibraryOptions,
+  launchImageLibrary,
+} from "react-native-image-picker";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import { SvgProps } from "react-native-svg";
+import Toast from "react-native-toast-message";
+import Geolocation from "react-native-geolocation-service"
 
 const Post = ({ navigation }: PostScreenType) => {
   const { layout, gutters, backgrounds, fonts } = useTheme();
-  const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { height } = Dimensions.get("window");
   const screenHeight = height - heights.bottomTabBarHeight;
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
+  const [location, setLocation] = useState<Geolocation.GeoPosition|boolean>(false);
 
   const [keyboardVisible, setKeyBoardVisible] = useState(false);
 
@@ -76,7 +88,7 @@ const Post = ({ navigation }: PostScreenType) => {
     // openBottomSheet(<ActivityForSheet />, ["50%"]);
     // setShowTime(true)
     // setShowDate(true)
-    navigation.navigate("PostLocation");
+    // navigation.navigate("PostLocation");
   };
 
   const _onPressInput = () => {
@@ -88,14 +100,69 @@ const Post = ({ navigation }: PostScreenType) => {
 
     setShowDate(true);
   };
+
   const _OnShowTime = () => {
     Keyboard.dismiss();
 
     setShowTime(true);
   };
 
-  const _onGoToLocation = () => {
-    navigation.navigate("PostLocation");
+  const _onShowGallery = async () => {
+    const options: ImageLibraryOptions = {
+      selectionLimit: 1,
+      mediaType: "photo",
+    };
+
+    const result = await launchImageLibrary(options);
+
+    console.log("Result : ", result);
+    console.log("Assets : ", result.assets);
+
+    if (result.errorCode) {
+      Toast.show({
+        type: "error",
+        text1: "Something wromng happen",
+      });
+    }
+  };
+
+  const _onGoToLocation = (location:Geolocation.GeoPosition|undefined) => {
+
+    navigation.navigate("PostLocation", {location});
+  };
+
+  const _onCancelPost = () => {
+    console.log("cancel : ");
+    
+    navigation.goBack();
+  };
+
+  const getLocation = () => {
+    const result = Platform.OS === "android" ? requestLocationPermission() : requestLocationPermissionIOS();
+    result.then(res => {
+      console.log('res is:', res);
+      if (res) {
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position);
+            _onGoToLocation(position)
+            // setLocation(position);
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+            _onGoToLocation(undefined)
+            // setLocation(false);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        _onGoToLocation(undefined)
+      }
+    }).catch(err => {
+      _onGoToLocation(undefined)
+    });
+    console.log(location);
   };
 
   return (
@@ -110,38 +177,39 @@ const Post = ({ navigation }: PostScreenType) => {
           },
         ]}
       >
-        <PostHeader />
+        <PostHeader onCancel={_onCancelPost} />
         <PostInput onPress={_onPressInput} />
-        {keyboardVisible && (
-          <PostMenu
-            onPressDateIcon={_OnShowCalender}
-            onPressTimeIcon={_OnShowTime}
-            onPressLocationIcon={_onGoToLocation}
-          />
-        )}
 
-        {!keyboardVisible && (
+        <PostMenu
+          onPressDateIcon={_OnShowCalender}
+          onPressTimeIcon={_OnShowTime}
+          onPressLocationIcon={getLocation}
+          onPressImageIcon={_onShowGallery}
+        />
+        {/* <View style={{ height: 10 }} /> */}
+        {/* {!keyboardVisible && (
           <View>
             <Button label="Next" type="PRIMARY" onPress={_onNext} />
           </View>
-        )}
+        )} */}
 
         <DatePicker
           open={showDate}
           type="DATE"
-          onClose={() => setShowDate(false)}
+          onCancel={() => setShowDate(false)}
         />
         <DatePicker
           open={showTime}
           type="TIME"
-          onClose={() => setShowTime(false)}
+          onCancel={() => setShowTime(false)}
+          onConfirm={(val) => console.log("Val : ", val)}
         />
       </View>
     </SafeScreen>
   );
 };
 
-const PostHeader = () => {
+const PostHeader = ({ onCancel }: PostHeaderProps) => {
   const { fonts, layout, gutters } = useTheme();
   return (
     <View style={[layout.row, layout.justifyBetween, layout.itemsCenter]}>
@@ -153,7 +221,7 @@ const PostHeader = () => {
           gutters.gap_8,
         ]}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onCancel?.()}>
           <Close width={30} height={30} color={fonts.gray800.color} />
         </TouchableOpacity>
         <Image source={DummyUser} />

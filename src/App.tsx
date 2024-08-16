@@ -12,6 +12,7 @@ import { StrictMode } from "react";
 import storage from "./storage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { GlobalBottomSheetProvider, LoaderProvider } from "./components/Global";
+import Toast from "react-native-toast-message";
 
 export const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ function App() {
               <Provider store={store}>
                 <LoaderProvider>
                   <ApplicationNavigator />
+                  <Toast />
                 </LoaderProvider>
               </Provider>
             </GlobalBottomSheetProvider>

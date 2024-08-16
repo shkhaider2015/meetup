@@ -279,7 +279,10 @@ const profileOptions: BottomTabNavigationOptions = {
 
 const postOptions: BottomTabNavigationOptions = {
   headerShown: false,
-  tabBarLabel: "Post"
+  tabBarLabel: "Post",
+  tabBarStyle: {
+    display: 'none'
+  }
 };
 
 export default TabsNavigator;

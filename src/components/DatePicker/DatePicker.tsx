@@ -9,16 +9,23 @@ import { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import { DateType } from "react-native-ui-datepicker/lib/typescript/src/types";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { fontFamily } from "@/theme/_config";
 import LimitTimePicker from "react-native-limit-timepicker";
 import { ItemT } from "react-native-limit-timepicker/lib/typescript/src/wheel_scroll/ScrollPicker";
+import { Button } from "../template";
+import _ from "lodash";
 
 const DatePicker = (props: DatePickerProps) => {
-  const { open = false, type = "DATE", onClose, onChange } = props;
+  const { open = false, type = "DATE", onCancel, onChange, onConfirm } = props;
 
   const [date, setDate] = useState(dayjs());
-  const [snapPoints] = useState<string[]>(type === "TIME" ? ['35%'] : ['55%'] );
+  const [time, setTime] = useState({
+    hours: 0,
+    minutes: 0,
+    period: 'am'
+  });
+  const [snapPoints] = useState<string[]>(type === "TIME" ? ["35%"] : ["60%"]);
 
   const { backgrounds, fonts, colors, gutters, layout } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -30,18 +37,72 @@ const DatePicker = (props: DatePickerProps) => {
   }, [open]);
 
   const _onChange = (param: { date: DateType }) => {
-    onChange?.("string");
+    onChange?.(dayjs(param.date).toDate());
+    setDate(dayjs(param.date));
   };
-  const _onChangeTime = (item: ItemT | undefined, index: number) => {};
+  const _onChangeHours = (item: ItemT | undefined, index: number) => {
+    if(!open) return
+    let hours = Number(item?.toString())
+    if(_.isNaN()) return;
+    setTime(pS => ({
+      ...pS,
+      hours: hours
+    }))
+    // return
+    
+  };
+  const _onChangeMinutes = (item: ItemT | undefined, index: number) => {
+    if(!open) return
+    let minutes = Number(item?.toString())
+    if(_.isNaN()) return;
+    setTime(pS => ({
+      ...pS,
+      minutes: minutes
+    }))
+    // return
+    
+  };
+  const _onChangePeriod = (item: ItemT | undefined, index: number) => {
+    if(!open) return
+    let period = item?.toString()
+    if(!period) return;
+    setTime(pS => ({
+      ...pS,
+      period: period
+    }))
+  };
 
-  const _handleClose = () => {
-    onClose?.();
+  const _onConfirm = () => {
+    if(!open) return
+    if(type === "TIME") {
+      let today = dayjs();
+      if(time.period == "PM") {
+        console.log("its pm ");
+        today.hour(time.hours + 12)
+      }
+      today.minute(time.minutes)
+      today.second(0)
+      console.log("Before confirm : ", today.format('h-m-s'));
+      
+      onConfirm?.(today.toDate())
+    } else {
+      onConfirm?.(date.toDate());
+      _onCancel();
+    }
+  };
+
+  const _onCancel = () => {
+    if(!open) return
+    onCancel?.();
+    _dismissBottomSheet();
   };
 
   const _dismissBottomSheet = () => {
     bottomSheetModalRef.current?.dismiss();
   };
 
+  console.log("Time : ", time);
+  
   return (
     <BottomSheetModalProvider>
       <BottomSheetModal
@@ -62,7 +123,7 @@ const DatePicker = (props: DatePickerProps) => {
           borderBottomWidth: 1,
           borderBottomColor: backgrounds.gray100.backgroundColor,
         }}
-        onDismiss={() => _handleClose()}
+        onDismiss={() => _onCancel()}
         enableHandlePanningGesture={true}
         enableContentPanningGesture={false}
       >
@@ -73,7 +134,9 @@ const DatePicker = (props: DatePickerProps) => {
               fonts.gray800,
               fontFamily._500_Medium,
               fonts.alignCenter,
-              type === "TIME" ? gutters.paddingVertical_14 : gutters.paddingVertical_8,
+              type === "TIME"
+                ? gutters.paddingVertical_14
+                : gutters.paddingVertical_8,
             ]}
           >
             {type === "TIME" ? "Select Time" : "Select Date"}
@@ -81,10 +144,9 @@ const DatePicker = (props: DatePickerProps) => {
 
           {type === "TIME" ? (
             <LimitTimePicker
-              customMinutesData={[0, 15, 30, 45]}
-              onChangeHour={_onChangeTime}
-              onChangeMinute={_onChangeTime}
-              onChangePeriod={_onChangeTime}
+              onChangeHour={_onChangeHours}
+              onChangeMinute={_onChangeMinutes}
+              onChangePeriod={_onChangePeriod}
               time={new Date()}
               containerStyle={{
                 paddingHorizontal: 40,
@@ -137,6 +199,27 @@ const DatePicker = (props: DatePickerProps) => {
               }}
             />
           )}
+          <View
+            style={[
+              layout.row,
+              layout.justifyBetween,
+              layout.itemsCenter,
+              gutters.paddingHorizontal_10,
+            ]}
+          >
+            <Button
+              label="Cancel"
+              type="SECONDARY"
+              onPress={_onCancel}
+              containerStyle={[{ width: "45%", height: 50 }]}
+            />
+            <Button
+              label="Confirm"
+              type="PRIMARY"
+              onPress={_onConfirm}
+              containerStyle={[{ width: "45%", height: 50 }]}
+            />
+          </View>
         </View>
       </BottomSheetModal>
     </BottomSheetModalProvider>

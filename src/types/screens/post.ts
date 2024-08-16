@@ -8,3 +8,8 @@ export type PostInputMenu = {
     onPressDateIcon?: () => void;
     onPressTimeIcon?: () => void;
 }
+
+export type PostHeaderProps = {
+    onCancel?: () => void;
+    onPost?: () => void;
+}

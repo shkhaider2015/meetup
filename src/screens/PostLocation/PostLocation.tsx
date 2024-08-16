@@ -13,11 +13,11 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import RNMapView, { Details, Marker, Region } from "react-native-maps";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { IInitialMapState } from "@/types/maps";
 import { Close } from "@/assets/icon";
 
-const PostLocation = ({ navigation }: PostLocationScreenType) => {
+const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   const { height } = Dimensions.get("window");
@@ -26,37 +26,48 @@ const PostLocation = ({ navigation }: PostLocationScreenType) => {
   const [mapState, setMapState] = useState<IInitialMapState>({
     region: {
       latitude: 37.78825,
-      longitude: -122.4324,
+      longitude:  -122.4324,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
   });
 
-  useLayoutEffect(() => {
-    
-    // Hide the tab bar
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: "none" },
-    });
+  // useLayoutEffect(() => {
+  //   // Hide the tab bar
+  //   navigation.getParent()?.setOptions({
+  //     tabBarStyle: { display: "none" },
+  //   });
 
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: {
-          display: "flex",
-          backgroundColor: backgrounds.gray00.backgroundColor,
-          height: heights.bottomTabBarHeight,
-          paddingBottom: 0,
-        },
-      });
+  //   return () => {
+  //     navigation.getParent()?.setOptions({
+  //       tabBarStyle: {
+  //         display: "flex",
+  //         backgroundColor: backgrounds.gray00.backgroundColor,
+  //         height: heights.bottomTabBarHeight,
+  //         paddingBottom: 0,
+  //       },
+  //     });
+  //   };
+  // }, [navigation]);
 
-    };
-  }, [navigation]);
+  useEffect(() => {
+    const latitude = route.params.location?.coords.latitude;
+    const longitude = route.params.location?.coords.longitude
+    if(latitude && longitude) setMapState(pS => ({
+      ...pS,
+      region: {
+        ...pS.region,
+        latitude,
+        longitude
+      }
+    }))
+  }, [route.params.location])
 
-  useLayoutEffect(() => {
-    StatusBar.setBackgroundColor('#FE434E00');
+  useEffect(() => {
+    StatusBar.setBackgroundColor("#FE434E00");
     StatusBar.setBarStyle("light-content");
-    StatusBar.setTranslucent(true)
-  }, [])
+    StatusBar.setTranslucent(true);
+  }, []);
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));
@@ -77,7 +88,7 @@ const PostLocation = ({ navigation }: PostLocationScreenType) => {
     // }, 3000)
     StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
     StatusBar.setBarStyle("dark-content");
-    StatusBar.setTranslucent(false)
+    StatusBar.setTranslucent(false);
 
     navigation.goBack();
   };
@@ -103,7 +114,7 @@ const PostLocation = ({ navigation }: PostLocationScreenType) => {
           layout.z1,
           {
             width: "100%",
-            height: 120
+            height: 120,
           },
         ]}
       >
@@ -111,7 +122,7 @@ const PostLocation = ({ navigation }: PostLocationScreenType) => {
         <Text style={[fonts.gray800, fontFamily._700_Bold, { fontSize: 20 }]}>
           Select Location
         </Text>
-        <TouchableOpacity onPress={_onClose} style={{ marginBottom: 5 }} >
+        <TouchableOpacity onPress={_onClose} style={{ marginBottom: 5 }}>
           <Close color={colors.gray800} />
         </TouchableOpacity>
       </View>
@@ -126,8 +137,8 @@ const PostLocation = ({ navigation }: PostLocationScreenType) => {
           layout.bottom0,
           layout.z1,
           {
-            height: 140
-          }
+            height: 140,
+          },
         ]}
       >
         <Button
