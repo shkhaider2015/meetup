@@ -63,7 +63,7 @@ function TabsNavigator() {
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
-      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
       <Tab.Screen name="PostTab"  component={PostNavigator} options={postOptions} />
       <Tab.Screen
         name="Notifications"
@@ -276,6 +276,10 @@ const profileOptions: BottomTabNavigationOptions = {
   },
   headerTitleAlign: "center",
 };
+
+const chatOptions: BottomTabNavigationOptions = {
+  headerShown: false
+}
 
 const postOptions: BottomTabNavigationOptions = {
   headerShown: false,

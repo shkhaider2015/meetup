@@ -1891,6 +1891,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cometchat/chat-sdk-react-native@npm:^4.0.11":
+  version: 4.0.11
+  resolution: "@cometchat/chat-sdk-react-native@npm:4.0.11"
+  checksum: 62ed2c6c85cab7956649f7ba813f0584cce8e039a66b3e88ed113a3616dfe4e2f3dc03ecf8649f4fe2ffe186343a541830d6c83d8fb0b7b4c65c0e345f9f1f33
+  languageName: node
+  linkType: hard
+
+"@cometchat/chat-uikit-react-native@npm:^4.3.17":
+  version: 4.3.17
+  resolution: "@cometchat/chat-uikit-react-native@npm:4.3.17"
+  dependencies:
+    "@react-native-clipboard/clipboard": ^1.13.2
+  peerDependencies:
+    "@cometchat/chat-sdk-react-native": "*"
+    "@react-native-community/datetimepicker": "*"
+    react: "*"
+    react-native: "*"
+  checksum: 37dd496d9706bb8272c7f1b796eb2deb49b313b01297d14daeb84baa24c54d774e76b4394e58670cb596e859fc2f9c32b6de07f7cb5a1169ca19aff07e246828
+  languageName: node
+  linkType: hard
+
 "@egjs/hammerjs@npm:^2.0.17":
   version: 2.0.17
   resolution: "@egjs/hammerjs@npm:2.0.17"
@@ -2424,6 +2445,39 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 6ad6a00fc4f2f2cfc6bff76fb1d88b8ee20bc0601e18ebb01b6d4be583733a860239a521a7fbca73b612e66705078809483549d2b18f370eb346c5155c8e4a0f
+  languageName: node
+  linkType: hard
+
+"@react-native-async-storage/async-storage@npm:1.17.10":
+  version: 1.17.10
+  resolution: "@react-native-async-storage/async-storage@npm:1.17.10"
+  dependencies:
+    merge-options: ^3.0.4
+  peerDependencies:
+    react-native: ^0.0.0-0 || 0.60 - 0.70 || 1000.0.0
+  checksum: 66a49bc82c498e70f2154ab6e25318e370fa1de8bd94fa3225246dfc269a377f9e1af3737dd845e19160c35a6d644383054aaef7e9734c0a84af7b8fe40694cd
+  languageName: node
+  linkType: hard
+
+"@react-native-clipboard/clipboard@npm:1.13.2":
+  version: 1.13.2
+  resolution: "@react-native-clipboard/clipboard@npm:1.13.2"
+  peerDependencies:
+    react: ">=16.0"
+    react-native: ">=0.57.0"
+  checksum: e26a2b92ff4cd8f5cc1bd5ae784fa7b2d9437d7801abf9a09bf34ddb450bb5e898256e1793f22543ef0576710dab99fa6ccf693364a04f1334acc6eccd64b497
+  languageName: node
+  linkType: hard
+
+"@react-native-clipboard/clipboard@npm:^1.13.2":
+  version: 1.14.1
+  resolution: "@react-native-clipboard/clipboard@npm:1.14.1"
+  peerDependencies:
+    react: 16.9.0 || 16.11.0 || 16.13.1 || 17.0.1 || 17.0.2 || 18.0.0 || 18.1.0 || 18.2.0
+    react-native: ^0.61.5 || ^0.62.3 || ^0.63.2 || ^0.64.2 || ^0.65.0 || ^0.66.0 || ^0.67.0 || ^0.68.0 || ^0.69.0 || ^0.70.0 || ^0.71.0 || ^0.72.0 || ^0.73.0
+    react-native-macos: ^0.61.0 || ^0.62.0 || ^0.63.0 || ^0.64.0 || ^0.65.0 || ^0.66.0 || ^0.67.0 || ^0.68.0 || ^0.69.0 || ^0.70.0 || ^0.71.0 || ^0.72.0 || ^0.73.0
+    react-native-windows: ^0.61.0 || ^0.62.0 || ^0.63.0 || ^0.64.0 || ^0.65.0 || ^0.66.0 || ^0.67.0 || ^0.68.0 || ^0.69.0 || ^0.70.0 || ^0.71.0 || ^0.72.0 || ^0.73.0
+  checksum: 005ce2bee4d6e30b2a6b11be0d0ee169ab108d24f2a9b518b0ba8e5b96616c6dfb089c28644c1b5e3c1b9aa786c92cbf781e525223f56ab8589da1df79cae31f
   languageName: node
   linkType: hard
 
@@ -6980,6 +7034,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-plain-obj@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "is-plain-obj@npm:2.1.0"
+  checksum: cec9100678b0a9fe0248a81743041ed990c2d4c99f893d935545cfbc42876cbe86d207f3b895700c690ad2fa520e568c44afc1605044b535a7820c1d40e38daa
+  languageName: node
+  linkType: hard
+
 "is-plain-object@npm:^2.0.4":
   version: 2.0.4
   resolution: "is-plain-object@npm:2.0.4"
@@ -8156,7 +8217,11 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@cometchat/chat-sdk-react-native": ^4.0.11
+    "@cometchat/chat-uikit-react-native": ^4.3.17
     "@gorhom/bottom-sheet": ^4.6.4
+    "@react-native-async-storage/async-storage": 1.17.10
+    "@react-native-clipboard/clipboard": 1.13.2
     "@react-native-community/datetimepicker": ^8.2.0
     "@react-native-masked-view/masked-view": ^0.3.1
     "@react-native/babel-preset": 0.74.83
@@ -8230,6 +8295,15 @@ __metadata:
   version: 5.2.1
   resolution: "memoize-one@npm:5.2.1"
   checksum: a3cba7b824ebcf24cdfcd234aa7f86f3ad6394b8d9be4c96ff756dafb8b51c7f71320785fbc2304f1af48a0467cbbd2a409efc9333025700ed523f254cb52e3d
+  languageName: node
+  linkType: hard
+
+"merge-options@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "merge-options@npm:3.0.4"
+  dependencies:
+    is-plain-obj: ^2.1.0
+  checksum: d86ddb3dd6e85d558dbf25dc944f3527b6bacb944db3fdda6e84a3f59c4e4b85231095f58b835758b9a57708342dee0f8de0dffa352974a48221487fe9f4584f
   languageName: node
   linkType: hard
 
