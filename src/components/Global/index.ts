@@ -1,2 +1,2 @@
-export { default as Loader, LoaderProvider, useLoader } from "./Loader/Loader";
-export { GlobalBottomSheetProvider, useGlobalBottomSheet  } from "./BottomSheet/BottomSheet";
+export { default as Loader, LoaderProvider } from "./Loader/Loader";
+export { GlobalBottomSheetProvider  } from "./BottomSheet/BottomSheet";

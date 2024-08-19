@@ -28,6 +28,7 @@ const ListView = ({}: ListViewScreenType) => {
       <View
         style={[
           gutters.paddingVertical_12,
+          backgrounds.gray30,
           {
             height: screenHeight,
           },

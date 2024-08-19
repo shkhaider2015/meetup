@@ -11,3 +11,4 @@ export { default as Notifications } from "./Notification/Notification";
 export { default as Profile } from "./Profile/Profile";
 export { default as MapView } from "./Explore/MapView";
 export { default as ListView } from "./Explore/ListView";
+export { default as PostLocation } from "./PostLocation/PostLocation";

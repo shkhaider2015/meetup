@@ -1,5 +1,6 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ImageSourcePropType } from 'react-native';
+import GeoLocation from "react-native-geolocation-service"
 
 export type RootStackParamList = {
 	Startup: undefined;
@@ -13,6 +14,10 @@ export type RootStackParamList = {
 	Explore: undefined;
 	Chat: undefined;
 	Post: undefined;
+	PostTab: undefined;
+	PostLocation: {
+		location?: GeoLocation.GeoPosition
+	};
 	Notifications: undefined;
 	Profile: undefined;
 	Carousel: {

@@ -17,7 +17,6 @@ import {
   Tab_Profile_Selected,
 } from "@/assets/icon";
 import { ExploreHeader, MeetupIcon } from "@/assets/images";
-import { useGlobalBottomSheet, useLoader } from "@/components/Global";
 import { Button } from "@/components/template";
 import { Chat, Explore, Notifications, Post, Profile } from "@/screens";
 import { logout } from "@/services/users/fetchOne";
@@ -30,12 +29,14 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { useMutation } from "@tanstack/react-query";
 import { FC } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 import { useDispatch } from "react-redux";
+import PostNavigator from "../Post";
+import { useGlobalBottomSheet, useLoader } from "@/hooks";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -49,7 +50,7 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
-          paddingBottom: 0,
+          paddingBottom: 0
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -58,17 +59,18 @@ function TabsNavigator() {
         },
         tabBarLabelPosition: "below-icon",
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
-      <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Post" component={Post} />
+      <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
+      <Tab.Screen name="PostTab"  component={PostNavigator} options={postOptions} />
       <Tab.Screen
         name="Notifications"
         component={Notifications}
         options={notificationOptions}
       />
-      <Tab.Screen name="Profile" component={Profile} options={profileOptions} />
+      <Tab.Screen name="Profile"  component={Profile} options={profileOptions} />
     </Tab.Navigator>
   );
 }
@@ -86,7 +88,7 @@ const tabBarIconOption = (
     case "Chat":
       Icon = focused ? Tab_Chat_Selected : Tab_Chat_Default;
       break;
-    case "Post":
+    case "PostTab":
       Icon = Tab_Post_Default;
       break;
     case "Notifications":
@@ -159,47 +161,71 @@ const notificationOptions: BottomTabNavigationOptions = {
 };
 
 const profileOptions: BottomTabNavigationOptions = {
-  headerLeft: () => <ChevronLeft />,
+  headerLeft: () => {
+    const navigation = useNavigation();
+
+    // To be removed
+    return (
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <ChevronLeft />
+      </TouchableOpacity>
+    );
+  },
   headerRight: () => {
     const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
-    const { showLoader, hideLoader } = useLoader()
+    const { showLoader, hideLoader } = useLoader();
     const dispatch: AppDispatch = useDispatch();
     const { mutate } = useMutation({
       mutationFn: () => {
         return logout();
+       
       },
       onSuccess: () => {
-        hideLoader()
-        closeBottomSheet()
+        hideLoader();
+        closeBottomSheet();
         setTimeout(() => {
           dispatch(clearUser());
-        }, 300)
+        }, 300);
       },
       onError: () => {
-        hideLoader()
-      }
+        hideLoader();
+      },
     });
 
     const _logout = () => {
-      showLoader()
+      showLoader();
       mutate();
     };
 
     const handleOpenBottomSheet = () => {
       openBottomSheet(
         <View
-          style={{ flex: 1, justifyContent: "flex-start", paddingHorizontal: 35, paddingTop: 30 }}
+          style={{
+            flex: 1,
+            justifyContent: "flex-start",
+            paddingHorizontal: 35,
+            paddingTop: 30,
+          }}
         >
           <TouchableOpacity
             style={{
               flexDirection: "row",
               columnGap: 30,
-              alignItems: 'center'
+              alignItems: "center",
             }}
             onPress={_logout}
           >
             <Signout width={25} height={25} color={"#000000"} />
-            <Text style={{ fontSize: 18, fontWeight: "600", fontFamily: "Poppins Regular", color: '#000000' }}>Logout</Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "600",
+                fontFamily: "Poppins Regular",
+                color: "#000000",
+              }}
+            >
+              Logout
+            </Text>
           </TouchableOpacity>
         </View>,
         ["15%"]
@@ -249,6 +275,18 @@ const profileOptions: BottomTabNavigationOptions = {
     paddingRight: 20,
   },
   headerTitleAlign: "center",
+};
+
+const chatOptions: BottomTabNavigationOptions = {
+  headerShown: false
+}
+
+const postOptions: BottomTabNavigationOptions = {
+  headerShown: false,
+  tabBarLabel: "Post",
+  tabBarStyle: {
+    display: 'none'
+  }
 };
 
 export default TabsNavigator;

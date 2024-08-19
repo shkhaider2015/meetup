@@ -1,13 +1,23 @@
 import { Edit, Heart, MenuHr, Share, Tick, Trash } from "@/assets/icon";
 import { useTheme } from "@/theme";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "../template";
 import { fontFamily } from "@/theme/_config";
 import { IPost } from "@/types/post";
+import UserModal from "../Modals/User";
+import { useState } from "react";
+import { useGlobalBottomSheet } from "@/hooks";
 
 const Post = (props: IPost) => {
   const { user, distance, Doing_icon, created_at, desc, main_post } = props;
   const { layout, gutters, fonts, backgrounds } = useTheme();
+  const [showDetails, setShowDetails] = useState(false);
+
+  const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
+
+  const _onBottomSheetOpen = () => {
+    openBottomSheet(<UserPostMenu />, ['25%'])
+  };
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24]}>
@@ -26,19 +36,13 @@ const Post = (props: IPost) => {
           <View style={[layout.col, gutters.marginHorizontal_12]}>
             <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-              <Text style={[fonts.size_12]}>{distance}</Text>
+              <Text style={[fonts.size_12, fonts.gray200]}>{distance}</Text>
               <Tick />
             </View>
           </View>
           {Doing_icon}
         </View>
-        <MenuHr />
-        {/* <InlineMenu
-          data={[
-            { label: "Edit", Icon: <Edit width={20} height={20} /> },
-            { label: "Delete", Icon: <Trash width={20} height={20}  /> },
-          ]}
-        /> */}
+        <MenuHr onPress={_onBottomSheetOpen} />
       </View>
       <View>
         {/* Content */}
@@ -98,10 +102,46 @@ const Post = (props: IPost) => {
             Username_01:{" "}
           </Text>
           <Text style={[fonts.gray300]}>
-            {desc.slice(0, 60)} <Text style={[fonts.primary]}>See more ..</Text>{" "}
+            {desc.slice(0, 60)}{" "}
+            <Text style={[fonts.primary]} onPress={() => setShowDetails(true)}>
+              See more ..
+            </Text>{" "}
           </Text>
         </Text>
       </View>
+      <UserModal
+        open={showDetails}
+        onClose={() => setShowDetails(false)}
+        data={props}
+      />
+    </View>
+  );
+};
+
+const UserPostMenu = () => {
+  const { gutters, layout, fonts } = useTheme();
+  
+  return (
+    <View style={[
+      gutters.paddingHorizontal_12,
+      gutters.paddingVertical_24
+    ]}>
+      {
+        ["One", "Two", "Three", "Four"].map((item, ind) => <TouchableOpacity key={ind}
+        style={[
+          layout.row,
+          layout.justifyStart,
+          layout.itemsCenter,
+          gutters.gap_8,
+        ]}
+      >
+        <Edit width={30} height={30} />
+        <Text style={[fontFamily._400_Regular, fonts.size_16, fonts.gray800]}>
+          Option {item}
+        </Text>
+      </TouchableOpacity>)
+      }
+      
     </View>
   );
 };
