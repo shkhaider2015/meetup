@@ -30,10 +30,11 @@ import {
   PostInputProps,
 } from "@/types/screens/post";
 import {
+  getRegionForCoordinates,
   requestLocationPermission,
   requestLocationPermissionIOS,
 } from "@/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -59,6 +60,7 @@ import Toast from "react-native-toast-message";
 import Geolocation from "react-native-geolocation-service";
 import { string } from "zod";
 import dayjs, { Dayjs } from "dayjs";
+import RNMapView, { Marker } from "react-native-maps";
 
 const Post = ({ navigation }: PostScreenType) => {
   const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
@@ -79,6 +81,7 @@ const Post = ({ navigation }: PostScreenType) => {
     },
     imageUri:
       "file:///data/user/0/com.meetup/cache/rn_image_picker_lib_temp_ac2a108c-c4b8-43fd-adc9-437ee579baf3.jpg",
+    // imageUri: undefined,
     activity: {
       label: "Reading",
       Icon: Cat_Reading,
@@ -86,6 +89,8 @@ const Post = ({ navigation }: PostScreenType) => {
   });
 
   const isKeyboardVisible = useKeyboardVisible();
+
+  useLayoutEffect(() => {}, []);
 
   const _onPressInput = () => {
     if (!isKeyboardVisible) Keyboard.dismiss();
@@ -217,6 +222,33 @@ const Post = ({ navigation }: PostScreenType) => {
     }
   };
 
+  const _onCancelData = (type: "DATA" | "IMAGE" | "LOCATION") => {
+    switch (type) {
+      case "DATA":
+        setPost((post) => ({
+          ...post,
+          date: undefined,
+          time: undefined,
+          activity: undefined,
+        }));
+        break;
+      case "IMAGE":
+        setPost((post) => ({
+          ...post,
+          imageUri: undefined,
+        }));
+        break;
+      case "LOCATION":
+        setPost((post) => ({
+          ...post,
+          location: undefined,
+        }));
+        break;
+      default:
+        break;
+    }
+  };
+
   console.log("Post ^^ : ", post);
 
   return (
@@ -234,55 +266,127 @@ const Post = ({ navigation }: PostScreenType) => {
         <PostHeader onCancel={_onCancelPost} />
         <PostInput onPress={_onPressInput} />
         <View style={[{ flex: 2 }]}>
-          <ImageBackground
-            source={{ uri: post.imageUri }}
-            style={{
-              width: "100%",
-              height: 250,
-              position: "relative",
-            }}
-            imageStyle={[borders.rounded_16]}
-          >
+          {post.location && !post.imageUri && (
             <View
               style={[
-                layout.absolute,
-                layout.top0,
-                layout.right0,
-                layout.justifyCenter,
-                layout.itemsCenter,
-                backgrounds.gray150,
+                borders.w_1,
+                borders.gray100,
+                gutters.paddingHorizontal_4,
+                gutters.paddingVertical_4,
+                backgrounds.gray30,
+                layout.relative,
                 {
-                  width: 30,
-                  height: 30,
-                  borderRadius: 40,
-                  marginTop: -8,
-                  marginRight: -5,
+                  width: "100%",
+                  height: 250,
+                  borderRadius: 20,
                 },
               ]}
             >
-              <Close color={colors.gray800} width={20} height={20} />
+              <TouchableOpacity
+                style={[
+                  layout.absolute,
+                  layout.top0,
+                  layout.right0,
+                  layout.justifyCenter,
+                  layout.itemsCenter,
+                  backgrounds.gray150,
+                  {
+                    width: 30,
+                    height: 30,
+                    borderRadius: 40,
+                    marginTop: -27,
+                    marginRight: -5,
+                  },
+                ]}
+                onPress={() => _onCancelData("LOCATION")}
+              >
+                <Close color={colors.gray800} width={20} height={20} />
+              </TouchableOpacity>
+              <RNMapView
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                initialRegion={{
+                  ...getRegionForCoordinates([
+                    {
+                      latitude: post.location.latitude || 0,
+                      longitude: post.location.longitude || 0,
+                    },
+                  ]),
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: post.location.latitude || 0,
+                    longitude: post.location.longitude || 0,
+                  }}
+                />
+              </RNMapView>
             </View>
-          </ImageBackground>
-          <View
-            style={[
-              layout.row,
-              layout.justifyBetween,
-              layout.itemsCenter,
-              gutters.padding_10,
-              backgrounds.gray150,
-              borders.rounded_4,
-              gutters.marginTop_24,
-            ]}
-          >
-            <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
-              {post.activity?.Icon && <post.activity.Icon color={colors.gray800} />}
-              <Text style={[fonts.gray800, fontFamily._400_Regular]}>
-                {"   "}- {post.activity?.label} - {post.date?.format("DD MMM")}{" "}
-                {post.time?.format("hh:mm a")}{" "}
-              </Text>
+          )}
+          {post.imageUri && (
+            <ImageBackground
+              source={{ uri: post.imageUri }}
+              style={{
+                width: "100%",
+                height: 250,
+                position: "relative",
+              }}
+              imageStyle={[borders.rounded_16]}
+            >
+              <TouchableOpacity
+                style={[
+                  layout.absolute,
+                  layout.top0,
+                  layout.right0,
+                  layout.justifyCenter,
+                  layout.itemsCenter,
+                  backgrounds.gray150,
+                  {
+                    width: 30,
+                    height: 30,
+                    borderRadius: 40,
+                    marginTop: -8,
+                    marginRight: -5,
+                  },
+                ]}
+                onPress={() => _onCancelData("IMAGE")}
+              >
+                <Close color={colors.gray800} width={20} height={20} />
+              </TouchableOpacity>
+            </ImageBackground>
+          )}
+
+          {(post.activity || post.date || post.time) && (
+            <View
+              style={[
+                layout.row,
+                layout.justifyBetween,
+                layout.itemsCenter,
+                gutters.padding_10,
+                backgrounds.gray150,
+                borders.rounded_4,
+                gutters.marginTop_24,
+              ]}
+            >
+              <View
+                style={[layout.row, layout.justifyStart, layout.itemsCenter]}
+              >
+                {post.activity?.Icon && (
+                  <post.activity.Icon color={colors.gray800} />
+                )}
+                <Text style={[fonts.gray800, fontFamily._400_Regular]}>
+                  {"   "}- {post.activity?.label} -{" "}
+                  {post.date?.format("DD MMM")} {post.time?.format("hh:mm a")}{" "}
+                </Text>
+              </View>
+              <Close
+                color={colors.gray800}
+                onPress={() => _onCancelData("DATA")}
+              />
             </View>
-            <Close color={colors.gray800} />
-          </View>
+          )}
         </View>
         <PostMenu
           onPressDateIcon={_OnShowCalender}
@@ -329,7 +433,7 @@ const PostHeader = ({ onCancel }: PostHeaderProps) => {
         layout.row,
         layout.justifyBetween,
         layout.itemsCenter,
-        { height: 50 },
+        { height: 70 },
       ]}
     >
       <View
@@ -387,6 +491,7 @@ const PostInput = ({ onPress }: PostInputProps) => {
         multiline={true}
         selectionColor={colors.gray800}
         scrollEnabled={true}
+        autoFocus={true}
       />
     </TouchableOpacity>
     // </KeyboardAvoidingView>
