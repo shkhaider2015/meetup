@@ -75,17 +75,12 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
 
   const _onSelectLocation = () => {
     console.log("Location : ", mapState.region);
+    route.params.onSelectLocation?.(mapState.region.latitude, mapState.region.longitude);
+    _onClose()
   };
 
   const _onClose = () => {
-    // navigation.getParent()?.setOptions({
-    //       tabBarStyle: {
-    //         display: 'flex'
-    //       }
-    //     });
-    // setTimeout(() => {
-    //   navigation.goBack();
-    // }, 3000)
+
     StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
     StatusBar.setBarStyle("dark-content");
     StatusBar.setTranslucent(false);

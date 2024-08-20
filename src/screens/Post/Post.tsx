@@ -1,5 +1,7 @@
 import { DummyUser } from "@/assets/dummyImages";
 import {
+  Activity,
+  Cat_Drinking,
   Cat_Fitness,
   Cat_Mountain_Climb,
   Cat_Others,
@@ -15,22 +17,27 @@ import {
   ImageIcon,
   LocationIcon,
 } from "@/assets/icon";
-import { DatePicker } from "@/components";
+import { ActivityPicker, DatePicker } from "@/components";
 import { Button, SafeScreen } from "@/components/template";
-import { useGlobalBottomSheet } from "@/hooks";
+import { useGlobalBottomSheet, useKeyboardVisible } from "@/hooks";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
 import {
+  PostData,
   PostHeaderProps,
   PostInputMenu,
   PostInputProps,
 } from "@/types/screens/post";
-import { requestLocationPermission, requestLocationPermissionIOS } from "@/utils";
+import {
+  requestLocationPermission,
+  requestLocationPermissionIOS,
+} from "@/utils";
 import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
+  ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
   PermissionsAndroid,
@@ -49,50 +56,39 @@ import {
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import { SvgProps } from "react-native-svg";
 import Toast from "react-native-toast-message";
-import Geolocation from "react-native-geolocation-service"
+import Geolocation from "react-native-geolocation-service";
+import { string } from "zod";
+import dayjs, { Dayjs } from "dayjs";
 
 const Post = ({ navigation }: PostScreenType) => {
-  const { layout, gutters, backgrounds, fonts } = useTheme();
-  const { height } = Dimensions.get("window");
+  const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
+  const { height, width } = Dimensions.get("window");
   const screenHeight = height - heights.bottomTabBarHeight;
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
-  const [location, setLocation] = useState<Geolocation.GeoPosition|boolean>(false);
+  const [showActivity, setShowActivity] = useState(false);
+  const [location, setLocation] = useState<Geolocation.GeoPosition | boolean>(
+    false
+  );
+  const [post, setPost] = useState<PostData>({
+    date: dayjs(),
+    time: dayjs(),
+    location: {
+      latitude: 24.928096242353995,
+      longitude: 67.0176518149674,
+    },
+    imageUri:
+      "file:///data/user/0/com.meetup/cache/rn_image_picker_lib_temp_ac2a108c-c4b8-43fd-adc9-437ee579baf3.jpg",
+    activity: {
+      label: "Reading",
+      Icon: Cat_Reading,
+    },
+  });
 
-  const [keyboardVisible, setKeyBoardVisible] = useState(false);
-
-  useEffect(() => {
-    const showKeyboardListener = Keyboard.addListener(
-      "keyboardDidShow",
-      _showKeyboard
-    );
-    const hideKeyboardListener = Keyboard.addListener(
-      "keyboardDidHide",
-      _hideKeyboard
-    );
-
-    return () => {
-      showKeyboardListener.remove();
-      hideKeyboardListener.remove();
-    };
-  }, []);
-
-  const _showKeyboard = () => {
-    setKeyBoardVisible(true);
-  };
-  const _hideKeyboard = () => {
-    setKeyBoardVisible(false);
-  };
-
-  const _onNext = () => {
-    // openBottomSheet(<ActivityForSheet />, ["50%"]);
-    // setShowTime(true)
-    // setShowDate(true)
-    // navigation.navigate("PostLocation");
-  };
+  const isKeyboardVisible = useKeyboardVisible();
 
   const _onPressInput = () => {
-    if (!keyboardVisible) Keyboard.dismiss();
+    if (!isKeyboardVisible) Keyboard.dismiss();
   };
 
   const _OnShowCalender = () => {
@@ -115,55 +111,113 @@ const Post = ({ navigation }: PostScreenType) => {
 
     const result = await launchImageLibrary(options);
 
-    console.log("Result : ", result);
-    console.log("Assets : ", result.assets);
-
     if (result.errorCode) {
       Toast.show({
         type: "error",
         text1: "Something wromng happen",
       });
     }
+
+    if (result.assets?.[0].uri) {
+      setPost((post) => ({
+        ...post,
+        imageUri: result.assets?.[0].uri,
+      }));
+    }
   };
 
-  const _onGoToLocation = (location:Geolocation.GeoPosition|undefined) => {
+  const _onShowActivity = () => {
+    Keyboard.dismiss();
+    setShowActivity(true);
+  };
 
-    navigation.navigate("PostLocation", {location});
+  const _onGoToLocation = (location: Geolocation.GeoPosition | undefined) => {
+    navigation.navigate("PostLocation", {
+      location,
+      onSelectLocation(lat, long) {
+        setPost((post) => ({
+          ...post,
+          location: {
+            latitude: lat,
+            longitude: long,
+          },
+        }));
+      },
+    });
   };
 
   const _onCancelPost = () => {
     console.log("cancel : ");
-    
+
     navigation.goBack();
   };
 
   const getLocation = () => {
-    const result = Platform.OS === "android" ? requestLocationPermission() : requestLocationPermissionIOS();
-    result.then(res => {
-      console.log('res is:', res);
-      if (res) {
-        Geolocation.getCurrentPosition(
-          position => {
-            console.log(position);
-            _onGoToLocation(position)
-            // setLocation(position);
-          },
-          error => {
-            // See error code charts below.
-            console.log(error.code, error.message);
-            _onGoToLocation(undefined)
-            // setLocation(false);
-          },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        );
-      } else {
-        _onGoToLocation(undefined)
-      }
-    }).catch(err => {
-      _onGoToLocation(undefined)
-    });
+    const result =
+      Platform.OS === "android"
+        ? requestLocationPermission()
+        : requestLocationPermissionIOS();
+    result
+      .then((res) => {
+        console.log("res is:", res);
+        if (res) {
+          Geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position);
+              _onGoToLocation(position);
+              // setLocation(position);
+            },
+            (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+              _onGoToLocation(undefined);
+              // setLocation(false);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          );
+        } else {
+          _onGoToLocation(undefined);
+        }
+      })
+      .catch((err) => {
+        _onGoToLocation(undefined);
+      });
     console.log(location);
   };
+
+  const _onConfirmDate = (type: "TIME" | "DATE", val: Dayjs) => {
+    if (type === "TIME") {
+      setPost((post) => ({
+        ...post,
+        time: val,
+      }));
+      // let time = dayjs()
+      // time.hour()
+      // console.log("Time  in confirm", val, time.format('h-m-s a'));
+    } else {
+      setPost((post) => ({
+        ...post,
+        date: val,
+      }));
+    }
+  };
+
+  const _onConfirmActivity = (
+    label: string | undefined,
+    icon: React.FC<SvgProps> | undefined
+  ) => {
+    if (label && icon) {
+      setPost((post) => ({
+        ...post,
+        activity: {
+          label: label,
+          Icon: icon,
+        },
+      }));
+    }
+  };
+
+  console.log("Post ^^ : ", post);
 
   return (
     <SafeScreen>
@@ -179,12 +233,63 @@ const Post = ({ navigation }: PostScreenType) => {
       >
         <PostHeader onCancel={_onCancelPost} />
         <PostInput onPress={_onPressInput} />
-
+        <View style={[{ flex: 2 }]}>
+          <ImageBackground
+            source={{ uri: post.imageUri }}
+            style={{
+              width: "100%",
+              height: 250,
+              position: "relative",
+            }}
+            imageStyle={[borders.rounded_16]}
+          >
+            <View
+              style={[
+                layout.absolute,
+                layout.top0,
+                layout.right0,
+                layout.justifyCenter,
+                layout.itemsCenter,
+                backgrounds.gray150,
+                {
+                  width: 30,
+                  height: 30,
+                  borderRadius: 40,
+                  marginTop: -8,
+                  marginRight: -5,
+                },
+              ]}
+            >
+              <Close color={colors.gray800} width={20} height={20} />
+            </View>
+          </ImageBackground>
+          <View
+            style={[
+              layout.row,
+              layout.justifyBetween,
+              layout.itemsCenter,
+              gutters.padding_10,
+              backgrounds.gray150,
+              borders.rounded_4,
+              gutters.marginTop_24,
+            ]}
+          >
+            <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
+              {post.activity?.Icon && <post.activity.Icon color={colors.gray800} />}
+              <Text style={[fonts.gray800, fontFamily._400_Regular]}>
+                {"   "}- {post.activity?.label} - {post.date?.format("DD MMM")}{" "}
+                {post.time?.format("hh:mm a")}{" "}
+              </Text>
+            </View>
+            <Close color={colors.gray800} />
+          </View>
+        </View>
         <PostMenu
           onPressDateIcon={_OnShowCalender}
           onPressTimeIcon={_OnShowTime}
           onPressLocationIcon={getLocation}
           onPressImageIcon={_onShowGallery}
+          onPressActivityIcon={_onShowActivity}
         />
         {/* <View style={{ height: 10 }} /> */}
         {/* {!keyboardVisible && (
@@ -197,12 +302,19 @@ const Post = ({ navigation }: PostScreenType) => {
           open={showDate}
           type="DATE"
           onCancel={() => setShowDate(false)}
+          onConfirm={(value) => _onConfirmDate("DATE", value)}
         />
         <DatePicker
           open={showTime}
           type="TIME"
           onCancel={() => setShowTime(false)}
-          onConfirm={(val) => console.log("Val : ", val)}
+          onConfirm={(value) => _onConfirmDate("TIME", value)}
+        />
+
+        <ActivityPicker
+          open={showActivity}
+          onClose={() => setShowActivity(false)}
+          onConfirm={_onConfirmActivity}
         />
       </View>
     </SafeScreen>
@@ -212,7 +324,14 @@ const Post = ({ navigation }: PostScreenType) => {
 const PostHeader = ({ onCancel }: PostHeaderProps) => {
   const { fonts, layout, gutters } = useTheme();
   return (
-    <View style={[layout.row, layout.justifyBetween, layout.itemsCenter, { height: 50 }]}>
+    <View
+      style={[
+        layout.row,
+        layout.justifyBetween,
+        layout.itemsCenter,
+        { height: 50 },
+      ]}
+    >
       <View
         style={[
           layout.row,
@@ -240,6 +359,7 @@ const PostHeader = ({ onCancel }: PostHeaderProps) => {
 
 const PostInput = ({ onPress }: PostInputProps) => {
   const { fonts, layout, gutters, colors } = useTheme();
+  const isKeyboardVisible = useKeyboardVisible();
   const inputRef = useRef<TextInput>(null);
 
   const _onPress = () => {
@@ -255,96 +375,21 @@ const PostInput = ({ onPress }: PostInputProps) => {
     //   style={[layout.flex_1]}
     //   behavior={Platform.OS === "ios" ? "padding" : "height"}
     // >
-      <TouchableOpacity
-        style={[layout.flex_1, { paddingBottom: 60 }]}
-        onPress={_onPress}
-        activeOpacity={1}
-      >
-        <TextInput
-          ref={inputRef}
-          style={[fonts.gray800, fonts.size_14]}
-          placeholder="Enter your thoughts...."
-          multiline={true}
-          selectionColor={colors.gray800}
-          scrollEnabled={true}
-        />
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={[layout.flex_1, { paddingBottom: isKeyboardVisible ? 0 : 60 }]}
+      onPress={_onPress}
+      activeOpacity={1}
+    >
+      <TextInput
+        ref={inputRef}
+        style={[fonts.gray800, fonts.size_14]}
+        placeholder="Enter your thoughts...."
+        multiline={true}
+        selectionColor={colors.gray800}
+        scrollEnabled={true}
+      />
+    </TouchableOpacity>
     // </KeyboardAvoidingView>
-  );
-};
-
-const ActivityForSheet = () => {
-  const { fonts, layout, gutters, backgrounds } = useTheme();
-  const [dummyCat, setDummyCat] = useState(dummyCategories);
-  const _onPress = (id: string) => {
-    setDummyCat((pS) =>
-      pS.map((item) =>
-        item.id === id ? { ...item, isSelected: !item.isSelected } : item
-      )
-    );
-  };
-  return (
-    <View>
-      <Text
-        style={[
-          fonts.alignCenter,
-          fontFamily._500_Medium,
-          fonts.size_16,
-          fonts.gray800,
-          gutters.paddingVertical_12,
-        ]}
-      >
-        Add Activity
-      </Text>
-      <View
-        style={[
-          layout.row,
-          layout.wrap,
-          layout.justifyCenter,
-          gutters.paddingVertical_24,
-          { columnGap: 16, rowGap: 36 },
-        ]}
-      >
-        {dummyCat.map(({ Icon, ...item }) => (
-          <TouchableOpacity
-            key={item.id}
-            style={[
-              layout.col,
-              layout.itemsCenter,
-              gutters.gap_6,
-              { width: "30%" },
-            ]}
-            onPress={() => _onPress(item.id)}
-          >
-            {
-              <Icon
-                color={
-                  item.isSelected
-                    ? backgrounds.primary.backgroundColor
-                    : backgrounds.gray300.backgroundColor
-                }
-              />
-            }
-            <Text style={[fonts.gray300]}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={[gutters.paddingHorizontal_16]}>
-        <Button label="Next" type="PRIMARY" onPress={() => {}} />
-      </View>
-    </View>
-  );
-};
-
-const TimeSheet = () => {
-  const { layout, gutters, fonts } = useTheme();
-
-  return (
-    <View>
-      <View style={[gutters.paddingHorizontal_16]}>
-        <Button label="Next" type="PRIMARY" onPress={() => {}} />
-      </View>
-    </View>
   );
 };
 
@@ -354,10 +399,13 @@ const PostMenu = (props: PostInputMenu) => {
     onPressImageIcon,
     onPressLocationIcon,
     onPressTimeIcon,
+    onPressActivityIcon,
   } = props;
   const { layout, colors, gutters } = useTheme();
 
-  const _onPressIcon = (value: "TIME" | "DATE" | "LOCATION" | "IMAGE") => {
+  const _onPressIcon = (
+    value: "TIME" | "DATE" | "LOCATION" | "IMAGE" | "ACTIVITY"
+  ) => {
     switch (value) {
       case "DATE":
         onPressDateIcon?.();
@@ -370,6 +418,9 @@ const PostMenu = (props: PostInputMenu) => {
         break;
       case "TIME":
         onPressTimeIcon?.();
+        break;
+      case "ACTIVITY":
+        onPressActivityIcon?.();
         break;
       default:
         break;
@@ -393,6 +444,9 @@ const PostMenu = (props: PostInputMenu) => {
       <TouchableOpacity onPress={() => _onPressIcon("LOCATION")}>
         <LocationIcon width={30} height={30} color={colors.gray800} />
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => _onPressIcon("ACTIVITY")}>
+        <Activity width={30} height={30} color={colors.gray800} />
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon("DATE")}>
         <DateIcon width={30} height={30} color={colors.gray800} />
       </TouchableOpacity>
@@ -402,56 +456,6 @@ const PostMenu = (props: PostInputMenu) => {
     </View>
   );
 };
-
-const dummyCategories: {
-  id: string;
-  label: string;
-  Icon: React.FC<SvgProps>;
-  isSelected: boolean;
-}[] = [
-  {
-    id: "171",
-    label: "Shopping",
-    Icon: Cat_Shopping,
-    isSelected: false,
-  },
-  {
-    id: "172",
-    label: "Reading",
-    Icon: Cat_Reading,
-    isSelected: false,
-  },
-  {
-    id: "173",
-    label: "Fitness",
-    Icon: Cat_Fitness,
-    isSelected: false,
-  },
-  {
-    id: "174",
-    label: "Sports",
-    Icon: Cat_Sports,
-    isSelected: false,
-  },
-  {
-    id: "175",
-    label: "Skateboarding",
-    Icon: Cat_Skateboarding,
-    isSelected: false,
-  },
-  {
-    id: "176",
-    label: "Mountain Climb",
-    Icon: Cat_Mountain_Climb,
-    isSelected: false,
-  },
-  {
-    id: "177",
-    label: "Others",
-    Icon: Cat_Others,
-    isSelected: false,
-  },
-];
 
 type PostScreenType = NativeStackScreenProps<RootStackParamList, "Post">;
 
