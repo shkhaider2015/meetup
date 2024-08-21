@@ -157,11 +157,13 @@ const Post = ({ navigation }: PostScreenType) => {
     navigation.goBack();
   };
 
-  const getLocation = () => {
-    const result =
-      Platform.OS === "android"
-        ? requestLocationPermission()
-        : requestLocationPermissionIOS();
+  const getLocation = async () => {
+    if (Platform.OS === "ios") {
+     const iosResult = await Geolocation.requestAuthorization("whenInUse");
+     console.log("IosResult : ", iosResult)
+     return
+    }
+    const result = requestLocationPermission()
     result
       .then((res) => {
         console.log("res is:", res);
