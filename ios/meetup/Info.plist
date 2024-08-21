@@ -34,7 +34,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to access your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-<string>We need your location to provide better service even when the app is in the background.</string>
+	<string>We need your location to provide better service even when the app is in the background.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<string>We need your location to provide better service even when the app is in the background.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
