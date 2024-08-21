@@ -32,7 +32,7 @@ const LoginScreen = (props: LoginScreenType) => {
 
   const { fonts, gutters, layout, backgrounds } = useTheme();
   const { height } = Dimensions.get("screen");
-  const { isError, isPending, isSuccess, mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: (data: IUserLoginForm) => {
       return login(data);
     },
