@@ -50,7 +50,7 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
-          paddingBottom: 0
+          paddingBottom: 0,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -60,17 +60,27 @@ function TabsNavigator() {
         tabBarLabelPosition: "below-icon",
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
         tabBarHideOnKeyboard: true,
+        headerStyle: {
+          backgroundColor: "white",
+          height: heights.tabNavigationHeader,
+          // borderWidth: 1,
+          // borderColor: 'red'
+        },
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
       <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
-      <Tab.Screen name="PostTab"  component={PostNavigator} options={postOptions} />
+      <Tab.Screen
+        name="PostTab"
+        component={PostNavigator}
+        options={postOptions}
+      />
       <Tab.Screen
         name="Notifications"
         component={Notifications}
         options={notificationOptions}
       />
-      <Tab.Screen name="Profile"  component={Profile} options={profileOptions} />
+      <Tab.Screen name="Profile" component={Profile} options={profileOptions} />
     </Tab.Navigator>
   );
 }
@@ -104,16 +114,17 @@ const tabBarIconOption = (
   return <Icon />;
 };
 
-const exploreOptions = ():BottomTabNavigationOptions =>  {
-  const profile_image = useSelector((state:RootState) => state.user.profile_image)
+const exploreOptions = (): BottomTabNavigationOptions => {
+  const profile_image = useSelector(
+    (state: RootState) => state.user.profile_image
+  );
 
-  
   return {
     headerTitle: "",
-    headerStyle: {
-      backgroundColor: "white",
-      height: heights.tabNavigationHeader,
-    },
+    // headerStyle: {
+    //   backgroundColor: "white",
+    //   height: heights.tabNavigationHeader,
+    // },
     headerLeftContainerStyle: {
       paddingLeft: 10,
     },
@@ -126,18 +137,21 @@ const exploreOptions = ():BottomTabNavigationOptions =>  {
       <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
     ),
     headerRight: () => (
-      <Image source={{ uri: profile_image }} style={{ width: 40, height: 40 }} />
+      <Image
+        source={{ uri: profile_image }}
+        style={{ width: 40, height: 40 }}
+      />
     ),
-  }
+  };
 };
 
 const notificationOptions: BottomTabNavigationOptions = {
   headerTitle: "Notifications",
   headerTitleAlign: "center",
-  headerStyle: {
-    backgroundColor: "white",
-    height: heights.tabNavigationHeader,
-  },
+  // headerStyle: {
+    // backgroundColor: "white",
+    // height: heights.tabNavigationHeader,
+  // },
   headerLeftContainerStyle: {
     paddingLeft: 20,
   },
@@ -165,12 +179,12 @@ const notificationOptions: BottomTabNavigationOptions = {
   },
 };
 
-const profileOptions = ():BottomTabNavigationOptions =>  {
-  const userName = useSelector((state:RootState) => state.user.name)
+const profileOptions = (): BottomTabNavigationOptions => {
+  const userName = useSelector((state: RootState) => state.user.name);
   return {
     headerLeft: () => {
       const navigation = useNavigation();
-  
+
       // To be removed
       return (
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -185,7 +199,6 @@ const profileOptions = ():BottomTabNavigationOptions =>  {
       const { mutate } = useMutation({
         mutationFn: () => {
           return logout();
-         
         },
         onSuccess: () => {
           hideLoader();
@@ -198,12 +211,12 @@ const profileOptions = ():BottomTabNavigationOptions =>  {
           hideLoader();
         },
       });
-  
+
       const _logout = () => {
         showLoader();
         mutate();
       };
-  
+
       const handleOpenBottomSheet = () => {
         openBottomSheet(
           <View
@@ -238,7 +251,7 @@ const profileOptions = ():BottomTabNavigationOptions =>  {
           ["15%"]
         );
       };
-  
+
       return (
         <Button
           Icon={<MenuHr width={17} height={17} />}
@@ -271,10 +284,10 @@ const profileOptions = ():BottomTabNavigationOptions =>  {
         <Star />
       </View>
     ),
-    headerStyle: {
-      backgroundColor: "white",
-      height: heights.tabNavigationHeader,
-    },
+    // headerStyle: {
+      // backgroundColor: "white",
+      // height: heights.tabNavigationHeader,
+    // },
     headerLeftContainerStyle: {
       paddingLeft: 20,
     },
@@ -282,19 +295,19 @@ const profileOptions = ():BottomTabNavigationOptions =>  {
       paddingRight: 20,
     },
     headerTitleAlign: "center",
-  }
+  };
 };
 
 const chatOptions: BottomTabNavigationOptions = {
-  headerShown: false
-}
+  headerShown: false,
+};
 
 const postOptions: BottomTabNavigationOptions = {
   headerShown: false,
   tabBarLabel: "Post",
   tabBarStyle: {
-    display: 'none'
-  }
+    display: "none",
+  },
 };
 
 export default TabsNavigator;
