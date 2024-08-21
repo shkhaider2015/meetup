@@ -17,11 +17,14 @@ import { Formik, useFormik } from "formik";
 import { userLoginSchema } from "@/types/schemas/user";
 import { useEffect, useRef, useState } from "react";
 import { Mutation, useMutation } from "@tanstack/react-query";
-import { IUserLoginForm, IUserReducer } from "@/types/templates/user";
+import { IUserLoginForm } from "@/types/forms"
 import { login } from "@/services/users";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { setUser } from "@/store/slices/userSlice";
+import Toast from "react-native-toast-message";
+import { IUserReducer } from "@/types/reducer";
+import { convertImageURLforngRok } from "@/utils";
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
@@ -33,25 +36,40 @@ const LoginScreen = (props: LoginScreenType) => {
     mutationFn: (data: IUserLoginForm) => {
       return login(data);
     },
-    onSuccess(data, variables, context) {
-      console.log("Success : ", data, variables, context);
-      dispatch(
-        setUser({
-          ...variables,
-          full_name: "Shakeel",
-          isLoggedIn: true,
-          id: "shk1735",
-        })
-      );
+    onSuccess:(data) => {
+      console.log("Success : ", data);
+      Toast.show({
+        type: "success",
+        text1: "Successfully logged in"
+      })
+
+      const user:IUserReducer = {
+        ...data,
+        profile_image: convertImageURLforngRok(data.profile_image),
+        isLoggedIn: true,
+        id: 'someid'
+      }
+      setTimeout(() => {
+        dispatch(
+          setUser(user)
+        );
+      }, 500)
     },
+    onError: (error:any) => {
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error?.message || "An unknown error accurred"
+      })
+    }
   });
 
   const passwordRef = useRef<TextInput>(null);
 
   const formik = useFormik<IUserLoginForm>({
     initialValues: {
-      email: "",
-      password: "",
+      email: __DEV__ ? "shakeel7@yopmail.com" : "",
+      password: __DEV__ ? "Admin@1735" : "",
     },
     validationSchema: userLoginSchema,
     onSubmit: (values) => {

@@ -16,7 +16,7 @@ import {
 } from "@/assets/icon";
 import { Button, SafeScreen } from "@/components/template";
 import { logout } from "@/services/users/fetchOne";
-import { AppDispatch } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
@@ -36,7 +36,7 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from "react-native-screens/lib/typescript/native-stack/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = ({ navigation }: ProfileScreenType) => {
   const dispatch: AppDispatch = useDispatch();
@@ -77,6 +77,7 @@ const Profile = ({ navigation }: ProfileScreenType) => {
 };
 
 const ProfileHead = () => {
+  const profile_image = useSelector((state:RootState) => state.user.profile_image)
   const { layout, gutters, backgrounds, fonts, borders } = useTheme();
   return (
     <View
@@ -108,7 +109,7 @@ const ProfileHead = () => {
         ]}
       >
         <Image
-          source={DummyLaraProfilePic}
+          source={{uri: profile_image}}
           style={{ width: 155, height: 155, borderRadius: 100 }}
         />
       </View>
@@ -196,6 +197,7 @@ const ProfileHead = () => {
 };
 
 const ProfileDescriptions = () => {
+  const userName = useSelector((state:RootState) => state.user.name)
   const { layout, gutters, backgrounds, fonts } = useTheme();
 
   const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
@@ -229,7 +231,7 @@ const ProfileDescriptions = () => {
         ]}
       >
         <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>
-          Lara Beu
+          {userName}
         </Text>
         <View style={[backgrounds.gray180, { width: 1, height: 14 }]} />
         <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>

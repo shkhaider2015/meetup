@@ -1,10 +1,13 @@
 import { AppleLogo, GoogleLogo } from "@/assets/icon";
 import { Button, InputField } from "@/components/template";
 import Checkbox from "@/components/template/Checkbox/Checkbox";
+import { signup } from "@/services/users/auth";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
+import { ISignupForm } from "@/types/forms";
 import { RootStackParamList } from "@/types/navigation";
 import { userSignupSchema } from "@/types/schemas/user";
+import { useMutation } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -28,23 +31,49 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
   const passwordRef = useRef<TextInput>(null);
   const confirmPasswordRef = useRef<TextInput>(null);
 
-  const formik = useFormik<SignupFormValues>({
+  const {isPending, mutate } = useMutation({
+    mutationFn: (data: ISignupForm) => {
+      return signup(data);
+    },
+    onSuccess(data:any) {
+      console.log("Success : ", data);
+      Toast.show({
+        type: "success",
+        text1: "Account created successfully",
+        text2: data?.message
+      })
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000)
+    },
+    onError: (error) => {
+      console.log("Error on query", error);
+      Toast.show({
+        type: "error",
+        text1: "Account creation failed",
+        text2: error.message || "An unknown error accured"
+      })
+    }
+  });
+
+  const formik = useFormik<ISignupForm>({
     initialValues: {
-      full_name: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-      terms_and_condition: false,
+      full_name: __DEV__ ? "Shakeel 7" : "",
+      email: __DEV__ ? "shakeel7@yopmail.com" : "",
+      password: __DEV__ ? "Admin@1735" : "",
+      confirm_password: __DEV__ ? "Admin@1735" : "",
+      terms_and_condition: __DEV__ ? true : false,
     },
     validationSchema: userSignupSchema,
     onSubmit: (values) => {
       console.log(values);
-      Toast.show({
-        type: "success",
-        text1: "Your account has been created successfully",
-        text2: "Activation link has been sent to your email",
-      });
-      navigation.goBack();
+      mutate(values)
+      // Toast.show({
+      //   type: "success",
+      //   text1: "Your account has been created successfully",
+      //   text2: "Activation link has been sent to your email",
+      // });
+      // navigation.goBack();
     },
   });
 
@@ -235,9 +264,9 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             ) : null}
             <Button
               label="Sign Up"
-              // onPress={formik.handleSubmit}
-              onPress={() => navigation.navigate("Ineterests")}
+              onPress={formik.handleSubmit}
               containerStyle={[gutters.marginVertical_16]}
+              disabled={isPending}
             />
 
             <View
@@ -277,12 +306,32 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                 label="Google"
                 Icon={<GoogleLogo width={20} />}
                 containerStyle={[layout.flex_1]}
+                disabled={isPending}
+                onPress={async () => {
+                  fetch('https://871f-103-196-160-178.ngrok-free.app/', {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  })
+                    .then(response => {
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      return  response.json();
+                    })
+                    .then(data => console.log(data.json()))
+                    .catch(error => {
+                      console.error('Fetch error:', error);
+                    });
+                }}
               />
               <Button
                 type="SECONDARY"
                 label="Apple"
                 Icon={<AppleLogo width={20} />}
                 containerStyle={[layout.flex_1]}
+                disabled={isPending}
               />
             </View>
           </View>
@@ -325,12 +374,5 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
 };
 
 type SignupScreenType = NativeStackScreenProps<RootStackParamList, "Signup">;
-interface SignupFormValues {
-  full_name: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-  terms_and_condition: boolean;
-}
 
 export default SignupScreen;
