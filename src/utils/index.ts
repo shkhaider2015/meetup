@@ -1,5 +1,5 @@
-import { PermissionsAndroid } from "react-native";
-import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import { PermissionsAndroid, Platform } from "react-native";
+import { request, PERMISSIONS, RESULTS, check } from "react-native-permissions";
 
 export const requestLocationPermission = async () => {
   try {
@@ -27,19 +27,35 @@ export const requestLocationPermission = async () => {
 };
 
 export const requestLocationPermissionIOS = async () => {
-  try {
-    const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+  const status = await check(
+    Platform.OS === 'ios'
+      ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+      : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+  );
+
+  if (status === RESULTS.DENIED) {
+    const result = await request(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+    );
 
     if (result === RESULTS.GRANTED) {
-      console.log("You can use Geolocation");
-      return true;
-    } else {
-      console.log("You cannot use Geolocation");
-      return false;
+      console.log('Location permission granted');
+      return true
+    } else if (result === RESULTS.DENIED) {
+      console.log('Location permission denied');
+      return false
+    } else if (result === RESULTS.BLOCKED) {
+      console.log('Location permission blocked');
+      return false
     }
-  } catch (err) {
-    console.error("Failed to request location permission", err);
-    return false;
+  } else if (status === RESULTS.GRANTED) {
+    console.log('Location permission already granted');
+    return true
+  } else if (status === RESULTS.BLOCKED) {
+    console.log('Location permission blocked');
+    return false
   }
 };
 
