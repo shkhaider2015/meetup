@@ -8,9 +8,6 @@ function SafeScreen({ children }: PropsWithChildren) {
 	const { layout, variant, navigationTheme } = useTheme();
 	const insets = useSafeAreaInsets();
 
-	console.log("Theme : ", variant);
-	
-
 	return (
 		<View
 			style={[
