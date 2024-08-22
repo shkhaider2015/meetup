@@ -10,6 +10,7 @@ import { ChevronLeft } from "@/assets/icon";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Interests from "@/screens/Ineterests/Interests";
+import OTP from "@/screens/OTP/OTP";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -22,7 +23,7 @@ function AuthNavigator() {
   };
 
   return (
-    <Stack.Navigator key={variant}>
+    <Stack.Navigator key={variant} initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -82,6 +83,8 @@ function AuthNavigator() {
           ),
         }}
       />
+
+      <Stack.Screen name="OTP" component={OTP} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

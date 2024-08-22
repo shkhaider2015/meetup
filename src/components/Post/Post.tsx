@@ -7,16 +7,23 @@ import { IPost } from "@/types/post";
 import UserModal from "../Modals/User";
 import { useState } from "react";
 import { useGlobalBottomSheet } from "@/hooks";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationHookProps, RootStackParamList } from "@/types/navigation";
 
 const Post = (props: IPost) => {
-  const { user, distance, Doing_icon, created_at, desc, main_post } = props;
-  const { layout, gutters, fonts, backgrounds } = useTheme();
+  const { user, distance, Doing_icon, created_at, desc, main_post, id } = props;
   const [showDetails, setShowDetails] = useState(false);
 
+  const { layout, gutters, fonts, backgrounds } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
+  const { navigate } = useNavigation<NavigationHookProps>();
 
   const _onBottomSheetOpen = () => {
-    openBottomSheet(<UserPostMenu />, ['25%'])
+    openBottomSheet(<UserPostMenu />, ["25%"]);
+  };
+
+  const _goToProfile = () => {
+    navigate("Profile", { isCurrentUser: false, id: id });
   };
 
   return (
@@ -32,9 +39,13 @@ const Post = (props: IPost) => {
       >
         {/* Header */}
         <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
-          <Image source={user.imageSource} style={styles.profile_image} />
+          <TouchableOpacity onPress={_goToProfile}>
+            <Image source={user.imageSource} style={styles.profile_image} />
+          </TouchableOpacity>
           <View style={[layout.col, gutters.marginHorizontal_12]}>
-            <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+            <TouchableOpacity onPress={_goToProfile}>
+              <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+            </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
               <Text style={[fonts.size_12, fonts.gray200]}>{distance}</Text>
               <Tick />
@@ -42,7 +53,12 @@ const Post = (props: IPost) => {
           </View>
           {Doing_icon}
         </View>
-        <MenuHr onPress={_onBottomSheetOpen} />
+        <TouchableOpacity
+          onPress={_onBottomSheetOpen}
+          style={[gutters.padding_8]}
+        >
+          <MenuHr />
+        </TouchableOpacity>
       </View>
       <View>
         {/* Content */}
@@ -120,28 +136,25 @@ const Post = (props: IPost) => {
 
 const UserPostMenu = () => {
   const { gutters, layout, fonts } = useTheme();
-  
+
   return (
-    <View style={[
-      gutters.paddingHorizontal_12,
-      gutters.paddingVertical_24
-    ]}>
-      {
-        ["One", "Two", "Three", "Four"].map((item, ind) => <TouchableOpacity key={ind}
-        style={[
-          layout.row,
-          layout.justifyStart,
-          layout.itemsCenter,
-          gutters.gap_8,
-        ]}
-      >
-        <Edit width={30} height={30} />
-        <Text style={[fontFamily._400_Regular, fonts.size_16, fonts.gray800]}>
-          Option {item}
-        </Text>
-      </TouchableOpacity>)
-      }
-      
+    <View style={[gutters.paddingHorizontal_12, gutters.paddingVertical_24]}>
+      {["One", "Two", "Three", "Four"].map((item, ind) => (
+        <TouchableOpacity
+          key={ind}
+          style={[
+            layout.row,
+            layout.justifyStart,
+            layout.itemsCenter,
+            gutters.gap_8,
+          ]}
+        >
+          <Edit width={30} height={30} />
+          <Text style={[fontFamily._400_Regular, fonts.size_16, fonts.gray800]}>
+            Option {item}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };

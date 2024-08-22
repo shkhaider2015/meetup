@@ -1,6 +1,7 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 import type { ThemeConfiguration } from '@/types/theme/config';
+import { Platform } from 'react-native';
 const colorsLight = {
 	black: '#000000',
 	error: '#FF0000',
@@ -108,10 +109,10 @@ export const fontFamily = {
 } as const
 
 export const heights = {
-	tabNavigationHeader: 70,
-	bottomTabBarHeight: 80,
-	exploreTabsHeader: 60
-}
+	tabNavigationHeader: Platform.OS === "android" ? 70 : 110,
+	bottomTabBarHeight: Platform.OS === "android" ? 80 : 110,
+	exploreTabsHeader: 60,
+};
 
 
 export const config = {

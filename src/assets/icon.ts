@@ -50,3 +50,4 @@ export { default as DateIcon } from "@/assets/icons/Date_range.svg";
 export { default as ImageIcon } from "@/assets/icons/Img_box_fill.svg";
 export { default as LocationIcon } from "@/assets/icons/Pin_alt_fill.svg";
 export { default as Clock  } from "@/assets/icons/Time.svg";
+export { default as Activity } from "@/assets/icons/Chart_alt.svg";

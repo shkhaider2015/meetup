@@ -8269,6 +8269,7 @@ __metadata:
     react-native-limit-timepicker: ^1.2.0
     react-native-maps: ^1.17.3
     react-native-mmkv: ^2.12.2
+    react-native-otp-entry: ^1.7.1
     react-native-pager-view: ^6.3.3
     react-native-permissions: ^4.1.5
     react-native-reanimated: ^3.9.0-rc.1
@@ -9693,6 +9694,13 @@ __metadata:
     react: "*"
     react-native: ">=0.71.0"
   checksum: 8c79504a89fefd7f9c290a4a6bb24f1f9ef9e2a69d20d0f7d882b89f3943556e9c919c9d46583e44ab698f25213489277fccb6d4c856cce310267c5f907388f1
+  languageName: node
+  linkType: hard
+
+"react-native-otp-entry@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "react-native-otp-entry@npm:1.7.1"
+  checksum: 3a585c9607cbbd42487b5cf00322985a904606ee3885c8b67616993b9faec22b4b571d7a69f4e77a727c9548c1af4baa409d4824b8b92ec338bd12368ba3957d
   languageName: node
   linkType: hard
 

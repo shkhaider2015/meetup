@@ -1,10 +1,10 @@
-import { z } from "zod";
 import * as yup from "yup";
 
 export const userSchema = yup.object().shape({
-  full_name: yup.string().required(),
+  name: yup.string().required(),
   email : yup.string().email().required(),
-  isLoggedIn: yup.boolean().required()
+  token: yup.string().required(),
+  profile_image: yup.string().required()
 })
 
 export const userLoginSchema = yup.object().shape({
@@ -30,7 +30,7 @@ export const userSignupSchema = yup.object().shape({
     .required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .required("Password is required"),
   confirm_password: yup
     .string()

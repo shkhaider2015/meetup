@@ -75,20 +75,17 @@ const DatePicker = (props: DatePickerProps) => {
   const _onConfirm = () => {
     if(!open) return
     if(type === "TIME") {
-      let today = dayjs();
+      let today = dayjs().minute(time.minutes).second(0)
       if(time.period == "PM") {
-        console.log("its pm ");
-        today.hour(time.hours + 12)
+        today = today.hour(time.hours + 12);
+      } else {
+        today = today.hour(time.hours);
       }
-      today.minute(time.minutes)
-      today.second(0)
-      console.log("Before confirm : ", today.format('h-m-s'));
-      
-      onConfirm?.(today.toDate())
+      onConfirm?.(today)
     } else {
-      onConfirm?.(date.toDate());
-      _onCancel();
+      onConfirm?.(date);
     }
+    _onCancel();
   };
 
   const _onCancel = () => {
@@ -101,7 +98,7 @@ const DatePicker = (props: DatePickerProps) => {
     bottomSheetModalRef.current?.dismiss();
   };
 
-  console.log("Time : ", time);
+  
   
   return (
     <BottomSheetModalProvider>
