@@ -26,7 +26,7 @@ export const requestLocationPermission = async () => {
   }
 };
 
-export const requestLocationPermissionIOS = async () => {
+export const requestLocationPermissionCross = async () => {
   const status = await check(
     Platform.OS === 'ios'
       ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE

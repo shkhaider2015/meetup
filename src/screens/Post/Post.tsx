@@ -32,7 +32,7 @@ import {
 import {
   getRegionForCoordinates,
   requestLocationPermission,
-  requestLocationPermissionIOS,
+  requestLocationPermissionCross,
 } from "@/utils";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
@@ -163,7 +163,7 @@ const Post = ({ navigation }: PostScreenType) => {
     //  console.log("IosResult : ", iosResult)
     //  return
     // }
-    const result = requestLocationPermission()
+    const result = requestLocationPermissionCross()
     result
       .then((res) => {
         console.log("res is:", res);
