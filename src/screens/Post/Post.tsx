@@ -158,12 +158,28 @@ const Post = ({ navigation }: PostScreenType) => {
   };
 
   const getLocation = async () => {
-    // if (Platform.OS === "ios") {
-    //  const iosResult = await Geolocation.requestAuthorization("whenInUse");
-    //  console.log("IosResult : ", iosResult)
-    //  return
-    // }
-    const result = requestLocationPermissionCross()
+    if (Platform.OS === "ios") {
+      const iosResult = await Geolocation.requestAuthorization("whenInUse");
+      if (iosResult === "granted") {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+            _onGoToLocation(position);
+            // setLocation(position);
+          },
+          (error) => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+            _onGoToLocation(undefined);
+            // setLocation(false);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+      }
+      console.log("IosResult : ", iosResult);
+      return;
+    }
+    const result = requestLocationPermissionCross();
     result
       .then((res) => {
         console.log("res is:", res);
@@ -255,174 +271,186 @@ const Post = ({ navigation }: PostScreenType) => {
 
   return (
     <SafeScreen>
-      <View
-        style={[
-          gutters.paddingHorizontal_12,
-          gutters.paddingVertical_12,
-          backgrounds.gray00,
-          {
-            height: "100%",
-          },
-        ]}
-      >
-        <PostHeader onCancel={_onCancelPost} />
-        <PostInput onPress={_onPressInput} />
-        <View style={[{ flex: 2 }]}>
-          {post.location && !post.imageUri && (
-            <View
-              style={[
-                borders.w_1,
-                borders.gray100,
-                gutters.paddingHorizontal_4,
-                gutters.paddingVertical_4,
-                backgrounds.gray30,
-                layout.relative,
-                {
-                  width: "100%",
-                  height: 250,
-                  borderRadius: 20,
-                },
-              ]}
-            >
-              <TouchableOpacity
-                style={[
-                  layout.absolute,
-                  layout.top0,
-                  layout.right0,
-                  layout.justifyCenter,
-                  layout.itemsCenter,
-                  backgrounds.gray150,
-                  {
-                    width: 30,
-                    height: 30,
-                    borderRadius: 40,
-                    marginTop: -27,
-                    marginRight: -5,
-                  },
-                ]}
-                onPress={() => _onCancelData("LOCATION")}
-              >
-                <Close color={colors.gray800} width={20} height={20} />
-              </TouchableOpacity>
-              <RNMapView
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-                initialRegion={{
-                  ...getRegionForCoordinates([
+      {Platform.OS === "ios" && (
+        <KeyboardAvoidingView
+          style={[layout.flex_1]}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View
+            style={[
+              gutters.paddingHorizontal_12,
+              gutters.paddingVertical_12,
+              backgrounds.gray00,
+              {
+                height: "100%",
+              },
+            ]}
+          >
+            <PostHeader onCancel={_onCancelPost} />
+            <PostInput onPress={_onPressInput} />
+            <View style={[{ flex: 2 }]}>
+              {post.location && !post.imageUri && (
+                <View
+                  style={[
+                    borders.w_1,
+                    borders.gray100,
+                    gutters.paddingHorizontal_4,
+                    gutters.paddingVertical_4,
+                    backgrounds.gray30,
+                    layout.relative,
                     {
-                      latitude: post.location.latitude || 0,
-                      longitude: post.location.longitude || 0,
+                      width: "100%",
+                      height: 250,
+                      borderRadius: 20,
                     },
-                  ]),
-                }}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: post.location.latitude || 0,
-                    longitude: post.location.longitude || 0,
+                  ]}
+                >
+                  <TouchableOpacity
+                    style={[
+                      layout.absolute,
+                      layout.top0,
+                      layout.right0,
+                      layout.justifyCenter,
+                      layout.itemsCenter,
+                      backgrounds.gray150,
+                      {
+                        width: 30,
+                        height: 30,
+                        borderRadius: 40,
+                        marginTop: -27,
+                        marginRight: -5,
+                      },
+                    ]}
+                    onPress={() => _onCancelData("LOCATION")}
+                  >
+                    <Close color={colors.gray800} width={20} height={20} />
+                  </TouchableOpacity>
+                  <RNMapView
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    initialRegion={{
+                      ...getRegionForCoordinates([
+                        {
+                          latitude: post.location.latitude || 0,
+                          longitude: post.location.longitude || 0,
+                        },
+                      ]),
+                    }}
+                  >
+                    <Marker
+                      coordinate={{
+                        latitude: post.location.latitude || 0,
+                        longitude: post.location.longitude || 0,
+                      }}
+                    />
+                  </RNMapView>
+                </View>
+              )}
+              {post.imageUri && (
+                <ImageBackground
+                  source={{ uri: post.imageUri }}
+                  style={{
+                    width: "100%",
+                    height: 250,
+                    position: "relative",
                   }}
-                />
-              </RNMapView>
-            </View>
-          )}
-          {post.imageUri && (
-            <ImageBackground
-              source={{ uri: post.imageUri }}
-              style={{
-                width: "100%",
-                height: 250,
-                position: "relative",
-              }}
-              imageStyle={[borders.rounded_16]}
-            >
-              <TouchableOpacity
-                style={[
-                  layout.absolute,
-                  layout.top0,
-                  layout.right0,
-                  layout.justifyCenter,
-                  layout.itemsCenter,
-                  backgrounds.gray150,
-                  {
-                    width: 30,
-                    height: 30,
-                    borderRadius: 40,
-                    marginTop: -8,
-                    marginRight: -5,
-                  },
-                ]}
-                onPress={() => _onCancelData("IMAGE")}
-              >
-                <Close color={colors.gray800} width={20} height={20} />
-              </TouchableOpacity>
-            </ImageBackground>
-          )}
+                  imageStyle={[borders.rounded_16]}
+                >
+                  <TouchableOpacity
+                    style={[
+                      layout.absolute,
+                      layout.top0,
+                      layout.right0,
+                      layout.justifyCenter,
+                      layout.itemsCenter,
+                      backgrounds.gray150,
+                      {
+                        width: 30,
+                        height: 30,
+                        borderRadius: 40,
+                        marginTop: -8,
+                        marginRight: -5,
+                      },
+                    ]}
+                    onPress={() => _onCancelData("IMAGE")}
+                  >
+                    <Close color={colors.gray800} width={20} height={20} />
+                  </TouchableOpacity>
+                </ImageBackground>
+              )}
 
-          {(post.activity || post.date || post.time) && (
-            <View
-              style={[
-                layout.row,
-                layout.justifyBetween,
-                layout.itemsCenter,
-                gutters.padding_10,
-                backgrounds.gray150,
-                borders.rounded_4,
-                gutters.marginTop_24,
-              ]}
-            >
-              <View
-                style={[layout.row, layout.justifyStart, layout.itemsCenter]}
-              >
-                {post.activity?.Icon && (
-                  <post.activity.Icon color={colors.gray800} />
-                )}
-                <Text style={[fonts.gray800, fontFamily._400_Regular]}>
-                  {"   "}- {post.activity?.label} -{" "}
-                  {post.date?.format("DD MMM")} {post.time?.format("hh:mm a")}{" "}
-                </Text>
-              </View>
-              <Close
-                color={colors.gray800}
-                onPress={() => _onCancelData("DATA")}
-              />
+              {(post.activity || post.date || post.time) && (
+                <View
+                  style={[
+                    layout.row,
+                    layout.justifyBetween,
+                    layout.itemsCenter,
+                    gutters.padding_10,
+                    backgrounds.gray150,
+                    borders.rounded_4,
+                    gutters.marginTop_24,
+                  ]}
+                >
+                  <View
+                    style={[
+                      layout.row,
+                      layout.justifyStart,
+                      layout.itemsCenter,
+                    ]}
+                  >
+                    {post.activity?.Icon && (
+                      <post.activity.Icon color={colors.gray800} />
+                    )}
+                    <Text style={[fonts.gray800, fontFamily._400_Regular]}>
+                      {"   "}- {post.activity?.label} -{" "}
+                      {post.date?.format("DD MMM")}{" "}
+                      {post.time?.format("hh:mm a")}{" "}
+                    </Text>
+                  </View>
+                  <Close
+                    color={colors.gray800}
+                    onPress={() => _onCancelData("DATA")}
+                  />
+                </View>
+              )}
             </View>
-          )}
-        </View>
-        <PostMenu
-          onPressDateIcon={_OnShowCalender}
-          onPressTimeIcon={_OnShowTime}
-          onPressLocationIcon={getLocation}
-          onPressImageIcon={_onShowGallery}
-          onPressActivityIcon={_onShowActivity}
-        />
-        {/* <View style={{ height: 10 }} /> */}
-        {/* {!keyboardVisible && (
+            <PostMenu
+              onPressDateIcon={_OnShowCalender}
+              onPressTimeIcon={_OnShowTime}
+              onPressLocationIcon={getLocation}
+              onPressImageIcon={_onShowGallery}
+              onPressActivityIcon={_onShowActivity}
+            />
+            {/* <View style={{ height: 10 }} /> */}
+            {/* {!keyboardVisible && (
           <View>
             <Button label="Next" type="PRIMARY" onPress={_onNext} />
           </View>
         )} */}
 
-        <DatePicker
-          open={showDate}
-          type="DATE"
-          onCancel={() => setShowDate(false)}
-          onConfirm={(value) => _onConfirmDate("DATE", value)}
-        />
-        <DatePicker
-          open={showTime}
-          type="TIME"
-          onCancel={() => setShowTime(false)}
-          onConfirm={(value) => _onConfirmDate("TIME", value)}
-        />
+            <DatePicker
+              open={showDate}
+              type="DATE"
+              onCancel={() => setShowDate(false)}
+              onConfirm={(value) => _onConfirmDate("DATE", value)}
+            />
+            <DatePicker
+              open={showTime}
+              type="TIME"
+              onCancel={() => setShowTime(false)}
+              onConfirm={(value) => _onConfirmDate("TIME", value)}
+            />
 
-        <ActivityPicker
-          open={showActivity}
-          onClose={() => setShowActivity(false)}
-          onConfirm={_onConfirmActivity}
-        />
-      </View>
+            <ActivityPicker
+              open={showActivity}
+              onClose={() => setShowActivity(false)}
+              onConfirm={_onConfirmActivity}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      )}
     </SafeScreen>
   );
 };
@@ -479,10 +507,15 @@ const PostInput = ({ onPress }: PostInputProps) => {
   return (
     // <KeyboardAvoidingView
     //   style={[layout.flex_1]}
-    //   behavior={Platform.OS === "ios" ? "padding" : "height"}
+    //   behavior={Platform.OS === "ios" ? "height" : "height"}
     // >
     <TouchableOpacity
-      style={[layout.flex_1, { paddingBottom: isKeyboardVisible ? 0 : 60 }]}
+      style={[
+        layout.flex_1,
+        {
+          paddingBottom: isKeyboardVisible ? 0 : 60,
+        },
+      ]}
       onPress={_onPress}
       activeOpacity={1}
     >
@@ -542,7 +575,9 @@ const PostMenu = (props: PostInputMenu) => {
         layout.itemsStart,
         gutters.gap_24,
         gutters.paddingRight_24,
-        { height: 50 },
+        {
+          height: Platform.OS === "ios" ? 50 : 80,
+        },
       ]}
     >
       <TouchableOpacity onPress={() => _onPressIcon("IMAGE")}>

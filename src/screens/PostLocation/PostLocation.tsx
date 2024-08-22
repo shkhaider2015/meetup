@@ -4,6 +4,7 @@ import { fontFamily, heights } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
 import {
   Dimensions,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -21,12 +22,12 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   const { height } = Dimensions.get("window");
-  const screenHeight = height + 60;
+  const screenHeight = Platform.OS === "android" ? height + 60 : height;
 
   const [mapState, setMapState] = useState<IInitialMapState>({
     region: {
       latitude: 37.78825,
-      longitude:  -122.4324,
+      longitude: -122.4324,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
@@ -52,16 +53,17 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
 
   useEffect(() => {
     const latitude = route.params.location?.coords.latitude;
-    const longitude = route.params.location?.coords.longitude
-    if(latitude && longitude) setMapState(pS => ({
-      ...pS,
-      region: {
-        ...pS.region,
-        latitude,
-        longitude
-      }
-    }))
-  }, [route.params.location])
+    const longitude = route.params.location?.coords.longitude;
+    if (latitude && longitude)
+      setMapState((pS) => ({
+        ...pS,
+        region: {
+          ...pS.region,
+          latitude,
+          longitude,
+        },
+      }));
+  }, [route.params.location]);
 
   useEffect(() => {
     StatusBar.setBackgroundColor("#FE434E00");
@@ -75,12 +77,14 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
 
   const _onSelectLocation = () => {
     console.log("Location : ", mapState.region);
-    route.params.onSelectLocation?.(mapState.region.latitude, mapState.region.longitude);
-    _onClose()
+    route.params.onSelectLocation?.(
+      mapState.region.latitude,
+      mapState.region.longitude
+    );
+    _onClose();
   };
 
   const _onClose = () => {
-
     StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
     StatusBar.setBarStyle("dark-content");
     StatusBar.setTranslucent(false);

@@ -37,6 +37,7 @@ import { SvgProps } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import PostNavigator from "../Post";
 import { useGlobalBottomSheet, useLoader } from "@/hooks";
+import { Platform } from "react-native";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -55,7 +56,7 @@ function TabsNavigator() {
         tabBarLabelStyle: {
           fontSize: 12,
           fontFamily: fontFamily._400_Regular.fontFamily,
-          paddingBottom: 10,
+          paddingBottom: Platform.OS === "android" ? 10 : 35,
         },
         tabBarLabelPosition: "below-icon",
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
@@ -149,8 +150,8 @@ const notificationOptions: BottomTabNavigationOptions = {
   headerTitle: "Notifications",
   headerTitleAlign: "center",
   // headerStyle: {
-    // backgroundColor: "white",
-    // height: heights.tabNavigationHeader,
+  // backgroundColor: "white",
+  // height: heights.tabNavigationHeader,
   // },
   headerLeftContainerStyle: {
     paddingLeft: 20,
@@ -285,8 +286,8 @@ const profileOptions = (): BottomTabNavigationOptions => {
       </View>
     ),
     // headerStyle: {
-      // backgroundColor: "white",
-      // height: heights.tabNavigationHeader,
+    // backgroundColor: "white",
+    // height: heights.tabNavigationHeader,
     // },
     headerLeftContainerStyle: {
       paddingLeft: 20,
