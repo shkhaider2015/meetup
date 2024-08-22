@@ -81,7 +81,7 @@ function TabsNavigator() {
         component={Notifications}
         options={notificationOptions}
       />
-      <Tab.Screen name="Profile" component={Profile} options={profileOptions} />
+      <Tab.Screen name="Profile" component={Profile} initialParams={{ isCurrentUser: true }}  options={profileOptions} />
     </Tab.Navigator>
   );
 }

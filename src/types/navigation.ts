@@ -1,6 +1,7 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ImageSourcePropType } from 'react-native';
 import GeoLocation from "react-native-geolocation-service"
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
 export type RootStackParamList = {
 	Startup: undefined;
@@ -20,7 +21,10 @@ export type RootStackParamList = {
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
-	Profile: undefined;
+	Profile: {
+		isCurrentUser: boolean;
+		id?: string
+	}
 	Carousel: {
 		images: ImageSourcePropType[],
 		selectedIndex?: number
@@ -32,6 +36,8 @@ export type ExploreTabsParamList = {
 	MapView: undefined;
 	ListView: undefined;
 }
+
+export type NavigationHookProps = NativeStackNavigationProp<RootStackParamList>;
 
 export type RootScreenProps<
 	S extends keyof RootStackParamList = keyof RootStackParamList,

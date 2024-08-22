@@ -1,4 +1,6 @@
 import {
+  DummyFarnese,
+  DummyJohnsonPost,
   DummyLaraProfile_1,
   DummyLaraProfile_2,
   DummyLaraProfile_3,
@@ -38,9 +40,9 @@ import {
 } from "react-native-screens/lib/typescript/native-stack/types";
 import { useDispatch, useSelector } from "react-redux";
 
-const Profile = ({ navigation }: ProfileScreenType) => {
+const Profile = ({ navigation, route }: ProfileScreenType) => {
   const dispatch: AppDispatch = useDispatch();
-
+  const { isCurrentUser, id } = route.params;
   const { layout, gutters, backgrounds, fonts } = useTheme();
   const { isError, isPending, isSuccess, mutate } = useMutation({
     mutationFn: () => {
@@ -66,7 +68,7 @@ const Profile = ({ navigation }: ProfileScreenType) => {
             },
           ]}
         >
-          <ProfileHead />
+          <ProfileHead isCurrentUser={isCurrentUser} />
           <ProfileDescriptions />
           <ProfileActivites />
           <ImageGallery navigation={navigation} />
@@ -76,7 +78,7 @@ const Profile = ({ navigation }: ProfileScreenType) => {
   );
 };
 
-const ProfileHead = () => {
+const ProfileHead = ({isCurrentUser}:{isCurrentUser:boolean}) => {
   const profile_image = useSelector((state:RootState) => state.user.profile_image)
   const { layout, gutters, backgrounds, fonts, borders } = useTheme();
   return (
@@ -109,7 +111,7 @@ const ProfileHead = () => {
         ]}
       >
         <Image
-          source={{uri: profile_image}}
+          source={!isCurrentUser ? DummyJohnsonPost : {uri: profile_image}}
           style={{ width: 155, height: 155, borderRadius: 100 }}
         />
       </View>
