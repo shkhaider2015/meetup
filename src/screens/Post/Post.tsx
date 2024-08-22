@@ -271,7 +271,6 @@ const Post = ({ navigation }: PostScreenType) => {
 
   return (
     <SafeScreen>
-      {Platform.OS === "ios" && (
         <KeyboardAvoidingView
           style={[layout.flex_1]}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -450,7 +449,6 @@ const Post = ({ navigation }: PostScreenType) => {
             />
           </View>
         </KeyboardAvoidingView>
-      )}
     </SafeScreen>
   );
 };

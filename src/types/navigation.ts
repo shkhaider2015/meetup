@@ -29,7 +29,8 @@ export type RootStackParamList = {
 		images: ImageSourcePropType[],
 		selectedIndex?: number
 	};
-	Tabs: undefined
+	Tabs: undefined;
+	OTP: undefined
 };
 
 export type ExploreTabsParamList = {
