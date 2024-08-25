@@ -38,6 +38,23 @@ const LoginScreen = (props: LoginScreenType) => {
     },
     onSuccess:(data) => {
       console.log("Success : ", data);
+      if(!data.isActivated) {
+        // User is not activated yet
+        Toast.show({
+          type: "error",
+          text1: "Login Failed",
+          text2: "Your account is not activated, Plaese enter activation code"
+        })
+
+        setTimeout(() => {
+          navigation.navigate("OTP", {
+            id: data.id,
+            email: data.email
+          })
+        }, 500)
+        return
+      }
+
       Toast.show({
         type: "success",
         text1: "Successfully logged in"
@@ -47,7 +64,6 @@ const LoginScreen = (props: LoginScreenType) => {
         ...data,
         profile_image: convertImageURLforngRok(data.profile_image),
         isLoggedIn: true,
-        id: 'someid'
       }
       setTimeout(() => {
         dispatch(

@@ -62,6 +62,23 @@ import { string } from "zod";
 import dayjs, { Dayjs } from "dayjs";
 import RNMapView, { Marker } from "react-native-maps";
 
+const isShow = true
+const postInitialValues:PostData = {
+  date: isShow ? dayjs() : undefined,
+  time: isShow ? dayjs() : undefined,
+  location: isShow ? {
+    latitude: 24.928096242353995,
+    longitude: 67.0176518149674,
+  } : undefined,
+  imageUri: !isShow ?
+    "file:///data/user/0/com.meetup/cache/rn_image_picker_lib_temp_ac2a108c-c4b8-43fd-adc9-437ee579baf3.jpg" : undefined,
+  // imageUri: undefined,
+  activity: isShow ? {
+    label: "Reading",
+    Icon: Cat_Reading,
+  } : undefined,
+}
+
 const Post = ({ navigation }: PostScreenType) => {
   const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
   const { height, width } = Dimensions.get("window");
@@ -72,21 +89,7 @@ const Post = ({ navigation }: PostScreenType) => {
   const [location, setLocation] = useState<Geolocation.GeoPosition | boolean>(
     false
   );
-  const [post, setPost] = useState<PostData>({
-    date: dayjs(),
-    time: dayjs(),
-    location: {
-      latitude: 24.928096242353995,
-      longitude: 67.0176518149674,
-    },
-    imageUri:
-      "file:///data/user/0/com.meetup/cache/rn_image_picker_lib_temp_ac2a108c-c4b8-43fd-adc9-437ee579baf3.jpg",
-    // imageUri: undefined,
-    activity: {
-      label: "Reading",
-      Icon: Cat_Reading,
-    },
-  });
+  const [post, setPost] = useState<PostData>(postInitialValues);
 
   const isKeyboardVisible = useKeyboardVisible();
 
@@ -299,7 +302,7 @@ const Post = ({ navigation }: PostScreenType) => {
                     layout.relative,
                     {
                       width: "100%",
-                      height: 250,
+                      height: '70%',
                       borderRadius: 20,
                     },
                   ]}
@@ -352,7 +355,7 @@ const Post = ({ navigation }: PostScreenType) => {
                   source={{ uri: post.imageUri }}
                   style={{
                     width: "100%",
-                    height: 250,
+                    height: '70%',
                     position: "relative",
                   }}
                   imageStyle={[borders.rounded_16]}
@@ -386,10 +389,13 @@ const Post = ({ navigation }: PostScreenType) => {
                     layout.row,
                     layout.justifyBetween,
                     layout.itemsCenter,
-                    gutters.padding_10,
                     backgrounds.gray150,
                     borders.rounded_4,
                     gutters.marginTop_24,
+                    gutters.paddingHorizontal_10,
+                    {
+                      height: '20%'
+                    }
                   ]}
                 >
                   <View
@@ -572,7 +578,8 @@ const PostMenu = (props: PostInputMenu) => {
         layout.justifyEnd,
         layout.itemsStart,
         gutters.gap_24,
-        gutters.paddingRight_24,
+        gutters.paddingTop_10,
+        gutters.paddingRight_16,
         {
           height: Platform.OS === "ios" ? 50 : 80,
         },

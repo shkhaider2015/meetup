@@ -1,10 +1,12 @@
 import * as yup from "yup";
 
 export const userSchema = yup.object().shape({
+  id: yup.string().required(),
   name: yup.string().required(),
   email : yup.string().email().required(),
   token: yup.string().required(),
-  profile_image: yup.string().required()
+  profile_image: yup.string().required(),
+  isActivated: yup.boolean().required()
 })
 
 export const userLoginSchema = yup.object().shape({

@@ -120,6 +120,8 @@ const exploreOptions = (): BottomTabNavigationOptions => {
     (state: RootState) => state.user.profile_image
   );
 
+  console.log("Profile imgae ", profile_image);
+  
   return {
     headerTitle: "",
     // headerStyle: {

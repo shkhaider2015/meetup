@@ -37,14 +37,20 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
     },
     onSuccess(data:any) {
       console.log("Success : ", data);
+      const userId = data?.payload?.id || "" ;
+      const email = data?.payload?.email || "";
+
       Toast.show({
         type: "success",
         text1: "Account created successfully",
         text2: data?.message
       })
       setTimeout(() => {
-        navigation.goBack();
-      }, 1000)
+        navigation.navigate("OTP", {
+          id: userId,
+          email: email
+        });
+      }, 200)
     },
     onError: (error) => {
       console.log("Error on query", error);
@@ -266,6 +272,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               label="Sign Up"
               onPress={formik.handleSubmit}
               containerStyle={[gutters.marginVertical_16]}
+              loading={isPending}
               disabled={isPending}
             />
 
@@ -332,6 +339,7 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                 Icon={<AppleLogo width={20} />}
                 containerStyle={[layout.flex_1]}
                 disabled={isPending}
+                
               />
             </View>
           </View>
