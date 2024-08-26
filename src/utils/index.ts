@@ -98,7 +98,7 @@ export const convertImageURLforngRok = (url: string) => {
   const baseUrl = process.env.DEV_API_URL || "";
 
   // Replace the hardcoded base URL with the environment variable
-  const convertedUrl = url.replace("http://localhost:3000/", baseUrl);
+  const convertedUrl = url.replace("http://localhost:3010/", baseUrl);
 
   return convertedUrl;
 };

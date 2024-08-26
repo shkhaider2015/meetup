@@ -15,47 +15,82 @@ import { useEffect, useState } from "react";
 import { CounterProps, OTPScreenType, stateType } from "@/types/screens/otp";
 import { useMutation } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
-import { accountVarification } from "@/services/users/auth";
+import {
+  accountVarification,
+  resendAccountVarification,
+} from "@/services/users/auth";
 import { useLoader } from "@/hooks";
+import _ from "lodash";
 
-function OTP({ navigation }: OTPScreenType) {
+function OTP({ navigation, route }: OTPScreenType) {
+  const { id: user_id, email } = route.params;
   const { colors, variant, layout, gutters, fonts, components, backgrounds } =
     useTheme();
 
   const [state, setState] = useState<stateType>("IDLE");
+  const [error, setError] = useState<string>();
   const { showLoader, hideLoader } = useLoader();
 
-  const {isError, isPending, mutate} = useMutation({
-	mutationFn: (code:string) => {
-		return accountVarification(code)
-	},
-	onSuccess: () => {
-		hideLoader()
-		Toast.show({
-			type: "success",
-			text1: "Account varified successfully, You can now login"
-		})
-		setTimeout(() => {
-			navigation.navigate("Login")
-		}, 200)
-	},
-	onError: () => {
-		hideLoader()
-		setState("FINISH")
-	}
-  })
+  const { isPending, mutate } = useMutation({
+    mutationFn: (code: string) => {
+      return accountVarification(user_id, code);
+    },
+    onSuccess: () => {
+      hideLoader();
+      Toast.show({
+        type: "success",
+        text1: "Account varified successfully, You can now login",
+      });
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 1000);
+    },
+    onError: (error) => {
+      hideLoader();
+      setState("FINISH");
+      setError(error.message || "something wrong happened")
+    },
+  });
+
+  const {
+    isPending: resendIsPending,
+    mutate: resendMutate,
+  } = useMutation({
+    mutationFn: () => {
+      return resendAccountVarification(user_id);
+    },
+    onSuccess: () => {
+      hideLoader();
+      setState("START");
+      Toast.show({
+        type: "success",
+        text1: "Resend activation code sent successfully",
+        text2: "Please check your inbox for more details",
+      });
+    },
+    onError: (error) => {
+      hideLoader();
+      setState("FINISH");
+      setError(error.message || "something wrong happened")
+    },
+  });
 
   useEffect(() => {
-    setState("START");
-  }, []);
+    if (!_.isEmpty(user_id) && !_.isEmpty(email)) {
+      setState("START");
+    }
+  }, [user_id, email]);
 
   const _resend = () => {
-	setState("START")
+    setError(undefined)
+    showLoader();
+    resendMutate()
   };
 
-  const _onSumit = (code:string) => {
-	showLoader()
-	mutate(code)
+  const _onSumit = (code: string) => {
+    setError(undefined)
+    showLoader();
+    mutate(code);
   };
 
   return (
@@ -94,7 +129,7 @@ function OTP({ navigation }: OTPScreenType) {
             >
               Verification code has been sent to{" "}
               <Text style={[fonts.primary, fontFamily._600_SemiBold]}>
-                shkhaider2015@gmail.com
+                {email}
               </Text>
             </Text>
             <Text
@@ -127,39 +162,48 @@ function OTP({ navigation }: OTPScreenType) {
                   borderColor: colors.primary,
                 },
               }}
+              disabled={isPending || resendIsPending}
             />
 
             {/* Error Message */}
-			{
-				isError && <Text
-				style={[
-				  fonts.size_14,
-				  fonts.error,
-				  gutters.marginTop_10,
-				  fonts.alignCenter,
-				]}
-			  >
-				The code you entered is invalid or expired
-			  </Text>
-			}
-            
+            {!_.isEmpty(error) && (
+              <Text
+                style={[
+                  fonts.size_14,
+                  fonts.error,
+                  gutters.marginTop_10,
+                  fonts.alignCenter,
+                ]}
+              >
+                {error || "The code you entered is invalid or expired"}
+              </Text>
+            )}
           </View>
           <View style={[{ height: 80 }, layout.justifyEnd]}>
-              {state === "FINISH" && (
-            <View style={[layout.row, layout.itemsCenter, layout.justifyCenter, gutters.gap_4]}>
-              <Text style={[fonts.alignCenter, fonts.gray500]}>
-                {" "}
-                Haven't received OTP yet?
-              </Text>
-                <TouchableOpacity onPress={_resend} style={[{marginTop: 3}]} >
-                  <Text
-                    style={[fontFamily._600_SemiBold, fonts.primary]}
-                  >
+            {state === "FINISH" && (
+              <View
+                style={[
+                  layout.row,
+                  layout.itemsCenter,
+                  layout.justifyCenter,
+                  gutters.gap_4,
+                ]}
+              >
+                <Text style={[fonts.alignCenter, fonts.gray500]}>
+                  {" "}
+                  Haven't received OTP yet?
+                </Text>
+                <TouchableOpacity
+                  disabled={isPending || resendIsPending}
+                  onPress={_resend}
+                  style={[{ marginTop: 3 }]}
+                >
+                  <Text style={[fontFamily._600_SemiBold, fonts.primary]}>
                     Resend
                   </Text>
                 </TouchableOpacity>
-            </View>
-              )}
+              </View>
+            )}
 
             {state === "START" && (
               <Text
@@ -177,7 +221,7 @@ function OTP({ navigation }: OTPScreenType) {
 }
 
 const Counter = ({ state, setState }: CounterProps) => {
-  const [counter, setCounter] = useState<number>(10);
+  const [counter, setCounter] = useState<number>(180);
 
   useEffect(() => {
     if (counter > 0) {

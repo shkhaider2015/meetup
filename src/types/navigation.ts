@@ -30,7 +30,10 @@ export type RootStackParamList = {
 		selectedIndex?: number
 	};
 	Tabs: undefined;
-	OTP: undefined
+	OTP: {
+		id: string;
+		email: string;
+	}
 };
 
 export type ExploreTabsParamList = {

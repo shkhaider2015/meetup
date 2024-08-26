@@ -1,4 +1,7 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
 import { useTheme } from "@/theme";
 
 import type { RootStackParamList } from "@/types/navigation";
@@ -56,22 +59,14 @@ function AuthNavigator() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
-        name="Ineterests"
-        component={Interests}
+        name="OTP"
+        component={OTP}
         options={{
           header: () => (
             <View
-              style={[
-                gutters.paddingHorizontal_24,
-                gutters.paddingVertical_12,
-                backgrounds.primary04,
-                layout.row,
-                layout.itemsEnd,
-                {
-                  height: 130,
-                },
-              ]}
+              style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
               <Button
                 Icon={<ChevronLeft />}
@@ -83,8 +78,6 @@ function AuthNavigator() {
           ),
         }}
       />
-
-      <Stack.Screen name="OTP" component={OTP} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

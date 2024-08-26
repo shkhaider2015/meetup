@@ -104,15 +104,15 @@ const ProfileHead = ({isCurrentUser}:{isCurrentUser:boolean}) => {
           layout.itemsCenter,
           backgrounds.error,
           {
-            width: 160,
-            height: 160,
+            width: widthInPercentage(40),
+            height: widthInPercentage(40),
             borderRadius: 100,
           },
         ]}
       >
         <Image
           source={!isCurrentUser ? DummyJohnsonPost : {uri: profile_image}}
-          style={{ width: 155, height: 155, borderRadius: 100 }}
+          style={{ width: widthInPercentage(39), height: widthInPercentage(39), borderRadius: 100 }}
         />
       </View>
       {/* Details Column */}
@@ -121,24 +121,25 @@ const ProfileHead = ({isCurrentUser}:{isCurrentUser:boolean}) => {
         <View
           style={[
             layout.row,
-            layout.justifyBetween,
+            layout.justifyCenter,
             layout.itemsCenter,
             gutters.paddingRight_10,
+            gutters.gap_10
           ]}
         >
           {/* Followers */}
           <View
             style={[
               layout.row,
-              layout.justifyStart,
+              layout.justifyBetween,
               layout.itemsEnd,
               gutters.gap_8,
             ]}
           >
-            <Persons width={40} height={40} />
+            <Persons width={widthInPercentage(8)} height={widthInPercentage(8)} />
             <View style={[layout.col]}>
               <Text
-                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 18 }]}
+                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
               >
                 1,232
               </Text>
@@ -163,10 +164,10 @@ const ProfileHead = ({isCurrentUser}:{isCurrentUser:boolean}) => {
               gutters.gap_8,
             ]}
           >
-            <Persons width={40} height={40} />
+            <Persons width={widthInPercentage(8)} height={widthInPercentage(8)} />
             <View style={[layout.col]}>
               <Text
-                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 18 }]}
+                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
               >
                 1,232
               </Text>
@@ -268,31 +269,31 @@ const ProfileActivites = () => {
         data={[
           <Cat_Shopping
             color={backgrounds.primary.backgroundColor}
-            width={25}
-            height={25}
+            width={widthInPercentage(6.5)}
+            height={widthInPercentage(6.5)}
           />,
           <Cat_Travel
             color={backgrounds.primary.backgroundColor}
-            width={25}
-            height={25}
+            width={widthInPercentage(6.5)}
+            height={widthInPercentage(6.5)}
           />,
           <Cat_Gaming
             color={backgrounds.primary.backgroundColor}
-            width={25}
-            height={25}
+            width={widthInPercentage(6.5)}
+            height={widthInPercentage(6.5)}
           />,
           <Cat_Music
             color={backgrounds.primary.backgroundColor}
-            width={25}
-            height={25}
+            width={widthInPercentage(6.5)}
+            height={widthInPercentage(6.5)}
           />,
         ]}
         renderItem={({ item, index }) => (
           <View
             style={[
               index === 0
-                ? gutters.paddingRight_32
-                : gutters.paddingHorizontal_32,
+                ? gutters.paddingRight_24
+                : gutters.paddingHorizontal_24,
               layout.justifyCenter,
               {
                 height: 35,
@@ -335,14 +336,14 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
     <View style={[gutters.paddingVertical_16]}>
       <View style={[layout.row, layout.justifyBetween]}>
         <TouchableOpacity onPress={() => _onImagePress(0)}>
-          <Image source={images[0]} />
+          <Image source={images[0]} style={{ width: widthInPercentage(60), borderRadius: 5 }} />
         </TouchableOpacity>
         <View style={[gutters.gap_10]}>
           <TouchableOpacity onPress={() => _onImagePress(3)}>
-            <Image source={images[3]} />
+            <Image source={images[3]} style={{ width: widthInPercentage(35), borderRadius: 5 }} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => _onImagePress(4)}>
-            <Image source={images[4]} />
+            <Image source={images[4]} style={{ width: widthInPercentage(35), borderRadius: 5 }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -350,17 +351,22 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
         style={[layout.row, layout.wrap, gutters.gap_14, gutters.marginTop_6]}
       >
         <TouchableOpacity onPress={() => _onImagePress(1)}>
-          <Image source={images[1]} />
+          <Image source={images[1]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => _onImagePress(2)}>
-          <Image source={images[2]} />
+          <Image source={images[2]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => _onImagePress(5)}>
-          <Image source={images[5]} />
+          <Image source={images[5]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
         </TouchableOpacity>
       </View>
     </View>
   );
+};
+
+const widthInPercentage = (percentage:number) => {
+ const { width } = Dimensions.get("screen");
+  return (width * percentage) / 100;
 };
 
 type Navigation = NativeStackNavigationProp<RootStackParamList, "Profile">;
