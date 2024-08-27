@@ -11,6 +11,8 @@ export type RootStackParamList = {
 	Home: undefined;
 	About: undefined;
 	ForgetPassword: undefined;
+	ForgetPasswordChange: undefined;
+	ForgetPasswordComplete: undefined;
 	Ineterests: undefined;
 	Explore: undefined;
 	Chat: undefined;
@@ -30,6 +32,7 @@ export type RootStackParamList = {
 	OTP: {
 		id: string;
 		email: string;
+		type: "ACCOUNT_ACTIVATION" | "FORGOT_PASSWORD"
 	}
 };
 

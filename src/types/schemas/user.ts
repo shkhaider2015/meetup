@@ -47,4 +47,19 @@ export const userSignupSchema = yup.object().shape({
     .oneOf([true], "You must agree to the terms and conditions"),
 });
 
+export const forgetPasswordSchema = yup.object().shape({
+  email: yup.string().email("Email is not valid").required("Email is required")
+})
+
+
+export const forgetPasswordChangeSchema = yup.object().shape({
+  newPassword: yup
+    .string()
+    .min(8, "New Password must be at least 8 characters long")
+    .required("New Password is required"),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref("newPassword"), undefined], "Passwords must match")
+    .required("Confirm New Password is reqiuired"),
+})
 
