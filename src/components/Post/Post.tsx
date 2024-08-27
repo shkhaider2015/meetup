@@ -23,7 +23,7 @@ const Post = (props: IPost) => {
   };
 
   const _goToProfile = () => {
-    navigate("Profile", { isCurrentUser: false, id: id });
+    navigate("Profile");
   };
 
   return (

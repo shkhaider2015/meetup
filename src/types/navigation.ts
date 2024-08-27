@@ -21,10 +21,7 @@ export type RootStackParamList = {
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
-	Profile: {
-		isCurrentUser: boolean;
-		id?: string
-	}
+	Profile: undefined
 	Carousel: {
 		images: ImageSourcePropType[],
 		selectedIndex?: number
