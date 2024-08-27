@@ -15,7 +15,6 @@ import { ImageVariant } from '@/components/atoms';
 import { Brand } from '@/components/molecules';
 import { SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
-import { fetchOne } from '@/services/users';
 
 import { isImageSourcePropType } from '@/types/guards/image';
 
@@ -38,20 +37,6 @@ function Example() {
 	} = useTheme();
 
 	const [currentId, setCurrentId] = useState(-1);
-
-	const { isSuccess, data, isFetching } = useQuery({
-		queryKey: ['example', currentId],
-		queryFn: () => {
-			return fetchOne(currentId);
-		},
-		enabled: currentId >= 0,
-	});
-
-	useEffect(() => {
-		if (isSuccess) {
-			Alert.alert(t('example:welcome', data.name));
-		}
-	}, [isSuccess, data]);
 
 	const onChangeTheme = () => {
 		changeTheme(variant === 'default' ? 'dark' : 'default');
@@ -123,14 +108,6 @@ function Example() {
 							style={[components.buttonCircle, gutters.marginBottom_16]}
 							onPress={() => setCurrentId(Math.ceil(Math.random() * 10 + 1))}
 						>
-							{isFetching ? (
-								<ActivityIndicator />
-							) : (
-								<ImageVariant
-									source={SendImage}
-									style={{ tintColor: colors.purple500 }}
-								/>
-							)}
 						</TouchableOpacity>
 
 						<TouchableOpacity

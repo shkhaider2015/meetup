@@ -6,7 +6,11 @@ export const userSchema = yup.object().shape({
   email : yup.string().email().required(),
   token: yup.string().required(),
   profile_image: yup.string().required(),
-  isActivated: yup.boolean().required()
+  isActivated: yup.boolean().required(),
+  cometchat: yup.object().shape({
+    authToken: yup.string().required(),
+    id: yup.string().required()
+  })
 })
 
 export const userLoginSchema = yup.object().shape({

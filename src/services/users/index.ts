@@ -1,2 +1,1 @@
-export { default as fetchOne } from './fetchOne';
-export { login } from "./auth"
+export { login, signup, logout, loadUser } from "./auth"

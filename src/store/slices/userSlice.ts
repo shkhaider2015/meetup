@@ -8,7 +8,12 @@ const initialState: IUserReducer = getItem<IUserReducer>('user') || {
   name: '',
   email: '',
   profile_image: '',
+  token: '',
   isLoggedIn: false,
+  cometchat: {
+    authToken: '',
+    id: ''
+  }
 };
 
 const userSlice = createSlice({
@@ -26,7 +31,12 @@ const userSlice = createSlice({
         name: '',
         email: '',
         profile_image: '',
+        token: '',
         isLoggedIn: false,
+        cometchat: {
+          authToken: '',
+          id: ''
+        }
       };
     },
   },

@@ -17,7 +17,7 @@ import {
   Persons,
 } from "@/assets/icon";
 import { Button, SafeScreen } from "@/components/template";
-import { logout } from "@/services/users/fetchOne";
+import { logout } from "@/services/users";
 import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";

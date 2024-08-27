@@ -25,6 +25,7 @@ import { setUser } from "@/store/slices/userSlice";
 import Toast from "react-native-toast-message";
 import { IUserReducer } from "@/types/reducer";
 import { convertImageURLforngRok } from "@/utils";
+import { CometChat } from "@cometchat/chat-sdk-react-native";
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
@@ -65,6 +66,9 @@ const LoginScreen = (props: LoginScreenType) => {
         profile_image: convertImageURLforngRok(data.profile_image),
         isLoggedIn: true,
       }
+
+      // CometChat.login(data.cometchat.authToken).then(res => console.log("cometchat successfully Logged In")).catch(err => console.log("CometChat login failed"))
+
       setTimeout(() => {
         dispatch(
           setUser(user)

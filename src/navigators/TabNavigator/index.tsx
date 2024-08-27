@@ -19,7 +19,7 @@ import {
 import { ExploreHeader, MeetupIcon } from "@/assets/images";
 import { Button } from "@/components/template";
 import { Chat, Explore, Notifications, Post, Profile } from "@/screens";
-import { logout } from "@/services/users/fetchOne";
+import { logout } from "@/services/users/auth";
 import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";

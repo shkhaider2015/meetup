@@ -1,7 +1,7 @@
 import { AppleLogo, GoogleLogo } from "@/assets/icon";
 import { Button, InputField } from "@/components/template";
 import Checkbox from "@/components/template/Checkbox/Checkbox";
-import { signup } from "@/services/users/auth";
+import { signup } from "@/services/users";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
 import { ISignupForm } from "@/types/forms";
