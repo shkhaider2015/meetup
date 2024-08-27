@@ -41,8 +41,8 @@ import {
 } from "react-native-screens/lib/typescript/native-stack/types";
 import { useDispatch, useSelector } from "react-redux";
 
-const Profile = ({ navigation, route }: ProfileScreenType) => {
-
+const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
+  const { userId } = route.params;
   const dispatch: AppDispatch = useDispatch();
   const { layout, gutters, backgrounds, fonts } = useTheme();
   const { isError, isPending, isSuccess, mutate } = useMutation({
@@ -69,7 +69,7 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
             },
           ]}
         >
-          <ProfileHead navigation={navigation} isCurrentUser={true} />
+          <ProfileHead navigation={navigation} isCurrentUser={false} />
           <ProfileDescriptions />
           <ProfileActivites />
           <ImageGallery navigation={navigation} />
@@ -190,7 +190,7 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
           label="Edit Profile"
           type={"PRIMARY"}
           containerStyle={[
-            isCurrentUser ? backgrounds.gray800 : backgrounds.primary,
+            backgrounds.gray800,
             borders.rounded_16,
             { width: "60%", height: 45 },
           ]}
@@ -373,7 +373,7 @@ const widthInPercentage = (percentage:number) => {
   return (width * percentage) / 100;
 };
 
-type Navigation = NativeStackNavigationProp<RootStackParamList, "Profile">;
-type ProfileScreenType = NativeStackScreenProps<RootStackParamList, "Profile">;
+type Navigation = NativeStackNavigationProp<RootStackParamList,"OtherProfile">;
+type OtherProfileScreenType = NativeStackScreenProps<RootStackParamList,"OtherProfile">;
 
-export default Profile;
+export default OthersProfile;

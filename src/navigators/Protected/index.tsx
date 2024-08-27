@@ -1,8 +1,7 @@
-import Carousel from "@/screens/Carousel/Carousel";
 import { RootStackParamList } from "@/types/navigation";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabsNavigator from "../TabNavigator";
-import { Interests } from "@/screens";
+import { Interests, Profile, Carousel, EditProfile, OtherProfile } from "@/screens";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useMutation } from "@tanstack/react-query";
@@ -66,6 +65,8 @@ const ProtectedScreens = () => {
       <Stack.Screen name="Tabs" component={TabsNavigator} />
       <Stack.Screen name="Carousel" component={Carousel} />
       <Stack.Screen name="Ineterests" component={Interests} />
+      <Stack.Screen name="OtherProfile" component={OtherProfile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 };

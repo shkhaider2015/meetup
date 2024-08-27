@@ -23,7 +23,7 @@ export type RootStackParamList = {
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
-	Profile: undefined
+	Profile: undefined;
 	Carousel: {
 		images: ImageSourcePropType[],
 		selectedIndex?: number
@@ -33,6 +33,10 @@ export type RootStackParamList = {
 		id: string;
 		email: string;
 		type: "ACCOUNT_ACTIVATION" | "FORGOT_PASSWORD"
+	},
+	EditProfile: undefined;
+	OtherProfile: {
+		userId?: string
 	}
 };
 
