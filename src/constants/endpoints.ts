@@ -8,7 +8,8 @@ const APIEndPoints = {
     LOGIN: 'auth/login',
     SIGNUP: 'auth/signup',
     ACCOUNT_ACTIVATION: 'auth/activate-user',
-    RESEND_ACTIVATION_CODE: 'auth/resent-activation-code'
+    RESEND_ACTIVATION_CODE: 'auth/resent-activation-code',
+    LOAD_USER: 'auth/refreshUserSession'
 }
 
 export default APIEndPoints;

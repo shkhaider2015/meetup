@@ -17,7 +17,7 @@ import {
   Persons,
 } from "@/assets/icon";
 import { Button, SafeScreen } from "@/components/template";
-import { logout } from "@/services/users/fetchOne";
+import { logout } from "@/services/users";
 import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";
@@ -42,7 +42,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Profile = ({ navigation, route }: ProfileScreenType) => {
   const dispatch: AppDispatch = useDispatch();
-  const { isCurrentUser, id } = route.params;
   const { layout, gutters, backgrounds, fonts } = useTheme();
   const { isError, isPending, isSuccess, mutate } = useMutation({
     mutationFn: () => {
@@ -68,7 +67,7 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
             },
           ]}
         >
-          <ProfileHead isCurrentUser={isCurrentUser} />
+          <ProfileHead isCurrentUser={true} />
           <ProfileDescriptions />
           <ProfileActivites />
           <ImageGallery navigation={navigation} />
