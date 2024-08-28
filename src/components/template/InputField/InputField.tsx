@@ -96,7 +96,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
           
         />
         {inputType === 'PASSWORD' && (
-          <TouchableOpacity onPress={_onPressEyeIcon}>
+          <TouchableOpacity onPress={_onPressEyeIcon} style={[ layout.justifyCenter, {height: 60} ]}>
             {!secureText ? (
               <EyeSlash color={backgrounds.gray300.backgroundColor} />
             ) : (

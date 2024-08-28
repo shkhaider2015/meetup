@@ -72,3 +72,17 @@ export const editProfileSchema = yup.object().shape({
   interests: yup.string()
 
 });
+
+export const ChangePasswordSchema = yup.object().shape({
+  currentPassword: yup.string().required("Current Password is required"),
+  newPassword: yup
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .max(50, "Password should not be greater than 50 characters")
+    .notOneOf([yup.ref('currentPassword')], 'New Password must be different from the current password')
+    .required('New Password is required'),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref('newPassword'), undefined], 'Passwords must match')
+    .required('Confirm Password is reqiuired'),
+})
