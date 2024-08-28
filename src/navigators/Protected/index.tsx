@@ -13,6 +13,7 @@ import { IUserReducer } from "@/types/reducer";
 import { convertImageURLforngRok } from "@/utils";
 import { getItem } from "@/storage";
 import { USER } from "@/constants";
+import ChangePassword from "@/screens/ChangePassword/ChangePassword";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -67,6 +68,7 @@ const ProtectedScreens = () => {
       <Stack.Screen name="Ineterests" component={Interests} />
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
     </Stack.Navigator>
   );
 };

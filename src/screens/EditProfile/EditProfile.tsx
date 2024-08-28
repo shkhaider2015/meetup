@@ -1,5 +1,6 @@
 import { ChevronLeft } from '@/assets/icon';
 import { ProfileImagePlaceholder } from '@/assets/images';
+import { ActivityPicker } from '@/components';
 import {
   Button,
   InputField,
@@ -12,6 +13,7 @@ import { RootStackParamList } from '@/types/navigation';
 import { editProfileSchema } from '@/types/schemas/user';
 import { editProfileState } from '@/types/screens/editProfile';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -27,6 +29,8 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   const { layout, fonts, colors, gutters, backgrounds } = useTheme();
   const { height } = Dimensions.get('screen');
+
+  const [showActivity, setShowActivity] = useState<boolean>(false)
 
   const formik = useFormik<editProfileState>({
     initialValues: {
@@ -47,6 +51,10 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   const _handleBack = () => {
     navigation.goBack();
   };
+
+  const _onConfirmActivity = (label:string|undefined) => {
+    formik.setFieldValue('interests', label)
+  }
 
   return (
     <SafeScreen>
@@ -170,9 +178,14 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
             </Text>
           </View>
           <View style={[gutters.marginTop_10]}>
-            <SelectField placeholder="Select interests" />
+            <SelectField placeholder="Select interests" value={formik.values.interests} onPress={() => setShowActivity(true)} />
           </View>
         </View>
+        <ActivityPicker
+              open={showActivity}
+              onClose={() => setShowActivity(false)}
+              onConfirm={_onConfirmActivity}
+            />
       </ScrollView>
       </KeyboardAvoidingView>
     </SafeScreen>

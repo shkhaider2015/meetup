@@ -2,6 +2,7 @@ import { DummyUser } from "@/assets/dummyImages";
 import {
   Cat_Cooking,
   ChevronLeft,
+  Key,
   MenuHr,
   Search,
   Signout,
@@ -24,7 +25,7 @@ import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
-import { RootStackParamList } from "@/types/navigation";
+import { NavigationHookProps, RootStackParamList } from "@/types/navigation";
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -183,6 +184,7 @@ const notificationOptions: BottomTabNavigationOptions = {
 };
 
 const profileOptions = (): BottomTabNavigationOptions => {
+  const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
   return {
     headerLeft: () => {
@@ -220,6 +222,11 @@ const profileOptions = (): BottomTabNavigationOptions => {
         mutate();
       };
 
+      const _goToChangePassword = () => {
+        closeBottomSheet();
+        navigation.navigate("ChangePassword")
+      }
+
       const handleOpenBottomSheet = () => {
         openBottomSheet(
           <View
@@ -235,10 +242,41 @@ const profileOptions = (): BottomTabNavigationOptions => {
                 flexDirection: "row",
                 columnGap: 30,
                 alignItems: "center",
+                borderWidth: 1,
+                borderColor: '#ededed',
+                paddingHorizontal: 5,
+                paddingVertical: 5,
+                borderRadius: 10
+              }}
+              onPress={_goToChangePassword}
+            >
+              <Key width={25} height={25} color={"#9f9f9f"} />
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "600",
+                  fontFamily: "Poppins Regular",
+                  color: "#000000",
+                }}
+              >
+                Change Password
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                columnGap: 30,
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: '#ededed',
+                paddingHorizontal: 5,
+                paddingVertical: 5,
+                borderRadius: 10,
+                marginTop: 10
               }}
               onPress={_logout}
             >
-              <Signout width={25} height={25} color={"#000000"} />
+              <Signout width={25} height={25} color={"#9f9f9f"} />
               <Text
                 style={{
                   fontSize: 18,
@@ -251,7 +289,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
               </Text>
             </TouchableOpacity>
           </View>,
-          ["15%"]
+          ["20%"]
         );
       };
 

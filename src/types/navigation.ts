@@ -37,7 +37,8 @@ export type RootStackParamList = {
 	EditProfile: undefined;
 	OtherProfile: {
 		userId?: string
-	}
+	},
+	ChangePassword: undefined
 };
 
 export type ExploreTabsParamList = {
