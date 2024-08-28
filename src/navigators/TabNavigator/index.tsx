@@ -2,6 +2,7 @@ import { DummyUser } from "@/assets/dummyImages";
 import {
   Cat_Cooking,
   ChevronLeft,
+  Key,
   MenuHr,
   Search,
   Signout,
@@ -24,7 +25,7 @@ import { AppDispatch, RootState } from "@/store";
 import { clearUser } from "@/store/slices/userSlice";
 import { useTheme } from "@/theme";
 import { fontFamily, heights } from "@/theme/_config";
-import { RootStackParamList } from "@/types/navigation";
+import { NavigationHookProps, RootStackParamList } from "@/types/navigation";
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -38,6 +39,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostNavigator from "../Post";
 import { useGlobalBottomSheet, useLoader } from "@/hooks";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -183,6 +185,7 @@ const notificationOptions: BottomTabNavigationOptions = {
 };
 
 const profileOptions = (): BottomTabNavigationOptions => {
+  const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
   return {
     headerLeft: () => {
@@ -204,14 +207,19 @@ const profileOptions = (): BottomTabNavigationOptions => {
           return logout();
         },
         onSuccess: () => {
-          hideLoader();
           closeBottomSheet();
           setTimeout(() => {
             dispatch(clearUser());
+            hideLoader();
           }, 300);
         },
-        onError: () => {
+        onError: (error) => {
           hideLoader();
+          Toast.show({
+            type: "error",
+            text1: "Logout Failed",
+            text2: error?.message || "Something wrong happened"
+          })
         },
       });
 
@@ -219,6 +227,11 @@ const profileOptions = (): BottomTabNavigationOptions => {
         showLoader();
         mutate();
       };
+
+      const _goToChangePassword = () => {
+        closeBottomSheet();
+        navigation.navigate("ChangePassword")
+      }
 
       const handleOpenBottomSheet = () => {
         openBottomSheet(
@@ -235,10 +248,35 @@ const profileOptions = (): BottomTabNavigationOptions => {
                 flexDirection: "row",
                 columnGap: 30,
                 alignItems: "center",
+                paddingHorizontal: 5,
+                paddingVertical: 5,
+              }}
+              onPress={_goToChangePassword}
+            >
+              <Key width={25} height={25} color={"#9f9f9f"} />
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "600",
+                  fontFamily: "Poppins Regular",
+                  color: "#000000",
+                }}
+              >
+                Change Password
+              </Text>
+            </TouchableOpacity>
+            <View style={{ height: 2, backgroundColor: '#eeeeee', marginVertical: 5 }} />
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                columnGap: 30,
+                alignItems: "center",
+                paddingHorizontal: 5,
+                paddingVertical: 5,
               }}
               onPress={_logout}
             >
-              <Signout width={25} height={25} color={"#000000"} />
+              <Signout width={25} height={25} color={"#9f9f9f"} />
               <Text
                 style={{
                   fontSize: 18,
@@ -251,7 +289,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
               </Text>
             </TouchableOpacity>
           </View>,
-          ["15%"]
+          ["20%"]
         );
       };
 

@@ -7,8 +7,10 @@ import { TextInputProps } from "react-native"
 
 export interface IInputFieldProps extends TextInputProps {
     rightIcon?: React.ReactElement;
-    inputType?: InputTypes,
-    isError?: boolean
+    inputType?: InputTypes;
+    isError?: boolean;
+    disable?: boolean;
+    rows?: number
 }
 
 type InputTypes = "TEXT" | "PASSWORD" | "NUMBER"

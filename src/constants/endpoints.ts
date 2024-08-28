@@ -7,9 +7,10 @@ export const _makeAPI_URL = (endPoint:string):string => {
 const APIEndPoints = {
     LOGIN: 'auth/login',
     SIGNUP: 'auth/signup',
+    LOGOUT: 'auth/logout',
     ACCOUNT_ACTIVATION: 'auth/activate-user',
     RESEND_ACTIVATION_CODE: 'auth/resent-activation-code',
-    LOAD_USER: 'auth/refreshUserSession'
+    LOAD_USER: 'auth/verify-user-token'
 }
 
 export default APIEndPoints;

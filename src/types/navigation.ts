@@ -11,6 +11,10 @@ export type RootStackParamList = {
 	Home: undefined;
 	About: undefined;
 	ForgetPassword: undefined;
+	ForgetPasswordChange: undefined;
+	ForgetPasswordComplete: {
+		type: "ForgetPassword" | "ChangePassword"
+	};
 	Ineterests: undefined;
 	Explore: undefined;
 	Chat: undefined;
@@ -21,7 +25,7 @@ export type RootStackParamList = {
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
-	Profile: undefined
+	Profile: undefined;
 	Carousel: {
 		images: ImageSourcePropType[],
 		selectedIndex?: number
@@ -30,7 +34,13 @@ export type RootStackParamList = {
 	OTP: {
 		id: string;
 		email: string;
-	}
+		type: "ACCOUNT_ACTIVATION" | "FORGOT_PASSWORD"
+	},
+	EditProfile: undefined;
+	OtherProfile: {
+		userId?: string
+	},
+	ChangePassword: undefined
 };
 
 export type ExploreTabsParamList = {

@@ -50,7 +50,8 @@ const LoginScreen = (props: LoginScreenType) => {
         setTimeout(() => {
           navigation.navigate("OTP", {
             id: data.id,
-            email: data.email
+            email: data.email,
+            type: "ACCOUNT_ACTIVATION"
           })
         }, 500)
         return

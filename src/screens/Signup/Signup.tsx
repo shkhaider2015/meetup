@@ -48,7 +48,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
       setTimeout(() => {
         navigation.navigate("OTP", {
           id: userId,
-          email: email
+          email: email,
+          type: "ACCOUNT_ACTIVATION"
         });
       }, 200)
     },

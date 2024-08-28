@@ -12,3 +12,6 @@ export { default as Profile } from "./Profile/Profile";
 export { default as MapView } from "./Explore/MapView";
 export { default as ListView } from "./Explore/ListView";
 export { default as PostLocation } from "./PostLocation/PostLocation";
+export { default as Carousel } from "./Carousel/Carousel";
+export { default as EditProfile } from './EditProfile/EditProfile';
+export { default as OtherProfile } from './OthersProfile/OthersProfile';

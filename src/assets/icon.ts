@@ -51,3 +51,6 @@ export { default as ImageIcon } from "@/assets/icons/Img_box_fill.svg";
 export { default as LocationIcon } from "@/assets/icons/Pin_alt_fill.svg";
 export { default as Clock  } from "@/assets/icons/Time.svg";
 export { default as Activity } from "@/assets/icons/Chart_alt.svg";
+export { default as ChevronRight } from "@/assets/icons/chevron_right.svg";
+export { default as Key } from '@/assets/icons/key.svg';
+export { default as CheckOutlined } from "@/assets/icons/check_outlined.svg"

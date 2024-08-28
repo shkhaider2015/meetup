@@ -23,7 +23,9 @@ const Post = (props: IPost) => {
   };
 
   const _goToProfile = () => {
-    navigate("Profile");
+    navigate("OtherProfile", {
+      userId: "some-id"
+    });
   };
 
   return (

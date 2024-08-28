@@ -65,6 +65,8 @@ const Button = (props: IButton) => {
 
   if (Icon || loading) mainTextStyles.push({ marginLeft: 8 });
 
+  if(disabled) mainStyles.push({ opacity: .7 })
+
   const _onPress = () => {
     if(loading || disabled) return
     onPress?.();
@@ -90,6 +92,7 @@ const Button = (props: IButton) => {
     <TouchableOpacity
       style={[...mainStyles, ...containerStyle]}
       onPress={_onPress}
+      disabled={disabled}
       activeOpacity={0.7}
     >
       {loading && (
