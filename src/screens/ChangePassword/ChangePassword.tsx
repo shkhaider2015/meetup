@@ -39,7 +39,9 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
     validationSchema: ChangePasswordSchema,
     onSubmit: (values) => {
       console.log(values);
-      navigation.navigate('ForgetPasswordComplete');
+      navigation.navigate('ForgetPasswordComplete', {
+        type: "ChangePassword"
+      });
     },
   });
 

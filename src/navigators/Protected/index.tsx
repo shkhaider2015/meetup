@@ -14,6 +14,7 @@ import { convertImageURLforngRok } from "@/utils";
 import { getItem } from "@/storage";
 import { USER } from "@/constants";
 import ChangePassword from "@/screens/ChangePassword/ChangePassword";
+import ForgetPasswordCompleteScreen from "@/screens/ForgetPasswordComplete/ForgetPasswordComplete";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -69,6 +70,7 @@ const ProtectedScreens = () => {
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="ForgetPasswordComplete" component={ForgetPasswordCompleteScreen} />
     </Stack.Navigator>
   );
 };

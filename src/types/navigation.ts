@@ -12,7 +12,9 @@ export type RootStackParamList = {
 	About: undefined;
 	ForgetPassword: undefined;
 	ForgetPasswordChange: undefined;
-	ForgetPasswordComplete: undefined;
+	ForgetPasswordComplete: {
+		type: "ForgetPassword" | "ChangePassword"
+	};
 	Ineterests: undefined;
 	Explore: undefined;
 	Chat: undefined;

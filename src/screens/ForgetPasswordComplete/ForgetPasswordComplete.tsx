@@ -7,10 +7,15 @@ import { RootStackParamList } from '@/types/navigation';
 import { ImageBackground, SafeAreaView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
-const ForgetPasswordCompleteScreen = ({ navigation }: ForgetPasswordCompleteScreenType) => {
+const ForgetPasswordCompleteScreen = ({ navigation, route }: ForgetPasswordCompleteScreenType) => {
+  const { type } = route.params;
   const { layout, gutters, fonts, colors } = useTheme();
 
   const _goToLogin = () => {
+    if(type === "ChangePassword") {
+      navigation.navigate("Explore");
+      return
+    }
     navigation.navigate("Login")
   }
 
@@ -22,7 +27,7 @@ const ForgetPasswordCompleteScreen = ({ navigation }: ForgetPasswordCompleteScre
           </ImageBackground>
           <Text style={[ fonts.size_32, fontFamily._600_SemiBold, fonts.gray800, gutters.marginTop_24 ]} >Password Changed!</Text>
           <Text style={[ fonts.size_16, fonts.gray300, fontFamily._400_Regular ]} >Your password has been changed successfully.</Text>
-          <Button label='Back to login' type="PRIMARY" containerStyle={[ gutters.marginTop_40, { width: '100%'} ]} onPress={_goToLogin}  />
+          <Button label={type === "ForgetPassword" ? 'Back to login' : 'Back to home'} type="PRIMARY" containerStyle={[ gutters.marginTop_40, { width: '100%'} ]} onPress={_goToLogin}  />
         </View>
     </SafeAreaView>
   );

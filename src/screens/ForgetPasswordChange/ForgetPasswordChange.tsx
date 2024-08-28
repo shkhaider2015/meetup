@@ -25,7 +25,9 @@ const ForgetPasswordChangeScreen = ({
       validationSchema: forgetPasswordChangeSchema,
       onSubmit: (values) => {
         console.log(values);
-        navigation.navigate('ForgetPasswordComplete');
+        navigation.navigate('ForgetPasswordComplete', {
+          type : "ForgetPassword"
+        });
       },
     },
   );

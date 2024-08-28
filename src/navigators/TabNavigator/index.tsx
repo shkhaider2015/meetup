@@ -39,6 +39,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostNavigator from "../Post";
 import { useGlobalBottomSheet, useLoader } from "@/hooks";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -206,14 +207,19 @@ const profileOptions = (): BottomTabNavigationOptions => {
           return logout();
         },
         onSuccess: () => {
-          hideLoader();
           closeBottomSheet();
           setTimeout(() => {
             dispatch(clearUser());
+            hideLoader();
           }, 300);
         },
-        onError: () => {
+        onError: (error) => {
           hideLoader();
+          Toast.show({
+            type: "error",
+            text1: "Logout Failed",
+            text2: error?.message || "Something wrong happened"
+          })
         },
       });
 
@@ -242,11 +248,8 @@ const profileOptions = (): BottomTabNavigationOptions => {
                 flexDirection: "row",
                 columnGap: 30,
                 alignItems: "center",
-                borderWidth: 1,
-                borderColor: '#ededed',
                 paddingHorizontal: 5,
                 paddingVertical: 5,
-                borderRadius: 10
               }}
               onPress={_goToChangePassword}
             >
@@ -262,17 +265,14 @@ const profileOptions = (): BottomTabNavigationOptions => {
                 Change Password
               </Text>
             </TouchableOpacity>
+            <View style={{ height: 2, backgroundColor: '#eeeeee', marginVertical: 5 }} />
             <TouchableOpacity
               style={{
                 flexDirection: "row",
                 columnGap: 30,
                 alignItems: "center",
-                borderWidth: 1,
-                borderColor: '#ededed',
                 paddingHorizontal: 5,
                 paddingVertical: 5,
-                borderRadius: 10,
-                marginTop: 10
               }}
               onPress={_logout}
             >
