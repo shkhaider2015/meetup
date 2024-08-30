@@ -17,7 +17,8 @@ import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {
   accountVarification,
-  resendAccountVarification,
+  forgetPasswordOTP,
+  resendCode,
 } from '@/services/users/auth';
 import { useLoader } from '@/hooks';
 import _ from 'lodash';
@@ -55,8 +56,8 @@ function OTP({ navigation, route }: OTPScreenType) {
   });
 
   const { isPending: resendIsPending, mutate: resendMutate } = useMutation({
-    mutationFn: () => {
-      return resendAccountVarification(user_id);
+    mutationFn: (type:"FORGET_PASSWORD" | "ACTIVATE_ACCOUNT") => {
+      return resendCode(user_id, type);
     },
     onSuccess: () => {
       hideLoader();
@@ -74,6 +75,25 @@ function OTP({ navigation, route }: OTPScreenType) {
     },
   });
 
+  const { isPending:fp_Peding, mutate:fp_Mutation } = useMutation({
+    mutationFn: (code: string) => {
+      return forgetPasswordOTP(user_id, code);
+    },
+    onSuccess: () => {
+      hideLoader();
+      setTimeout(() => {
+        navigation.navigate("ForgetPasswordChange", {
+          user_id
+        });
+      }, 300);
+    },
+    onError: (error) => {
+      hideLoader();
+      setState('FINISH');
+      setError(error.message || 'something wrong happened');
+    },
+  });
+
   useEffect(() => {
     if (!_.isEmpty(user_id) && !_.isEmpty(email)) {
       setState('START');
@@ -82,8 +102,13 @@ function OTP({ navigation, route }: OTPScreenType) {
 
   const _resend = () => {
     setError(undefined);
-    showLoader();
-    resendMutate();
+  showLoader();
+    if(type === "FORGOT_PASSWORD") {
+      resendMutate("FORGET_PASSWORD");
+    } else {
+      resendMutate("ACTIVATE_ACCOUNT");
+    }
+
   };
 
   const _onSumit = () => {
@@ -92,7 +117,7 @@ function OTP({ navigation, route }: OTPScreenType) {
       return;
     }
     if(type === "FORGOT_PASSWORD") {
-      navigation.navigate("ForgetPasswordChange");
+      fp_Mutation(code)
       return
     }
     setError(undefined);

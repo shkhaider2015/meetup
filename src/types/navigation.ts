@@ -11,7 +11,9 @@ export type RootStackParamList = {
 	Home: undefined;
 	About: undefined;
 	ForgetPassword: undefined;
-	ForgetPasswordChange: undefined;
+	ForgetPasswordChange: {
+		user_id: string;
+	};
 	ForgetPasswordComplete: {
 		type: "ForgetPassword" | "ChangePassword"
 	};

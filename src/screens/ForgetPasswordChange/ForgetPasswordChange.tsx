@@ -1,21 +1,51 @@
 import { Button, InputField } from '@/components/template';
+import { forgetPassword } from '@/services/users/auth';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { forgetPasswordChangeSchema } from '@/types/schemas/user';
+import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useRef } from 'react';
 import { Keyboard, SafeAreaView, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import Toast from 'react-native-toast-message';
 
 const ForgetPasswordChangeScreen = ({
   navigation,
+  route
 }: ForgetPasswordChangeScreenType) => {
+  const { user_id } = route.params
   const { layout, gutters, fonts, colors } = useTheme();
 
   const confirmPasswordRef = useRef<TextInput>(null);
 
+  const { mutate } = useMutation({
+    mutationFn: (values:{ newPassword: string; confirmNewPassword: string }) => {
+      return forgetPassword(user_id, values.newPassword, values.confirmNewPassword)
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: "success",
+        text1: "Password Chage Successfully",
+        text2: "You can ow login with newly created password"
+      })
+
+      setTimeout(() => {
+        navigation.navigate('ForgetPasswordComplete', {
+          type : "ForgetPassword"
+        });
+      }, 500)
+    },
+    onError:(error) => {
+      Toast.show({
+        type: "error",
+        text1: "Password Chage Failed",
+        text2: error?.message || "Something wrong happened"
+      })
+    }
+  })
   const formik = useFormik<{ newPassword: string; confirmNewPassword: string }>(
     {
       initialValues: {
@@ -25,9 +55,7 @@ const ForgetPasswordChangeScreen = ({
       validationSchema: forgetPasswordChangeSchema,
       onSubmit: (values) => {
         console.log(values);
-        navigation.navigate('ForgetPasswordComplete', {
-          type : "ForgetPassword"
-        });
+        mutate(values)
       },
     },
   );

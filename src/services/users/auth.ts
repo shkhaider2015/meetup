@@ -86,13 +86,14 @@ export const accountVarification = async (id: string, code: string) => {
   }
 };
 
-export const resendAccountVarification = async (id: string) => {
+export const resendCode = async (id: string, type:"FORGET_PASSWORD" | "ACTIVATE_ACCOUNT") => {
   try {
-    const response = await instance.get(END_POINTS.RESEND_ACTIVATION_CODE, {
-      searchParams: {
-        id,
+    const response = await instance.post(END_POINTS.RESEND_ACTIVATION_CODE, {
+      json: {
+        user_id: id,
+        type
       },
-    });
+    }).json();
 
     return response;
   } catch (error: any) {
@@ -133,6 +134,81 @@ export const loadUser = async (accessToken: string) => {
     }
   }
 };
+
+export const forgetPasswordApply = async (email:string) => {
+  try {
+    const response: any = await instance
+      .post(END_POINTS.FORGET_PASSWORD_APPLY, {
+        json: {
+          email
+        },
+      })
+      .json();
+
+    return response
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      // console.log('Validation failed:', error.errors);
+      throw error;
+    } else if (error?.response) {
+      const errorData = await error.response.json();
+      // console.log('HTTP Error:', errorData);
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+}
+export const forgetPasswordOTP = async (user_id: string, otp:string) => {
+  try {
+    const response: any = await instance
+      .post(END_POINTS.FORGET_PASSWORD_VERIFICATION, {
+        json: {
+          userId: user_id,
+          otp
+        },
+      })
+      .json();
+
+    return response
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      // console.log('Validation failed:', error.errors);
+      throw error;
+    } else if (error?.response) {
+      const errorData = await error.response.json();
+      // console.log('HTTP Error:', errorData);
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+}
+export const forgetPassword = async (userId:string, password:string, confirmPassword: string) => {
+  try {
+    const response: any = await instance
+      .post(END_POINTS.FORGET_PASSWORD, {
+        json: {
+          userId,
+          password,
+          confirmPassword
+        },
+      })
+      .json();
+
+    return response
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      throw error;
+    } else if (error?.response) {
+      const errorData = await error.response.json();
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+}
+
 
 export const logout = async () => {
   try {

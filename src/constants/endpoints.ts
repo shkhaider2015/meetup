@@ -10,7 +10,11 @@ const APIEndPoints = {
     LOGOUT: 'auth/logout',
     ACCOUNT_ACTIVATION: 'auth/activate-user',
     RESEND_ACTIVATION_CODE: 'auth/resent-activation-code',
-    LOAD_USER: 'auth/verify-user-token'
+    LOAD_USER: 'auth/verify-user-token',
+    CATEGORIES: 'categories/all',
+    FORGET_PASSWORD_APPLY: 'auth/check-email',
+    FORGET_PASSWORD_VERIFICATION: 'auth/verify-otp',
+    FORGET_PASSWORD: 'auth/reset-password'
 }
 
 export default APIEndPoints;

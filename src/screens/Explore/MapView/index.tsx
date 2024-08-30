@@ -12,7 +12,7 @@ import {
   Cat_Gaming,
   Cat_Music,
   Cat_Reading,
-  Cat_Running,
+  Cat_Running_Left,
   Cat_Swimming,
 } from "@/assets/icon";
 import {
@@ -115,7 +115,7 @@ const data: ICustomMarker[] = [
     latitude: 37.773602,
     longitude: -122.444264,
     user_image: DummyLaraBeu,
-    CatIcon: <Cat_Running color={"#FFFFFF"} />,
+    CatIcon: <Cat_Running_Left color={"#FFFFFF"} />,
     backgroundColor: '#08b5ff'
   },
 ];

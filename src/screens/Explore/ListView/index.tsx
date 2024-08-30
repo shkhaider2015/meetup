@@ -4,7 +4,7 @@ import {
   DummyLaraBeu,
   DummyUserLocation,
 } from "@/assets/dummyImages";
-import { Cat_Running, Cat_Swimming } from "@/assets/icon";
+import { Cat_Running_Left, Cat_Swimming } from "@/assets/icon";
 import { Post } from "@/components";
 import { SafeScreen } from "@/components/template";
 import { useTheme } from "@/theme";
@@ -56,7 +56,7 @@ const PostsData: IPost[] = [
       imageSource: DummyLaraBeu,
     },
     distance: "3km",
-    Doing_icon: <Cat_Running />,
+    Doing_icon: <Cat_Running_Left />,
     main_post: DummyUserLocation,
     created_at: "3 hours ago",
     desc: dummyDesc,
