@@ -12,6 +12,7 @@ import {
   Cat_Travel,
 } from "@/assets/icon";
 import { Button } from "@/components/template";
+import { activityData } from "@/constants/activities";
 import { useTheme } from "@/theme";
 import { fontFamily } from "@/theme/_config";
 import { RootStackParamList } from "@/types/navigation";
@@ -53,6 +54,7 @@ const Interests = ({ navigation }: InterestsScreenType) => {
             layout.fullHeight,
             {
               minHeight: screenHeight - 75,
+              marginTop: 75
             },
           ]}
         >
@@ -191,8 +193,6 @@ const Interests = ({ navigation }: InterestsScreenType) => {
               layout.justifyCenter,
               {
                 flex: 1,
-                // borderWidth: 2,
-                // borderColor: 'blue'
               },
             ]}
           >

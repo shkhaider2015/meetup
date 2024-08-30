@@ -9,7 +9,7 @@ import {
   Animated,
   Text,
 } from 'react-native';
-import { Eye, EyeSlash } from '@/assets/icon';
+import { Hide, Show } from '@/assets/icon';
 import { fontFamily } from '@/theme/_config';
 
 const InputField = forwardRef<TextInput, IInputFieldProps>(
@@ -98,9 +98,9 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
         {inputType === 'PASSWORD' && (
           <TouchableOpacity onPress={_onPressEyeIcon} style={[ layout.justifyCenter, {height: 60} ]}>
             {!secureText ? (
-              <EyeSlash color={backgrounds.gray300.backgroundColor} />
+              <Show color={backgrounds.gray300.backgroundColor} />
             ) : (
-              <Eye stroke={backgrounds.gray300.backgroundColor} />
+              <Hide color={backgrounds.gray300.backgroundColor} />
             )}
           </TouchableOpacity>
         )}

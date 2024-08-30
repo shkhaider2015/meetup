@@ -1,7 +1,7 @@
 import { RootStackParamList } from "@/types/navigation";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabsNavigator from "../TabNavigator";
-import { Interests, Profile, Carousel, EditProfile, OtherProfile } from "@/screens";
+import { Interests, Carousel, EditProfile, OtherProfile, ChangePassword, ForgetPasswordComplete } from "@/screens";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useMutation } from "@tanstack/react-query";
@@ -13,8 +13,6 @@ import { IUserReducer } from "@/types/reducer";
 import { convertImageURLforngRok } from "@/utils";
 import { getItem } from "@/storage";
 import { USER } from "@/constants";
-import ChangePassword from "@/screens/ChangePassword/ChangePassword";
-import ForgetPasswordCompleteScreen from "@/screens/ForgetPasswordComplete/ForgetPasswordComplete";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -70,7 +68,7 @@ const ProtectedScreens = () => {
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="ForgetPasswordComplete" component={ForgetPasswordCompleteScreen} />
+      <Stack.Screen name="ForgetPasswordComplete" component={ForgetPasswordComplete} />
     </Stack.Navigator>
   );
 };
