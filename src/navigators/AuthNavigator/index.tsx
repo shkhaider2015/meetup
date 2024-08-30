@@ -119,12 +119,6 @@ function AuthNavigator() {
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
-              <Button
-                Icon={<ChevronLeft />}
-                isCirculer={true}
-                type="SECONDARY"
-                onPress={_goBack}
-              />
             </View>
           ),
         }}

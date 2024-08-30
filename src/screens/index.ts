@@ -15,3 +15,5 @@ export { default as PostLocation } from "./PostLocation/PostLocation";
 export { default as Carousel } from "./Carousel/Carousel";
 export { default as EditProfile } from './EditProfile/EditProfile';
 export { default as OtherProfile } from './OthersProfile/OthersProfile';
+export { default as ChangePassword } from './ChangePassword/ChangePassword';
+export { default as ForgetPasswordComplete } from './ForgetPasswordComplete/ForgetPasswordComplete';
