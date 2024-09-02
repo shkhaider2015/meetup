@@ -2,6 +2,7 @@ import { Button, InputField } from '@/components/template';
 import { forgetPassword } from '@/services/users/auth';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
+import { IForgetPassword } from '@/types/forms';
 import { RootStackParamList } from '@/types/navigation';
 import { forgetPasswordChangeSchema } from '@/types/schemas/user';
 import { useMutation } from '@tanstack/react-query';
@@ -22,8 +23,8 @@ const ForgetPasswordChangeScreen = ({
   const confirmPasswordRef = useRef<TextInput>(null);
 
   const { mutate } = useMutation({
-    mutationFn: (values:{ newPassword: string; confirmNewPassword: string }) => {
-      return forgetPassword(user_id, values.newPassword, values.confirmNewPassword)
+    mutationFn: (values:IForgetPassword) => {
+      return forgetPassword(user_id, values)
     },
     onSuccess: () => {
       Toast.show({
@@ -46,7 +47,7 @@ const ForgetPasswordChangeScreen = ({
       })
     }
   })
-  const formik = useFormik<{ newPassword: string; confirmNewPassword: string }>(
+  const formik = useFormik<IForgetPassword>(
     {
       initialValues: {
         newPassword: '',

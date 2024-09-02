@@ -1,3 +1,4 @@
+import store from "@/store";
 import { PermissionsAndroid, Platform } from "react-native";
 import { request, PERMISSIONS, RESULTS, check } from "react-native-permissions";
 
@@ -102,3 +103,9 @@ export const convertImageURLforngRok = (url: string) => {
 
   return convertedUrl;
 };
+
+
+export const getToken = () => {
+  const state = store.getState();
+  return state.user.token; 
+}

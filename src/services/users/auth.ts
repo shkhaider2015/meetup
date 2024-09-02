@@ -1,4 +1,4 @@
-import { ISignupForm, IUserLoginForm } from '@/types/forms';
+import { IChangePassword, IForgetPassword, ISignupForm, IUserLoginForm } from '@/types/forms';
 import { userSchema } from '@/types/schemas/user';
 import * as yup from 'yup';
 import { instance } from '../instance';
@@ -184,14 +184,14 @@ export const forgetPasswordOTP = async (user_id: string, otp:string) => {
     }
   }
 }
-export const forgetPassword = async (userId:string, password:string, confirmPassword: string) => {
+export const forgetPassword = async (userId:string, data:IForgetPassword) => {
   try {
     const response: any = await instance
       .post(END_POINTS.FORGET_PASSWORD, {
         json: {
           userId,
-          password,
-          confirmPassword
+          password: data.newPassword,
+          confirmPassword: data.confirmNewPassword
         },
       })
       .json();
@@ -209,7 +209,6 @@ export const forgetPassword = async (userId:string, password:string, confirmPass
   }
 }
 
-
 export const logout = async () => {
   try {
     await CometChat.logout();
@@ -218,3 +217,28 @@ export const logout = async () => {
     console.error('Logout:', error?.message || error);
   }
 };
+
+
+export const changePassword = async (userId:string, data:IChangePassword) => {
+  try {
+    const response: any = await instance
+      .post(END_POINTS.CHANGE_PASSWORD, {
+        json: {
+          userId,
+          ...data
+        },
+      })
+      .json();
+
+    return response
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      throw error;
+    } else if (error?.response) {
+      const errorData = await error.response.json();
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+}
