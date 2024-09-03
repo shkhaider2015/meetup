@@ -1,21 +1,10 @@
-import {
-  Cat_Charity,
-  Cat_Cooking,
-  Cat_Fashioon,
-  Cat_Gaming,
-  Cat_Music,
-  Cat_Painting,
-  Cat_PawPrint,
-  Cat_Photography,
-  Cat_Reading,
-  Cat_Speech,
-  Cat_Travel,
-} from "@/assets/icon";
-import { Button } from "@/components/template";
-import { activityData } from "@/constants/activities";
-import { useTheme } from "@/theme";
-import { fontFamily } from "@/theme/_config";
-import { RootStackParamList } from "@/types/navigation";
+import { Button } from '@/components/template';
+import { activityData, IActivity } from '@/constants/activities';
+import { useTheme } from '@/theme';
+import { fontFamily } from '@/theme/_config';
+import { RootStackParamList } from '@/types/navigation';
+import _ from 'lodash';
+import { useState } from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -25,12 +14,20 @@ import {
   TouchableOpacity,
   StyleProp,
   ViewStyle,
-} from "react-native";
-import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
+  StyleSheet,
+} from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+
+const activitiesData: IActivityInterests[] = _.cloneDeep(activityData).map(
+  (item) => ({ ...item, isSelected: false }),
+);
 
 const Interests = ({ navigation }: InterestsScreenType) => {
-  const { layout, gutters, backgrounds, fonts } = useTheme();
-  const screenHeight = Dimensions.get("window").height;
+  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
+  const screenHeight = Dimensions.get('window').height;
+
+  const [activities, setActivities] = useState(activitiesData);
+  const [error, setError] = useState<string>();
 
   const categoryStyle: StyleProp<ViewStyle> = [
     gutters.paddingHorizontal_12,
@@ -38,52 +35,103 @@ const Interests = ({ navigation }: InterestsScreenType) => {
     { height: 50 },
   ];
 
+  const _onSelect = (id:string , isSelected: boolean) => {
+    const data = _.cloneDeep(activities).map(item => item.id === id ? ({
+      ...item,
+      isSelected: isSelected
+    }): item )
+
+    setActivities(data)
+  }
+
+  const renderItem = (item: IActivityInterests, index: number) => {
+    let isTwo = false;
+
+    if(index % 5 === 0 || index % 5 === 1) isTwo = true;
+    else isTwo = false;
+
+    const isIndented = index % 5 === 1 || index % 5 === 3;
+
+    return (
+      <View style={[{ width: isTwo ? '37%' : '30%' }]}>
+        <Button
+          label={item.label}
+          Icon={
+            <item.Icon
+              color={item.isSelected ? colors.gray00 : colors.primary}
+              width={22}
+              height={22}
+            />
+          }
+          type={item.isSelected ? 'PRIMARY' : 'SECONDARY'}
+          onPress={() => _onSelect(item.id, !item.isSelected)}
+          containerStyle={[{height: 50}]}
+        />
+      </View>
+    );
+  };
+
+  const _onCreate = () => {
+    const selectedActivities = activities.filter(item => item.isSelected).map(item => item.id)
+    if(selectedActivities.length === 0) {
+      setError("No activity selected");
+      return
+    }
+
+    navigation.navigate("Tabs")
+  }
+
+  const _onSkip = () => {
+    navigation.navigate("Tabs")
+  }
+
   return (
     <>
       <StatusBar
         translucent={true}
-        backgroundColor={"#FE434E00"}
-        barStyle={"dark-content"}
+        backgroundColor={'#FE434E00'}
+        barStyle={'dark-content'}
       />
-      <ScrollView style={[layout.flex_1, backgrounds.primary04]}>
+
+      <View
+        style={[
+          layout.flex_1,
+          gutters.paddingHorizontal_24,
+          gutters.paddingVertical_12,
+          layout.fullHeight,
+          backgrounds.primary04,
+          {
+            minHeight: screenHeight,
+            paddingTop: 75,
+          },
+        ]}
+      >
         <View
           style={[
-            layout.flex_1,
-            gutters.paddingHorizontal_24,
-            gutters.paddingVertical_12,
-            layout.fullHeight,
+            layout.col,
             {
-              minHeight: screenHeight - 75,
-              marginTop: 75
+              flex: 5,
+              // borderWidth: 2,
+              // borderColor: 'green'
             },
           ]}
         >
-          <View
-            style={[
-              layout.col,
-              {
-                flex: 4,
-                // borderWidth: 2,
-                // borderColor: 'green'
-              },
-            ]}
-          >
-            <View>
-              <Text
-                style={[
-                  fontFamily._600_SemiBold,
-                  fonts.size_32,
-                  fonts.alignCenter,
-                  fonts.black,
-                ]}
-              >
-                Select Up to 3 Interests
-              </Text>
-              <Text style={[fonts.alignCenter, fonts.gray250, fonts.size_16]}>
-                Tell us what piques your curiosity and passions
-              </Text>
-            </View>
-            <View
+          <View>
+            <Text
+              style={[
+                fontFamily._600_SemiBold,
+                fonts.size_32,
+                fonts.alignCenter,
+                fonts.black,
+              ]}
+            >
+              Select Up to 3 Interests
+            </Text>
+            <Text style={[fonts.alignCenter, fonts.gray250, fonts.size_16]}>
+              Tell us what piques your curiosity and passions
+            </Text>
+          </View>
+          {/* <View
               style={[
                 layout.row,
                 layout.justifyCenter,
@@ -186,35 +234,55 @@ const Interests = ({ navigation }: InterestsScreenType) => {
                 type="SECONDARY"
                 containerStyle={[...categoryStyle]}
               />
+            </View> */}
+          <ScrollView>
+            <View
+              style={[
+                layout.row,
+                layout.justifyCenter,
+                gutters.marginVertical_24,
+                layout.wrap,
+                { rowGap: 20, columnGap: 15 },
+              ]}
+            >
+              {activities.map((item, index) => renderItem(item, index))}
             </View>
-          </View>
-          <View
-            style={[
-              layout.justifyCenter,
-              {
-                flex: 1,
-              },
-            ]}
-          >
-            <TouchableOpacity>
-              <Text style={[fonts.primary, fonts.alignCenter]}>
-                Skip for now
-              </Text>
-            </TouchableOpacity>
-            <Button
-              label="Create Account"
-              containerStyle={[gutters.marginVertical_12]}
-            />
-          </View>
+          </ScrollView>
         </View>
-      </ScrollView>
+        <View
+          style={[
+            layout.justifyCenter,
+            {
+              flex: 1,
+            },
+          ]}
+        >
+          <TouchableOpacity onPress={_onSkip}>
+            <Text style={[fonts.primary, fonts.alignCenter]}>Skip for now</Text>
+          </TouchableOpacity>
+          <Button
+            label="Create Account"
+            containerStyle={[gutters.marginVertical_12]}
+            onPress={_onCreate}
+          />
+        </View>
+      </View>
     </>
   );
 };
 
+const styles = StyleSheet.create({
+  twoItem: {},
+  threeItem: {},
+});
+
+interface IActivityInterests extends IActivity {
+  isSelected: boolean;
+}
+
 type InterestsScreenType = NativeStackScreenProps<
   RootStackParamList,
-  "Ineterests"
+  'Ineterests'
 >;
 
 export default Interests;
