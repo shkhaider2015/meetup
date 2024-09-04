@@ -14,7 +14,8 @@ const APIEndPoints = {
     CATEGORIES: 'categories/all',
     FORGET_PASSWORD_APPLY: 'auth/check-email',
     FORGET_PASSWORD_VERIFICATION: 'auth/verify-otp',
-    FORGET_PASSWORD: 'auth/reset-password'
+    FORGET_PASSWORD: 'auth/reset-password',
+    CHANGE_PASSWORD: 'user/change-password'
 }
 
 export default APIEndPoints;

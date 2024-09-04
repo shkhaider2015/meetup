@@ -11,7 +11,7 @@ export interface IPost {
     }
     main_post: ImageSourcePropType | undefined;
     distance: string;
-    Doing_icon: React.ReactElement;
+    activity: string;
     created_at: string;
     desc: string;
 }

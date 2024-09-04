@@ -1,32 +1,38 @@
-import { Edit, Heart, MenuHr, Share, Tick, Trash } from "@/assets/icon";
-import { useTheme } from "@/theme";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button } from "../template";
-import { fontFamily } from "@/theme/_config";
-import { IPost } from "@/types/post";
-import UserModal from "../Modals/User";
-import { useState } from "react";
-import { useGlobalBottomSheet } from "@/hooks";
-import { useNavigation } from "@react-navigation/native";
-import { NavigationHookProps, RootStackParamList } from "@/types/navigation";
+import { Edit, Heart, MenuHr, Share, Tick, Trash } from '@/assets/icon';
+import { useTheme } from '@/theme';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button } from '../template';
+import { fontFamily } from '@/theme/_config';
+import { IPost } from '@/types/post';
+import UserModal from '../Modals/User';
+import { useState } from 'react';
+import { useGlobalBottomSheet } from '@/hooks';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationHookProps } from '@/types/navigation';
+import { getIconByID } from '@/utils';
 
 const Post = (props: IPost) => {
-  const { user, distance, Doing_icon, created_at, desc, main_post, id } = props;
+  const { user, distance, activity, created_at, desc, main_post, id } = props;
   const [showDetails, setShowDetails] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
-  const { layout, gutters, fonts, backgrounds } = useTheme();
+  const { layout, gutters, fonts, backgrounds, colors } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { navigate } = useNavigation<NavigationHookProps>();
 
+  const Icon = getIconByID(activity);
+
   const _onBottomSheetOpen = () => {
-    openBottomSheet(<UserPostMenu />, ["25%"]);
+    openBottomSheet(<UserPostMenu />, ['25%']);
   };
 
   const _goToProfile = () => {
-    navigate("OtherProfile", {
-      userId: "some-id"
+    navigate('OtherProfile', {
+      userId: 'some-id',
     });
   };
+
+  
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24]}>
@@ -53,7 +59,18 @@ const Post = (props: IPost) => {
               <Tick />
             </View>
           </View>
-          {Doing_icon}
+          {Icon && (
+            <View
+              style={[
+                layout.justifyCenter,
+                layout.itemsCenter,
+                backgrounds.primary,
+                { width: 40, height: 40, borderRadius: 50 },
+              ]}
+            >
+              <Icon color={colors.gray00} />
+            </View>
+          )}
         </View>
         <TouchableOpacity
           onPress={_onBottomSheetOpen}
@@ -90,7 +107,7 @@ const Post = (props: IPost) => {
             <Button
               Icon={
                 <Heart
-                  color={backgrounds.primary.backgroundColor}
+                  color={favorite ? colors.primary : colors.gray250 }
                   width={23}
                   height={23}
                 />
@@ -98,6 +115,7 @@ const Post = (props: IPost) => {
               isCirculer={true}
               type="SECONDARY"
               containerStyle={[{ width: 40, height: 40 }]}
+              onPress={() => setFavorite(pS => !pS)}
             />
             <Button
               Icon={
@@ -117,13 +135,13 @@ const Post = (props: IPost) => {
         <Text style={[gutters.paddingHorizontal_10, fonts.size_16]}>
           {/* Details */}
           <Text style={[fontFamily._500_Medium, fonts.black]}>
-            Username_01:{" "}
+            Username_01:{' '}
           </Text>
           <Text style={[fonts.gray300]}>
-            {desc.slice(0, 60)}{" "}
+            {desc.slice(0, 60)}{' '}
             <Text style={[fonts.primary]} onPress={() => setShowDetails(true)}>
               See more ..
-            </Text>{" "}
+            </Text>{' '}
           </Text>
         </Text>
       </View>
@@ -141,7 +159,7 @@ const UserPostMenu = () => {
 
   return (
     <View style={[gutters.paddingHorizontal_12, gutters.paddingVertical_24]}>
-      {["One", "Two", "Three", "Four"].map((item, ind) => (
+      {['One', 'Two', 'Three', 'Four'].map((item, ind) => (
         <TouchableOpacity
           key={ind}
           style={[
@@ -168,7 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   location: {
-    width: "100%",
+    width: '100%',
     height: 210,
   },
 });

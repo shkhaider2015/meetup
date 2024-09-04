@@ -1,10 +1,14 @@
 import { ChevronLeft } from '@/assets/icon';
 import { Button, InputField, SafeScreen } from '@/components/template';
+import { changePassword } from '@/services/users';
+import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
+import { IChangePassword } from '@/types/forms';
 import { NavigationHookProps, RootStackParamList } from '@/types/navigation';
 import { ChangePasswordSchema } from '@/types/schemas/user';
 import { useNavigation } from '@react-navigation/native';
+import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useRef } from 'react';
 import {
@@ -18,19 +22,42 @@ import {
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
 
 const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
   const { layout, gutters, fonts } = useTheme();
   const { height } = Dimensions.get('screen');
   const screenHeight = height - heights.tabNavigationHeader - 60;
+  const user = useSelector((state:RootState) => state.user)
   const newPasswordRef = useRef<TextInput>(null);
   const confirmNewPasswordRef = useRef<TextInput>(null);
 
-  const formik = useFormik<{
-    currentPassword: string;
-    newPassword: string;
-    confirmNewPassword: string;
-  }>({
+  const { isPending, mutate } = useMutation({
+    mutationFn: (data:IChangePassword) => {
+      return changePassword(user.id, data);
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: "success",
+        text1: "Password changed successfully"
+      })
+      setTimeout(() => {
+        navigation.navigate("ForgetPasswordComplete", {
+          type: "ChangePassword"
+        })
+      }, 500)
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: "Password changed failed",
+        text2: error.message
+      })
+    }
+  })
+
+  const formik = useFormik<IChangePassword>({
     initialValues: {
       currentPassword: '',
       newPassword: '',
@@ -39,9 +66,7 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
     validationSchema: ChangePasswordSchema,
     onSubmit: (values) => {
       console.log(values);
-      navigation.navigate('ForgetPasswordComplete', {
-        type: "ChangePassword"
-      });
+      mutate(values)
     },
   });
 
@@ -161,6 +186,7 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
                 label="Update"
                 type="PRIMARY"
                 onPress={formik.handleSubmit}
+                loading={isPending}
               />
             </View>
           </View>

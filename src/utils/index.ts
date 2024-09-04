@@ -1,3 +1,5 @@
+import { activityData } from "@/constants/activities";
+import store from "@/store";
 import { PermissionsAndroid, Platform } from "react-native";
 import { request, PERMISSIONS, RESULTS, check } from "react-native-permissions";
 
@@ -102,3 +104,15 @@ export const convertImageURLforngRok = (url: string) => {
 
   return convertedUrl;
 };
+
+
+export const getToken = () => {
+  const state = store.getState();
+  return state.user.token; 
+}
+
+export const getIconByID = (id:string) => {
+  const icon = activityData.find(item => item.id === id)?.Icon ;
+
+  return icon
+}
