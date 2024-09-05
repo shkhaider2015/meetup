@@ -6,27 +6,40 @@ import {
   Cat_Shopping,
   Cat_Skateboarding,
   Cat_Sports,
-} from "@/assets/icon";
-import { useTheme } from "@/theme";
-import { fontFamily } from "@/theme/_config";
-import { ActivityPickerProps } from "@/types/activityPicker";
+} from '@/assets/icon';
+import { useTheme } from '@/theme';
+import { fontFamily } from '@/theme/_config';
+import { ActivityPickerProps, IActivityPicker } from '@/types/activityPicker';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { SvgProps } from "react-native-svg";
-import { Button } from "../template";
+} from '@gorhom/bottom-sheet';
+import { useEffect, useRef, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SvgProps } from 'react-native-svg';
+import { Button } from '../template';
+import { activityData } from '@/constants/activities';
+import _ from 'lodash';
+
+const activitesData: IActivityPicker[] = activityData.map((item) => ({
+  ...item,
+  isSelected: false,
+}));
 
 const ActivityPicker = (props: ActivityPickerProps) => {
-  const { open, onClose, onConfirm } = props;
+  const { open, isMulti = false, initialData = [], onClose, onConfirm } = props;
 
-  const [snapPoints] = useState<string[]>(["50%"]);
-  const [dummyCat, setDummyCat] = useState(dummyCategories);
+  const [snapPoints] = useState<string[]>(['75%']);
+  const [activities, setActivities] = useState(
+    activitesData.map((item) =>
+      initialData.some((id) => item.id === id)
+        ? { ...item, isSelected: true }
+        : item,
+    ),
+  );
 
-  const { backgrounds, fonts, colors, gutters, layout } = useTheme();
+  const { borders, fonts, colors, gutters, layout } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
@@ -36,10 +49,14 @@ const ActivityPicker = (props: ActivityPickerProps) => {
   }, [open]);
 
   const _onPress = (id: string) => {
-    setDummyCat((pS) =>
+    setActivities((pS) =>
       pS.map((item) =>
-        item.id === id ? { ...item, isSelected: !item.isSelected } : {...item, isSelected: false}
-      )
+        item.id === id
+          ? { ...item, isSelected: !item.isSelected }
+          : isMulti
+            ? item
+            : { ...item, isSelected: false },
+      ),
     );
   };
 
@@ -54,10 +71,13 @@ const ActivityPicker = (props: ActivityPickerProps) => {
   };
 
   const _onConfirm = () => {
-    const selected = dummyCat.find(item => item.isSelected)
-    onConfirm?.(selected?.label, selected?.Icon)
+    const selected = activities.filter((item) => item.isSelected);
+    if (_.isEmpty(selected)) return;
+
+    onConfirm?.(selected);
+
     _onCancel();
-  }
+  };
 
   return (
     <BottomSheetModalProvider>
@@ -69,7 +89,7 @@ const ActivityPicker = (props: ActivityPickerProps) => {
           <BottomSheetBackdrop
             appearsOnIndex={0}
             disappearsOnIndex={-1}
-            pressBehavior={"close"}
+            pressBehavior={'close'}
             {...props}
           />
         )}
@@ -83,7 +103,7 @@ const ActivityPicker = (props: ActivityPickerProps) => {
         enableHandlePanningGesture={true}
         enableContentPanningGesture={false}
       >
-        <View>
+        <View style={[{ height: '100%' }]}>
           <Text
             style={[
               fonts.alignCenter,
@@ -95,58 +115,65 @@ const ActivityPicker = (props: ActivityPickerProps) => {
           >
             Add Activity
           </Text>
-          <View
-            style={[
-              layout.row,
-              layout.wrap,
-              layout.justifyCenter,
-              gutters.paddingVertical_24,
-              { columnGap: 16, rowGap: 36 },
-            ]}
-          >
-            {dummyCat.map(({ Icon, ...item }) => (
-              <TouchableOpacity
-                key={item.id}
-                style={[
-                  layout.col,
-                  layout.itemsCenter,
-                  gutters.gap_6,
-                  { width: "30%" },
-                ]}
-                onPress={() => _onPress(item.id)}
-              >
-                {
-                  <Icon
-                    color={
-                      item.isSelected
-                        ? backgrounds.primary.backgroundColor
-                        : backgrounds.gray300.backgroundColor
-                    }
-                  />
-                }
-                <Text style={[fonts.gray300]}>{item.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          <ScrollView style={{ maxHeight: '75%' }}>
+            <View
+              style={[
+                layout.row,
+                layout.wrap,
+                layout.justifyCenter,
+                gutters.paddingVertical_24,
+                { columnGap: 16, rowGap: 36 },
+              ]}
+            >
+              {activities.map(({ Icon, ...item }) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[
+                    layout.col,
+                    layout.itemsCenter,
+                    gutters.gap_6,
+                    { width: '30%' },
+                  ]}
+                  onPress={() => _onPress(item.id)}
+                >
+                  {
+                    <Icon
+                      color={item.isSelected ? colors.primary : colors.gray300}
+                      width={25}
+                      height={25}
+                    />
+                  }
+                  <Text style={[fonts.gray300]}>{item.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
           <View
             style={[
               layout.row,
               layout.justifyBetween,
               layout.itemsCenter,
               gutters.paddingHorizontal_10,
+              gutters.paddingVertical_10,
+              {
+                borderWidth: 1,
+                borderTopColor: colors.gray50,
+                borderBottomColor: colors.gray00
+              },
             ]}
           >
             <Button
               label="Cancel"
               type="SECONDARY"
               onPress={_onCancel}
-              containerStyle={[{ width: "45%", height: 50 }]}
+              containerStyle={[{ width: '45%', height: 50 }]}
             />
             <Button
               label="Confirm"
               type="PRIMARY"
               onPress={_onConfirm}
-              containerStyle={[{ width: "45%", height: 50 }]}
+              containerStyle={[{ width: '45%', height: 50 }]}
+              disabled={activities.every(item => !item.isSelected)}
             />
           </View>
         </View>
@@ -162,44 +189,44 @@ const dummyCategories: {
   isSelected: boolean;
 }[] = [
   {
-    id: "171",
-    label: "Shopping",
+    id: '171',
+    label: 'Shopping',
     Icon: Cat_Shopping,
     isSelected: false,
   },
   {
-    id: "172",
-    label: "Reading",
+    id: '172',
+    label: 'Reading',
     Icon: Cat_Reading,
     isSelected: false,
   },
   {
-    id: "173",
-    label: "Fitness",
+    id: '173',
+    label: 'Fitness',
     Icon: Cat_Fitness,
     isSelected: false,
   },
   {
-    id: "174",
-    label: "Sports",
+    id: '174',
+    label: 'Sports',
     Icon: Cat_Sports,
     isSelected: false,
   },
   {
-    id: "175",
-    label: "Skateboarding",
+    id: '175',
+    label: 'Skateboarding',
     Icon: Cat_Skateboarding,
     isSelected: false,
   },
   {
-    id: "176",
-    label: "Mountain Climb",
+    id: '176',
+    label: 'Mountain Climb',
     Icon: Cat_Mountain_Climb,
     isSelected: false,
   },
   {
-    id: "177",
-    label: "Others",
+    id: '177',
+    label: 'Others',
     Icon: Cat_Others,
     isSelected: false,
   },

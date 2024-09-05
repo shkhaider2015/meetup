@@ -80,7 +80,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
 };
 
 const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigation:Navigation}) => {
-  const profile_image = useSelector((state:RootState) => state.user.profile_image)
+  const profile_image = useSelector((state:RootState) => state.user.profileImage)
   const { layout, gutters, backgrounds, fonts, borders } = useTheme();
   return (
     <View

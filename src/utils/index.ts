@@ -1,6 +1,7 @@
 import { activityData } from "@/constants/activities";
 import store from "@/store";
 import { PermissionsAndroid, Platform } from "react-native";
+import { Asset } from "react-native-image-picker";
 import { request, PERMISSIONS, RESULTS, check } from "react-native-permissions";
 
 export const requestLocationPermission = async () => {
@@ -116,3 +117,12 @@ export const getIconByID = (id:string) => {
 
   return icon
 }
+
+export const convertAssetToFile = (asset:Asset|undefined) => {
+  if(!asset) return
+  return {
+    uri: asset.uri,
+    name: asset.fileName || `file-${Date.now()}.jpg`,
+    type: asset.type,
+  };
+};

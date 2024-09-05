@@ -1,9 +1,17 @@
-import { IChangePassword, IForgetPassword, ISignupForm, IUserLoginForm } from '@/types/forms';
+import {
+  IChangePassword,
+  IEditProfileForm,
+  IForgetPassword,
+  ISignupForm,
+  IUserLoginForm,
+} from '@/types/forms';
 import { userSchema } from '@/types/schemas/user';
 import * as yup from 'yup';
 import { instance } from '../instance';
 import { END_POINTS } from '@/constants';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import _ from 'lodash';
+import { convertAssetToFile } from '@/utils';
 
 export const login = async (data: IUserLoginForm) => {
   try {
@@ -13,11 +21,9 @@ export const login = async (data: IUserLoginForm) => {
       })
       .json();
 
-    console.log('data ', response?.payload);
-
     await CometChat.login(response?.payload?.cometchat?.authToken);
 
-    return userSchema.validate(response?.payload);
+    return response?.payload;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       console.log('Validation failed:', error.errors);
@@ -86,14 +92,19 @@ export const accountVarification = async (id: string, code: string) => {
   }
 };
 
-export const resendCode = async (id: string, type:"FORGET_PASSWORD" | "ACTIVATE_ACCOUNT") => {
+export const resendCode = async (
+  id: string,
+  type: 'FORGET_PASSWORD' | 'ACTIVATE_ACCOUNT',
+) => {
   try {
-    const response = await instance.post(END_POINTS.RESEND_ACTIVATION_CODE, {
-      json: {
-        user_id: id,
-        type
-      },
-    }).json();
+    const response = await instance
+      .post(END_POINTS.RESEND_ACTIVATION_CODE, {
+        json: {
+          user_id: id,
+          type,
+        },
+      })
+      .json();
 
     return response;
   } catch (error: any) {
@@ -120,7 +131,7 @@ export const loadUser = async (accessToken: string) => {
       })
       .json();
 
-    return userSchema.validate(response?.payload);
+    return response?.payload;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       console.log('Validation failed:', error.errors);
@@ -135,17 +146,17 @@ export const loadUser = async (accessToken: string) => {
   }
 };
 
-export const forgetPasswordApply = async (email:string) => {
+export const forgetPasswordApply = async (email: string) => {
   try {
     const response: any = await instance
       .post(END_POINTS.FORGET_PASSWORD_APPLY, {
         json: {
-          email
+          email,
         },
       })
       .json();
 
-    return response
+    return response;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       // console.log('Validation failed:', error.errors);
@@ -158,19 +169,19 @@ export const forgetPasswordApply = async (email:string) => {
       throw new Error('An unknown error occurred');
     }
   }
-}
-export const forgetPasswordOTP = async (user_id: string, otp:string) => {
+};
+export const forgetPasswordOTP = async (user_id: string, otp: string) => {
   try {
     const response: any = await instance
       .post(END_POINTS.FORGET_PASSWORD_VERIFICATION, {
         json: {
           userId: user_id,
-          otp
+          otp,
         },
       })
       .json();
 
-    return response
+    return response;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       // console.log('Validation failed:', error.errors);
@@ -183,20 +194,20 @@ export const forgetPasswordOTP = async (user_id: string, otp:string) => {
       throw new Error('An unknown error occurred');
     }
   }
-}
-export const forgetPassword = async (userId:string, data:IForgetPassword) => {
+};
+export const forgetPassword = async (userId: string, data: IForgetPassword) => {
   try {
     const response: any = await instance
       .post(END_POINTS.FORGET_PASSWORD, {
         json: {
           userId,
           password: data.newPassword,
-          confirmPassword: data.confirmNewPassword
+          confirmPassword: data.confirmNewPassword,
         },
       })
       .json();
 
-    return response
+    return response;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       throw error;
@@ -207,7 +218,7 @@ export const forgetPassword = async (userId:string, data:IForgetPassword) => {
       throw new Error('An unknown error occurred');
     }
   }
-}
+};
 
 export const logout = async () => {
   try {
@@ -218,19 +229,18 @@ export const logout = async () => {
   }
 };
 
-
-export const changePassword = async (userId:string, data:IChangePassword) => {
+export const changePassword = async (userId: string, data: IChangePassword) => {
   try {
     const response: any = await instance
       .post(END_POINTS.CHANGE_PASSWORD, {
         json: {
           userId,
-          ...data
+          ...data,
         },
       })
       .json();
 
-    return response
+    return response;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
       throw error;
@@ -241,4 +251,51 @@ export const changePassword = async (userId:string, data:IChangePassword) => {
       throw new Error('An unknown error occurred');
     }
   }
-}
+};
+
+export const updateProfile = async (userId: string, data: any) => {
+  try {
+    let isFilePresent = false;
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (!_.isEmpty(data[key])) {
+        if (key == 'profileImage') {
+          formData.append(key, convertAssetToFile(data.profileImage));
+        } else if (key == 'activitiesToAdd') {
+          data[key]?.forEach((item:string) => {
+            formData.append('activitiesToAdd[]', item)
+          })
+        } else if (key == 'activitiesToDelete') {
+          data[key]?.forEach((item:string) => {
+            formData.append('activitiesToDelete[]', item)
+          })
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+    });
+
+
+    const response: any = await instance
+      .post(`${END_POINTS.UPDATE_PROFILE}/${userId}`, {
+        body: formData,
+      })
+      .json();
+
+    console.log('responnse  -----: ', response);
+
+    return response?.payload;
+  } catch (error: any) {
+    if (error instanceof yup.ValidationError) {
+      throw error;
+    } else if (error?.response) {
+      const errorData = await error.response.json();
+      console.log('Error update ', errorData?.message);
+
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+};

@@ -6,7 +6,6 @@ import {
   Cat_Mountain_Climb,
   Cat_Others,
   Cat_Reading,
-  Cat_Running,
   Cat_Shopping,
   Cat_Skateboarding,
   Cat_Sports,
@@ -61,6 +60,7 @@ import Geolocation from "react-native-geolocation-service";
 import { string } from "zod";
 import dayjs, { Dayjs } from "dayjs";
 import RNMapView, { Marker } from "react-native-maps";
+import { activityData, IActivity } from "@/constants/activities";
 
 const isShow = true
 const postInitialValues:PostData = {
@@ -73,10 +73,7 @@ const postInitialValues:PostData = {
   imageUri: !isShow ?
     "file:///data/user/0/com.meetup/cache/rn_image_picker_lib_temp_ac2a108c-c4b8-43fd-adc9-437ee579baf3.jpg" : undefined,
   // imageUri: undefined,
-  activity: isShow ? {
-    label: "Reading",
-    Icon: Cat_Reading,
-  } : undefined,
+  activity: isShow ? activityData[0] : undefined,
 }
 
 const Post = ({ navigation }: PostScreenType) => {
@@ -229,18 +226,13 @@ const Post = ({ navigation }: PostScreenType) => {
   };
 
   const _onConfirmActivity = (
-    label: string | undefined,
-    icon: React.FC<SvgProps> | undefined
+    activities: IActivity[]
   ) => {
-    if (label && icon) {
-      setPost((post) => ({
-        ...post,
-        activity: {
-          label: label,
-          Icon: icon,
-        },
-      }));
-    }
+
+    setPost(post => ({
+      ...post,
+      activity: activities[0]
+    }))
   };
 
   const _onCancelData = (type: "DATA" | "IMAGE" | "LOCATION") => {
@@ -393,9 +385,7 @@ const Post = ({ navigation }: PostScreenType) => {
                     borders.rounded_4,
                     gutters.marginTop_24,
                     gutters.paddingHorizontal_10,
-                    {
-                      height: '20%'
-                    }
+                    gutters.paddingVertical_10
                   ]}
                 >
                   <View

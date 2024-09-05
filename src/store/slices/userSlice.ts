@@ -1,19 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { setItem, getItem, removeItem } from "@/storage";
+import { setItem, getItem, removeItem } from '@/storage';
 import { IUserReducer } from '@/types/reducer';
 import { USER } from '@/constants';
 
 const initialState: IUserReducer = getItem<IUserReducer>('user') || {
-  id: '',
+  _id: '',
   name: '',
   email: '',
-  profile_image: '',
+  profileImage: '',
   token: '',
   isLoggedIn: false,
   cometchat: {
     authToken: '',
-    id: ''
-  }
+    id: '',
+  },
+  activities: [],
+  bio: '',
 };
 
 const userSlice = createSlice({
@@ -27,16 +29,7 @@ const userSlice = createSlice({
     clearUser: () => {
       removeItem(USER);
       return {
-        id: '',
-        name: '',
-        email: '',
-        profile_image: '',
-        token: '',
-        isLoggedIn: false,
-        cometchat: {
-          authToken: '',
-          id: ''
-        }
+        ...initialState
       };
     },
   },

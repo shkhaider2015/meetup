@@ -37,10 +37,10 @@ const ProtectedScreens = () => {
       }, 500);
     },
     onSuccess: (data:any) => {
-      console.log("Dasta ", data);
+      console.log("Load User Data ", data);
       const user:IUserReducer = {
         ...data,
-        profile_image: convertImageURLforngRok(data.profile_image),
+        profileImage: convertImageURLforngRok(data.profileImage),
         isLoggedIn: true,
       }
       dispatch(setUser(user))

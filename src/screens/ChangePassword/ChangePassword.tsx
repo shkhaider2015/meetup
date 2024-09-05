@@ -35,7 +35,7 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: (data:IChangePassword) => {
-      return changePassword(user.id, data);
+      return changePassword(user._id, data);
     },
     onSuccess: () => {
       Toast.show({

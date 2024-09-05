@@ -1,3 +1,4 @@
+import { IActivity } from "@/constants/activities";
 import { Dayjs } from "dayjs";
 import React from "react";
 import { SvgProps } from "react-native-svg";
@@ -29,8 +30,5 @@ export type PostData = {
     date?: Dayjs;
     time?: Dayjs;
     imageUri?: string;
-    activity?: {
-        label?: string;
-        Icon?: React.FC<SvgProps>;
-    }
+    activity?: IActivity
 }
