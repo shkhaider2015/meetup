@@ -16,6 +16,7 @@ import Interests from '@/screens/Ineterests/Interests';
 import OTP from '@/screens/OTP/OTP';
 import ForgetPasswordChangeScreen from '@/screens/ForgetPasswordChange/ForgetPasswordChange';
 import ForgetPasswordCompleteScreen from '@/screens/ForgetPasswordComplete/ForgetPasswordComplete';
+import { heights } from '@/theme/_config';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -28,7 +29,10 @@ function AuthNavigator() {
   };
 
   return (
-    <Stack.Navigator key={variant} initialRouteName="Login">
+    <Stack.Navigator screenOptions={{headerShown: true, headerStyle: {
+      backgroundColor: 'white',
+      height: heights.tabNavigationHeader,
+    },}} key={variant} initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -40,7 +44,8 @@ function AuthNavigator() {
         name="Signup"
         component={SignupScreen}
         options={{
-          header: () => (
+          headerTitle: "",
+          headerLeft: () => (
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
@@ -58,7 +63,8 @@ function AuthNavigator() {
         name="ForgetPassword"
         component={ForgetPasswordScreen}
         options={{
-          header: () => (
+          headerTitle: "",
+          headerLeft: () => (
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
@@ -77,7 +83,8 @@ function AuthNavigator() {
         name="OTP"
         component={OTP}
         options={{
-          header: () => (
+          headerTitle: "",
+          headerLeft: () => (
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
@@ -96,7 +103,8 @@ function AuthNavigator() {
         name="ForgetPasswordChange"
         component={ForgetPasswordChangeScreen}
         options={{
-          header: () => (
+          headerTitle: "",
+          headerLeft: () => (
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
@@ -115,7 +123,8 @@ function AuthNavigator() {
         name="ForgetPasswordComplete"
         component={ForgetPasswordCompleteScreen}
         options={{
-          header: () => (
+          headerTitle: "",
+          headerLeft: () => (
             <View
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
