@@ -25,7 +25,7 @@ const DatePicker = (props: DatePickerProps) => {
     minutes: 0,
     period: 'am'
   });
-  const [snapPoints] = useState<string[]>(type === "TIME" ? ["35%"] : ["60%"]);
+  const [snapPoints] = useState<string[]>(type === "TIME" ? ["40%"] : ["65%"]);
 
   const { backgrounds, fonts, colors, gutters, layout } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -193,6 +193,10 @@ const DatePicker = (props: DatePickerProps) => {
                 ...fontFamily._600_SemiBold,
                 ...fonts.size_16,
                 ...fonts.gray800,
+              }}
+              headerTextStyle={{
+                ...fontFamily._600_SemiBold,
+                ...fonts.gray800
               }}
             />
           )}

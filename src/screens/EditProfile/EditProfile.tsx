@@ -152,10 +152,10 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   return (
     <SafeScreen>
       <EditProfileHeader onBack={_handleBack} onUpdate={_onUpdate} />
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView>
           <View
             style={[
               layout.flex_1,
@@ -272,7 +272,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               >
                 Bio
               </Text>
-              <TouchableOpacity onPress={() => bioRef.current?.focus()} >
+              <TouchableOpacity onPress={() => bioRef.current?.focus()}>
                 <InputField
                   ref={bioRef}
                   placeholder="Write something about you"
@@ -305,15 +305,15 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               />
             </View>
           </View>
-          <ActivityPicker
-            open={showActivity}
-            initialData={user.activities}
-            isMulti={true}
-            onClose={() => setShowActivity(false)}
-            onConfirm={_onConfirmActivity}
-          />
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <ActivityPicker
+        open={showActivity}
+        initialData={user.activities}
+        isMulti={true}
+        onClose={() => setShowActivity(false)}
+        onConfirm={_onConfirmActivity}
+      />
     </SafeScreen>
   );
 };

@@ -1,7 +1,7 @@
-import { Button, SafeScreen } from "@/components/template";
-import { useTheme } from "@/theme";
-import { fontFamily, heights } from "@/theme/_config";
-import { RootStackParamList } from "@/types/navigation";
+import { Button, SafeScreen } from '@/components/template';
+import { useTheme } from '@/theme';
+import { fontFamily, heights } from '@/theme/_config';
+import { RootStackParamList } from '@/types/navigation';
 import {
   Dimensions,
   Platform,
@@ -11,23 +11,24 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
-import RNMapView, { Details, Marker, Region } from "react-native-maps";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { IInitialMapState } from "@/types/maps";
-import { Close } from "@/assets/icon";
+} from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import RNMapView, { Details, Marker, Region } from 'react-native-maps';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { IInitialMapState } from '@/types/maps';
+import { Close } from '@/assets/icon';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
-  const { height } = Dimensions.get("window");
-  const screenHeight = Platform.OS === "android" ? height + 60 : height;
+  const { height } = Dimensions.get('window');
+  const screenHeight = Platform.OS === 'android' ? height + 60 : height;
 
   const [mapState, setMapState] = useState<IInitialMapState>({
     region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
+      latitude: route.params.location?.coords.latitude || 37.78825,
+      longitude: route.params.location?.coords.longitude || -122.4324,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
@@ -51,46 +52,36 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   //   };
   // }, [navigation]);
 
-  useEffect(() => {
-    const latitude = route.params.location?.coords.latitude;
-    const longitude = route.params.location?.coords.longitude;
-    if (latitude && longitude)
-      setMapState((pS) => ({
-        ...pS,
-        region: {
-          ...pS.region,
-          latitude,
-          longitude,
-        },
-      }));
-  }, [route.params.location]);
 
-  useEffect(() => {
-    StatusBar.setBackgroundColor("#FE434E00");
-    StatusBar.setBarStyle("light-content");
+  useFocusEffect(() => {
+    StatusBar.setBackgroundColor('#FE434E00');
+    StatusBar.setBarStyle('light-content');
     StatusBar.setTranslucent(true);
-  }, []);
+  });
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));
   };
 
   const _onSelectLocation = () => {
-    console.log("Location : ", mapState.region);
+    console.log('Location : ', mapState.region);
     route.params.onSelectLocation?.(
       mapState.region.latitude,
-      mapState.region.longitude
+      mapState.region.longitude,
     );
     _onClose();
   };
 
   const _onClose = () => {
     StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
-    StatusBar.setBarStyle("dark-content");
+    StatusBar.setBarStyle('dark-content');
     StatusBar.setTranslucent(false);
 
     navigation.goBack();
   };
+
+  console.log('route.params.location ', route.params.location?.coords);
+  console.log('State ', mapState.region);
 
   return (
     <View
@@ -112,7 +103,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
           layout.top0,
           layout.z1,
           {
-            width: "100%",
+            width: '100%',
             height: 120,
           },
         ]}
@@ -143,7 +134,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
         <Button
           label="Select Location"
           type="PRIMARY"
-          containerStyle={[{ width: "100%" }]}
+          containerStyle={[{ width: '100%' }]}
           onPress={_onSelectLocation}
         />
       </View>
@@ -165,7 +156,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
 
 type PostLocationScreenType = NativeStackScreenProps<
   RootStackParamList,
-  "PostLocation"
+  'PostLocation'
 >;
 
 export default PostLocation;
