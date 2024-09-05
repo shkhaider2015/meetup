@@ -1,12 +1,14 @@
 export interface IUserReducer {
-    id: string;
+    _id: string;
     name: string;
     email: string;
-    profile_image: string;
+    profileImage: string;
     isLoggedIn: boolean;
     token: string;
     cometchat: {
       authToken: string;
       id: string;
-    }
+    },
+    activities: string[];
+    bio: string;
   }

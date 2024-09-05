@@ -8,5 +8,6 @@ export {
   forgetPassword,
   forgetPasswordApply,
   forgetPasswordOTP,
-  changePassword
+  changePassword,
+  updateProfile
 } from './auth';

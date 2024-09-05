@@ -93,7 +93,6 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
           placeholderTextColor={fonts.gray200.color}
           selectionColor={fonts.gray800.color}
           secureTextEntry={inputType === 'PASSWORD' ? secureText : false}
-          
         />
         {inputType === 'PASSWORD' && (
           <TouchableOpacity onPress={_onPressEyeIcon} style={[ layout.justifyCenter, {height: 60} ]}>
