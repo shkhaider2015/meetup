@@ -189,13 +189,18 @@ function OTP({ navigation, route }: OTPScreenType) {
                   backgroundColor: colors.gray00,
                   borderColor: colors.gray200,
                 },
-                pinCodeTextStyle: styles.pinCodeText,
+                pinCodeTextStyle: {
+                  color: colors.gray800
+                },
                 focusStickStyle: {
                   backgroundColor: colors.primary,
                 },
                 focusedPinCodeContainerStyle: {
                   borderColor: colors.primary,
                 },
+                filledPinCodeContainerStyle: {
+                  backgroundColor: colors.primary04
+                }
               }}
               disabled={isPending || resendIsPending}
             />
@@ -283,7 +288,8 @@ const Counter = ({ state, setState }: CounterProps) => {
 const styles = StyleSheet.create({
   container: {},
   pinCodeContainer: {},
-  pinCodeText: {},
+  pinCodeText: {
+  },
   focusStick: {},
   activePinCodeContainer: {},
 });
