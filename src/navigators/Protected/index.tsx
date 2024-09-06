@@ -26,15 +26,17 @@ const ProtectedScreens = () => {
       return loadUser(token);
     },
     onError: (error) => {
-      Toast.show({
-        type: "error",
-        text1: "Session Expired",
-        text2: error?.message || "Your session has been expired, Please login",
-      });
-
-      setTimeout(() => {
-        dispatch(clearUser())
-      }, 500);
+      if(error?.message?.includes("expired")) {
+        Toast.show({
+          type: "error",
+          text1: "Session Expired",
+          text2: error?.message,
+        });
+  
+        setTimeout(() => {
+          dispatch(clearUser())
+        }, 500);
+      }
     },
     onSuccess: (data:any) => {
       console.log("Load User Data ", data);
