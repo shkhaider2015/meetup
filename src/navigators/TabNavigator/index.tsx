@@ -216,10 +216,8 @@ const profileOptions = (): BottomTabNavigationOptions => {
         },
         onSuccess: () => {
           closeBottomSheet();
-          setTimeout(() => {
-            dispatch(clearUser());
-            hideLoader();
-          }, 300);
+          hideLoader();
+          dispatch(clearUser());
         },
         onError: (error) => {
           hideLoader();
