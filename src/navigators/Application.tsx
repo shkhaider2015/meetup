@@ -10,28 +10,11 @@ import { useEffect, useState } from 'react';
 function ApplicationNavigator() {
   const { navigationTheme } = useTheme();
   const user = useSelector((state: RootState) => state.user);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (user.isLoggedIn !== isLoggedIn) {
-      setIsLoggedIn(user.isLoggedIn);
-    }
-  }, [user]);
-
-  if (isLoggedIn) {
-    return (
-      <SafeAreaProvider>
-        <NavigationContainer theme={navigationTheme}>
-          <ProtectedScreens />
-        </NavigationContainer>
-      </SafeAreaProvider>
-    );
-  }
 
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={navigationTheme}>
-         <AuthNavigator />
+        { user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator /> }
       </NavigationContainer>
     </SafeAreaProvider>
   );

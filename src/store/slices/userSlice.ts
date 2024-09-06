@@ -29,7 +29,18 @@ const userSlice = createSlice({
     clearUser: () => {
       removeItem(USER);
       return {
-        ...initialState
+        _id: '',
+        name: '',
+        email: '',
+        profileImage: '',
+        token: '',
+        isLoggedIn: false,
+        cometchat: {
+          authToken: '',
+          id: '',
+        },
+        activities: [],
+        bio: '',
       };
     },
   },
