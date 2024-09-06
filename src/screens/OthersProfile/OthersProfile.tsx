@@ -187,16 +187,15 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
         </View>
         {/* Edit Profile button */}
         <Button
-          label="Edit Profile"
+          label="Follow"
           type={"PRIMARY"}
           containerStyle={[
-            backgrounds.gray800,
             borders.rounded_16,
             { width: "60%", height: 45 },
           ]}
-          onPress={()=> {
-            navigation.navigate("EditProfile")
-          }}
+          // onPress={()=> {
+          //   navigation.navigate("EditProfile")
+          // }}
         />
       </View>
     </View>
@@ -331,7 +330,7 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
     .map((item, ind) => ({ id: ind, uri: item.uri?.toString() }))
     .filter((item) => item.uri);
 
-  console.log("Uris ", uris);
+  // console.log("Uris ", uris);s
   const _onImagePress = (id: number) => {
     navigation.navigate("Carousel", { images, selectedIndex: id });
   };
