@@ -28,6 +28,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -48,38 +49,39 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   const { height } = Dimensions.get('screen');
   const bioRef = useRef<TextInput>(null);
   const [showActivity, setShowActivity] = useState<boolean>(false);
-  const dispatch:AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   const { showLoader, hideLoader } = useLoader();
 
-  const {isPending, mutate} = useMutation({
-    mutationFn: async (data:IEditProfileForm) => {
-       return updateProfile(user._id, data)
+  const { isPending, mutate } = useMutation({
+    mutationFn: async (data: IEditProfileForm) => {
+      return updateProfile(user._id, data);
     },
     onSuccess: (data) => {
-      console.log("success update data : ", data);
+      console.log('success update data : ', data);
       hideLoader();
       Toast.show({
-        type: "success",
-        text1: "Profile Updated successfully"
-      })
+        type: 'success',
+        text1: 'Profile Updated successfully',
+      });
 
-      dispatch(setUser({
-        ...user,
-        ...data,
-        profileImage: convertImageURLforngRok(data.profileImage),
-      }))
-
+      dispatch(
+        setUser({
+          ...user,
+          ...data,
+          profileImage: convertImageURLforngRok(data.profileImage),
+        }),
+      );
     },
     onError: (error) => {
-      hideLoader()
+      hideLoader();
       Toast.show({
-        type: "error",
-        text1: "Profile Update Failed",
-        text2: error.message || "Something wrong happened"
-      })
-    }
-  })
+        type: 'error',
+        text1: 'Profile Update Failed',
+        text2: error.message || 'Something wrong happened',
+      });
+    },
+  });
 
   const formik = useFormik<IEditProfileForm>({
     initialValues: {
@@ -90,8 +92,8 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
     },
     validationSchema: editProfileSchema,
     onSubmit: (values) => {
-      showLoader()
-      mutate(values)
+      showLoader();
+      mutate(values);
     },
   });
 
@@ -103,10 +105,14 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
     navigation.goBack();
   };
 
-  const _onConfirmActivity = (activities:IActivity[]) => {
-    let prevIds = user.activities
-    let addIds = activities.map(item => item.id).filter(id => !prevIds.some(prevId => prevId === id));
-    let deleteIds = prevIds.filter(id => !activities.some(item => item.id === id))
+  const _onConfirmActivity = (activities: IActivity[]) => {
+    let prevIds = user.activities;
+    let addIds = activities
+      .map((item) => item.id)
+      .filter((id) => !prevIds.some((prevId) => prevId === id));
+    let deleteIds = prevIds.filter(
+      (id) => !activities.some((item) => item.id === id),
+    );
 
     formik.setFieldValue('activitiesToAdd', addIds);
     formik.setFieldValue('activitiesToDelete', deleteIds);
@@ -131,23 +137,24 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   };
 
   const _onUpdate = () => {
-    if(!formik.dirty) {
+    if (!formik.dirty) {
       Toast.show({
-        type: "info",
-        text1: "Nothing to update",
-      })
-      return
+        type: 'info',
+        text1: 'Nothing to update',
+      });
+      return;
     }
     formik.handleSubmit();
-  }
+  };
 
   console.log();
-  
 
   return (
     <SafeScreen>
       <EditProfileHeader onBack={_handleBack} onUpdate={_onUpdate} />
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
         <ScrollView>
           <View
             style={[
@@ -155,6 +162,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               backgrounds.gray30,
               gutters.paddingVertical_16,
               gutters.paddingHorizontal_24,
+              gutters.paddingVertical_16,
               {
                 minHeight: height - heights.tabNavigationHeader - 70,
               },
@@ -264,21 +272,25 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               >
                 Bio
               </Text>
-              <InputField
-                ref={bioRef}
-                placeholder="Write something about you"
-                onChangeText={formik.handleChange('bio')}
-                onBlur={formik.handleBlur('bio')}
-                value={formik.values.bio}
-                onSubmitEditing={() => Keyboard.dismiss()}
-                returnKeyType="next"
-                keyboardType="default"
-                autoCapitalize="none"
-                blurOnSubmit={false}
-                isError={formik.touched.bio && formik.errors.bio ? true : false}
-                multiline={true}
-                rows={3}
-              />
+              <TouchableOpacity onPress={() => bioRef.current?.focus()}>
+                <InputField
+                  ref={bioRef}
+                  placeholder="Write something about you"
+                  onChangeText={formik.handleChange('bio')}
+                  onBlur={formik.handleBlur('bio')}
+                  value={formik.values.bio}
+                  onSubmitEditing={() => Keyboard.dismiss()}
+                  returnKeyType="next"
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  blurOnSubmit={false}
+                  isError={
+                    formik.touched.bio && formik.errors.bio ? true : false
+                  }
+                  multiline={true}
+                  rows={3}
+                />
+              </TouchableOpacity>
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
                 {formik.touched.bio && formik.errors.bio
                   ? formik.errors.bio
@@ -293,15 +305,15 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               />
             </View>
           </View>
-          <ActivityPicker
-            open={showActivity}
-            initialData={user.activities}
-            isMulti={true}
-            onClose={() => setShowActivity(false)}
-            onConfirm={_onConfirmActivity}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
+      <ActivityPicker
+        open={showActivity}
+        initialData={user.activities}
+        isMulti={true}
+        onClose={() => setShowActivity(false)}
+        onConfirm={_onConfirmActivity}
+      />
     </SafeScreen>
   );
 };

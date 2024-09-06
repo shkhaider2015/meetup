@@ -4,13 +4,16 @@ import { useTheme } from "@/theme";
 import { fontFamily } from "@/theme/_config";
 import { UserModalProps } from "@/types/modals";
 import { IPost } from "@/types/post";
+import { getIconByID } from "@/utils";
 import { useEffect, useLayoutEffect } from "react";
-import { Modal, View, Image, Text, StyleSheet, StatusBar } from "react-native";
+import { Modal, View, Image, Text, StyleSheet } from "react-native";
 
 const UserModal = (props: UserModalProps) => {
   const { data, open, onClose } = props;
-  const { user, distance, Doing_icon, main_post, created_at, desc } = data;
+  const { user, distance, activity, main_post, created_at, desc } = data;
   const { layout, gutters, fonts, colors, backgrounds, borders } = useTheme();
+
+  const Icon = getIconByID(activity);
 
   const _handleClose = () => {
     // StatusBar.setBackgroundColor(colors.gray00);
@@ -67,7 +70,18 @@ const UserModal = (props: UserModalProps) => {
                   <Tick />
                 </View>
               </View>
-              {Doing_icon}
+               {Icon && (
+            <View
+              style={[
+                layout.justifyCenter,
+                layout.itemsCenter,
+                backgrounds.primary,
+                { width: 40, height: 40, borderRadius: 50 },
+              ]}
+            >
+              <Icon color={colors.gray00} />
+            </View>
+          )}
             </View>
             <Close color={colors.gray800} onPress={_handleClose} />
           </View>

@@ -5,15 +5,23 @@ import AuthNavigator from "./AuthNavigator";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import ProtectedScreens from "./Protected";
+import { useEffect, useState } from "react";
 
 function ApplicationNavigator() {
   const { navigationTheme } = useTheme();
   const user = useSelector((state: RootState) => state.user);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if(user.isLoggedIn !== isLoggedIn) {
+      setIsLoggedIn(user.isLoggedIn)
+    }
+  }, [user])
 
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={navigationTheme}>
-        {user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator />}
+        {isLoggedIn ? <ProtectedScreens /> : <AuthNavigator />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import { Button, InputField, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
@@ -25,6 +27,7 @@ import _ from 'lodash';
 
 function OTP({ navigation, route }: OTPScreenType) {
   const { id: user_id, email, type } = route.params;
+  const screenHiegt = Dimensions.get('screen').height - heights.bottomTabBarHeight
   const { colors, variant, layout, gutters, fonts, components, backgrounds } =
     useTheme();
 
@@ -127,10 +130,9 @@ function OTP({ navigation, route }: OTPScreenType) {
 
   return (
     <SafeScreen>
-      <KeyboardAvoidingView
-        // style={[layout.flex_1]}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+      <ScrollView style={{
+        minHeight: screenHiegt
+      }} >
         <View
           style={[
             // layout.flex_1,
@@ -256,7 +258,7 @@ function OTP({ navigation, route }: OTPScreenType) {
             onPress={_onSumit}
           />
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
     </SafeScreen>
   );
 }

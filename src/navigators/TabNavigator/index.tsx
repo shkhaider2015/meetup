@@ -136,20 +136,22 @@ const exploreOptions = (): BottomTabNavigationOptions => {
       <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
     ),
     headerRight: () => (
-      <View style={{
-        borderRadius: 50,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-      }} >
+      <View
+        style={{
+          borderRadius: 50,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+      >
         <Image
           source={{ uri: profile_image }}
-          style={{ width: 40, height: 40, borderRadius: 50,}}
+          style={{ width: 40, height: 40, borderRadius: 50 }}
         />
       </View>
     ),

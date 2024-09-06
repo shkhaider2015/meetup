@@ -14,7 +14,12 @@ import { fontFamily } from '@/theme/_config';
 
 const InputField = forwardRef<TextInput, IInputFieldProps>(
   (props: IInputFieldProps, ref) => {
-    const { inputType = 'TEXT', isError = false, disable = false, rows= 1 } = props;
+    const {
+      inputType = 'TEXT',
+      isError = false,
+      disable = false,
+      rows = 1,
+    } = props;
     const { borders, backgrounds, gutters, layout, fonts } = useTheme();
     const [isActive, setIsActive] = useState<boolean>(false);
     const [secureText, setSecureText] = useState<boolean>(
@@ -89,13 +94,21 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
           ref={ref}
           onFocus={() => setIsActive(true)}
           onBlur={() => setIsActive(false)}
-          style={[layout.flex_1, fonts.gray800, fontFamily._400_Regular, { height: 60 }]}
+          style={[
+            layout.flex_1,
+            fonts.gray800,
+            fontFamily._400_Regular,
+            { minHeight: 60, maxHeight: rows * 60 },
+          ]}
           placeholderTextColor={fonts.gray200.color}
           selectionColor={fonts.gray800.color}
           secureTextEntry={inputType === 'PASSWORD' ? secureText : false}
         />
         {inputType === 'PASSWORD' && (
-          <TouchableOpacity onPress={_onPressEyeIcon} style={[ layout.justifyCenter, {height: 60} ]}>
+          <TouchableOpacity
+            onPress={_onPressEyeIcon}
+            style={[layout.justifyCenter, { height: 60 }]}
+          >
             {!secureText ? (
               <Show color={backgrounds.gray300.backgroundColor} />
             ) : (

@@ -36,12 +36,12 @@ export const activityData: IActivity[] = [
   },
   {
     id: 'c56f2417-b172-467a-84aa-e6c0da664612',
-    label: 'Cookig',
+    label: 'Cooking',
     Icon: Cat_Cooking,
   },
   {
     id: '439b0f8e-6205-493f-bdd4-bf8b05b0e383',
-    label: 'Driking',
+    label: 'Drinking',
     Icon: Cat_Drinking,
   },
   {
@@ -106,12 +106,12 @@ export const activityData: IActivity[] = [
   },
   {
     id: '4d6fe6c9-70ad-4216-8262-193c0e46c569',
-    label: 'Sketboardig',
+    label: 'Sketboarding',
     Icon: Cat_Skateboarding,
   },
   {
     id: '986e9f06-6ee2-4208-8aea-7b1f19223db1',
-    label: 'Speech',
+    label: 'Singing',
     Icon: Cat_Speech,
   },
   {

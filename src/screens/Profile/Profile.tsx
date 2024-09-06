@@ -342,7 +342,7 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
     .map((item, ind) => ({ id: ind, uri: item.uri?.toString() }))
     .filter((item) => item.uri);
 
-  console.log('Uris ', uris);
+  // console.log('Uris ', uris);
   const _onImagePress = (id: number) => {
     navigation.navigate('Carousel', { images, selectedIndex: id });
   };
