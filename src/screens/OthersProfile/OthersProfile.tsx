@@ -8,23 +8,25 @@ import {
   DummyLaraProfile_5,
   DummyLaraProfile_6,
   DummyLaraProfilePic,
-} from "@/assets/dummyImages";
+} from '@/assets/dummyImages';
 import {
   Cat_Gaming,
   Cat_Music,
   Cat_Shopping,
   Cat_Travel,
+  ChevronLeft,
   Persons,
-} from "@/assets/icon";
-import { Button, SafeScreen } from "@/components/template";
-import { logout } from "@/services/users";
-import { AppDispatch, RootState } from "@/store";
-import { clearUser } from "@/store/slices/userSlice";
-import { useTheme } from "@/theme";
-import { fontFamily, heights } from "@/theme/_config";
-import { RootStackParamList } from "@/types/navigation";
-import { useMutation } from "@tanstack/react-query";
-import _ from "lodash";
+  Star,
+} from '@/assets/icon';
+import { Button, SafeScreen } from '@/components/template';
+import { logout } from '@/services/users';
+import { AppDispatch, RootState } from '@/store';
+import { clearUser } from '@/store/slices/userSlice';
+import { useTheme } from '@/theme';
+import { fontFamily, heights } from '@/theme/_config';
+import { RootStackParamList } from '@/types/navigation';
+import { useMutation } from '@tanstack/react-query';
+import _ from 'lodash';
 import {
   Dimensions,
   FlatList,
@@ -34,12 +36,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
-} from "react-native-screens/lib/typescript/native-stack/types";
-import { useDispatch, useSelector } from "react-redux";
+} from 'react-native-screens/lib/typescript/native-stack/types';
+import { useDispatch, useSelector } from 'react-redux';
 
 const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   const { userId } = route.params;
@@ -50,14 +52,19 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
       return logout();
     },
     onSuccess(data, variables, context) {
-      console.log("Success Logout : ", data, variables, context);
+      console.log('Success Logout : ', data, variables, context);
       dispatch(clearUser());
     },
   });
-  const { height, width } = Dimensions.get("window");
+  const { height, width } = Dimensions.get('window');
+
+  const _goBack = () => {
+    navigation.goBack();
+  }
 
   return (
     <SafeScreen>
+      <ProfileHeader onBack={_goBack} title='Jhonson' />
       <ScrollView>
         <View
           style={[
@@ -79,8 +86,49 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   );
 };
 
-const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigation:Navigation}) => {
-  const profile_image = useSelector((state:RootState) => state.user.profileImage)
+const ProfileHeader = ({
+  onBack,
+  title,
+}: {
+  onBack?: () => void;
+  title?: string;
+}) => {
+  const { layout, gutters, backgrounds, fonts } = useTheme();
+  return (
+    <View
+      style={[
+        layout.row,
+        layout.justifyBetween,
+        layout.itemsCenter,
+        gutters.paddingHorizontal_10,
+        backgrounds.gray00,
+        { height: heights.bottomTabBarHeight },
+      ]}
+    >
+      <View style={[ layout.row, layout.justifyStart, layout.itemsCenter ]} >
+        <TouchableOpacity onPress={onBack} style={[ gutters.paddingHorizontal_8 ]} >
+          <ChevronLeft width={25} height={25} />
+        </TouchableOpacity>
+      </View>
+      <View style={[ layout.row, layout.justifyCenter, layout.itemsCenter, gutters.gap_4 ]} >
+        <Text style={[ fonts.gray800, fonts.size_24, fontFamily._700_Bold ]} >{title}</Text>
+        <Star />
+      </View>
+      <View></View>
+    </View>
+  );
+};
+
+const ProfileHead = ({
+  isCurrentUser,
+  navigation,
+}: {
+  isCurrentUser: boolean;
+  navigation: Navigation;
+}) => {
+  const profile_image = useSelector(
+    (state: RootState) => state.user.profileImage,
+  );
   const { layout, gutters, backgrounds, fonts, borders } = useTheme();
   return (
     <View
@@ -112,8 +160,12 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
         ]}
       >
         <Image
-          source={!isCurrentUser ? DummyJohnsonPost : {uri: profile_image}}
-          style={{ width: widthInPercentage(39), height: widthInPercentage(39), borderRadius: 100 }}
+          source={!isCurrentUser ? DummyJohnsonPost : { uri: profile_image }}
+          style={{
+            width: widthInPercentage(39),
+            height: widthInPercentage(39),
+            borderRadius: 100,
+          }}
         />
       </View>
       {/* Details Column */}
@@ -125,7 +177,7 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
             layout.justifyCenter,
             layout.itemsCenter,
             gutters.paddingRight_10,
-            gutters.gap_10
+            gutters.gap_10,
           ]}
         >
           {/* Followers */}
@@ -137,7 +189,10 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
               gutters.gap_8,
             ]}
           >
-            <Persons width={widthInPercentage(8)} height={widthInPercentage(8)} />
+            <Persons
+              width={widthInPercentage(8)}
+              height={widthInPercentage(8)}
+            />
             <View style={[layout.col]}>
               <Text
                 style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
@@ -165,7 +220,10 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
               gutters.gap_8,
             ]}
           >
-            <Persons width={widthInPercentage(8)} height={widthInPercentage(8)} />
+            <Persons
+              width={widthInPercentage(8)}
+              height={widthInPercentage(8)}
+            />
             <View style={[layout.col]}>
               <Text
                 style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
@@ -188,11 +246,8 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
         {/* Edit Profile button */}
         <Button
           label="Follow"
-          type={"PRIMARY"}
-          containerStyle={[
-            borders.rounded_16,
-            { width: "60%", height: 45 },
-          ]}
+          type={'PRIMARY'}
+          containerStyle={[borders.rounded_16, { width: '60%', height: 45 }]}
           // onPress={()=> {
           //   navigation.navigate("EditProfile")
           // }}
@@ -203,25 +258,25 @@ const ProfileHead = ({isCurrentUser, navigation}:{isCurrentUser:boolean, navigat
 };
 
 const ProfileDescriptions = () => {
-  const userName = useSelector((state:RootState) => state.user.name)
+  const userName = useSelector((state: RootState) => state.user.name);
   const { layout, gutters, backgrounds, fonts } = useTheme();
 
   const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
 
   const renderTextWithHighlights = (text: string) => {
     // Split the text on spaces to process each word
-    const words = text.split(" ");
+    const words = text.split(' ');
 
     return words.map((word, index) => {
-      if (word.startsWith("@")) {
+      if (word.startsWith('@')) {
         // If the word starts with "@", apply the special style
         return (
           <Text key={index} style={[fonts.primary]}>
-            {word + " "}
+            {word + ' '}
           </Text>
         );
       } else {
-        return <Text key={index}>{word + " "}</Text>;
+        return <Text key={index}>{word + ' '}</Text>;
       }
     });
   };
@@ -332,21 +387,30 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
 
   // console.log("Uris ", uris);s
   const _onImagePress = (id: number) => {
-    navigation.navigate("Carousel", { images, selectedIndex: id });
+    navigation.navigate('Carousel', { images, selectedIndex: id });
   };
 
   return (
     <View style={[gutters.paddingVertical_16]}>
       <View style={[layout.row, layout.justifyBetween]}>
         <TouchableOpacity onPress={() => _onImagePress(0)}>
-          <Image source={images[0]} style={{ width: widthInPercentage(60), borderRadius: 5 }} />
+          <Image
+            source={images[0]}
+            style={{ width: widthInPercentage(60), borderRadius: 5 }}
+          />
         </TouchableOpacity>
         <View style={[gutters.gap_10]}>
           <TouchableOpacity onPress={() => _onImagePress(3)}>
-            <Image source={images[3]} style={{ width: widthInPercentage(35), borderRadius: 5 }} />
+            <Image
+              source={images[3]}
+              style={{ width: widthInPercentage(35), borderRadius: 5 }}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => _onImagePress(4)}>
-            <Image source={images[4]} style={{ width: widthInPercentage(35), borderRadius: 5 }} />
+            <Image
+              source={images[4]}
+              style={{ width: widthInPercentage(35), borderRadius: 5 }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -354,25 +418,37 @@ const ImageGallery = ({ navigation }: { navigation: Navigation }) => {
         style={[layout.row, layout.wrap, gutters.gap_14, gutters.marginTop_6]}
       >
         <TouchableOpacity onPress={() => _onImagePress(1)}>
-          <Image source={images[1]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
+          <Image
+            source={images[1]}
+            style={{ width: widthInPercentage(30), borderRadius: 5 }}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => _onImagePress(2)}>
-          <Image source={images[2]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
+          <Image
+            source={images[2]}
+            style={{ width: widthInPercentage(30), borderRadius: 5 }}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => _onImagePress(5)}>
-          <Image source={images[5]} style={{ width: widthInPercentage(30), borderRadius: 5 }} />
+          <Image
+            source={images[5]}
+            style={{ width: widthInPercentage(30), borderRadius: 5 }}
+          />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const widthInPercentage = (percentage:number) => {
- const { width } = Dimensions.get("screen");
+const widthInPercentage = (percentage: number) => {
+  const { width } = Dimensions.get('screen');
   return (width * percentage) / 100;
 };
 
-type Navigation = NativeStackNavigationProp<RootStackParamList,"OtherProfile">;
-type OtherProfileScreenType = NativeStackScreenProps<RootStackParamList,"OtherProfile">;
+type Navigation = NativeStackNavigationProp<RootStackParamList, 'OtherProfile'>;
+type OtherProfileScreenType = NativeStackScreenProps<
+  RootStackParamList,
+  'OtherProfile'
+>;
 
 export default OthersProfile;
