@@ -195,6 +195,7 @@ const notificationOptions: BottomTabNavigationOptions = {
 const profileOptions = (): BottomTabNavigationOptions => {
   const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
+  const { colors } = useTheme()
   return {
     headerLeft: () => {
       const navigation = useNavigation();
@@ -334,7 +335,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
         >
           {userName}
         </Text>
-        <Star />
+        <Star width={20} height={20} color={colors.blue500} />
       </View>
     ),
     // headerStyle: {

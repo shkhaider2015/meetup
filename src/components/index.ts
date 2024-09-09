@@ -4,3 +4,7 @@ export { default as NotificationItem } from "@/components/NotificationItem/Notif
 export { default as DatePicker } from "@/components/DatePicker/DatePicker";
 export { default as UserModal } from "@/components/Modals/User"
 export { default as ActivityPicker } from "@/components/ActivityPicker/ActivityPicker";
+export { default as ProfileSectionHead } from "@/components/ProfileSectionHead/ProfileSectionHead";
+export { default as ProfileSectionDescription } from "@/components/ProfileSectionDescription/ProfileSectionDescription";
+export { default as ProfileSectionActivities } from "@/components/ProfileSectionActivities/ProfileSectionActivities";
+export { default as ProfileSectionImageGallery } from "@/components/ProfileSectionImageGallery/ProfileSectionImageGallery";
