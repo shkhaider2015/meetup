@@ -3,17 +3,17 @@ import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { widthInPercentage } from '@/utils';
 import _ from 'lodash';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 const ProfileSectionActivites = (props: IProfileSectionActivities) => {
-  const { activities = [] } = props;
+  const { activities = [], containerStyle, headingStyle } = props;
 
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   return (
-    <View style={[gutters.paddingHorizontal_32]}>
+    <View style={[gutters.paddingHorizontal_32, containerStyle]}>
         {
-            !_.isEmpty(activities) && <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
+            !_.isEmpty(activities) && <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800, headingStyle]}>
             Activities
           </Text>
         }
@@ -55,5 +55,7 @@ const ProfileSectionActivites = (props: IProfileSectionActivities) => {
 
 interface IProfileSectionActivities {
   activities?: string[];
+  containerStyle?: StyleProp<ViewStyle>;
+  headingStyle?: StyleProp<TextStyle>;
 }
 export default ProfileSectionActivites;

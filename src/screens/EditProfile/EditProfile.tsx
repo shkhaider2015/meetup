@@ -1,6 +1,7 @@
 import { ChevronLeft } from '@/assets/icon';
 import { ProfileImagePlaceholder } from '@/assets/images';
 import { ActivityPicker } from '@/components';
+import ProfileSectionActivites from '@/components/ProfileSectionActivities/ProfileSectionActivities';
 import {
   Button,
   InputField,
@@ -45,13 +46,17 @@ import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
 const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
-  const { layout, fonts, colors, gutters, backgrounds } = useTheme();
-  const { height } = Dimensions.get('screen');
-  const bioRef = useRef<TextInput>(null);
   const [showActivity, setShowActivity] = useState<boolean>(false);
-  const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const [activitiesToShow, setActivitiesToShow] = useState<string[]>(
+    user.activities,
+  );
+
+  const { layout, fonts, colors, gutters, backgrounds } = useTheme();
   const { showLoader, hideLoader } = useLoader();
+  const { height } = Dimensions.get('screen');
+  const dispatch: AppDispatch = useDispatch();
+  const bioRef = useRef<TextInput>(null);
 
   const { isPending, mutate } = useMutation({
     mutationFn: async (data: IEditProfileForm) => {
@@ -114,6 +119,13 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       (id) => !activities.some((item) => item.id === id),
     );
 
+    setActivitiesToShow((pS) =>
+      [...pS, ...addIds].filter(
+        (id) => !deleteIds.some((deleteId) => deleteId === id),
+      ),
+    );
+
+
     formik.setFieldValue('activitiesToAdd', addIds);
     formik.setFieldValue('activitiesToDelete', deleteIds);
   };
@@ -163,6 +175,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               gutters.paddingVertical_16,
               gutters.paddingHorizontal_24,
               gutters.paddingVertical_16,
+              gutters.paddingBottom_24,
               {
                 minHeight: height - heights.tabNavigationHeader - 70,
               },
@@ -297,6 +310,11 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                   : ''}
               </Text>
             </View>
+            <ProfileSectionActivites
+              activities={activitiesToShow}
+              containerStyle={[ gutters.paddingHorizontal_4 ]}
+              headingStyle={[ fonts.gray250, fonts.size_14, fontFamily._400_Regular ]}
+            />
             <View style={[gutters.marginTop_10]}>
               <SelectField
                 placeholder="Select interests"
