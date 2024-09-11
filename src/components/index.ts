@@ -8,3 +8,4 @@ export { default as ProfileSectionHead } from "@/components/ProfileSectionHead/P
 export { default as ProfileSectionDescription } from "@/components/ProfileSectionDescription/ProfileSectionDescription";
 export { default as ProfileSectionActivities } from "@/components/ProfileSectionActivities/ProfileSectionActivities";
 export { default as ProfileSectionImageGallery } from "@/components/ProfileSectionImageGallery/ProfileSectionImageGallery";
+export { default as DetailText } from '@/components/DetailText/DetailText';

@@ -308,7 +308,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
 
       return (
         <Button
-          Icon={<MenuHr width={17} height={17} />}
+          Icon={<MenuHr width={17} height={17} color={'#000000'} />}
           type="SECONDARY"
           isCirculer={true}
           containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}

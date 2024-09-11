@@ -5,6 +5,7 @@ export const _makeAPI_URL = (endPoint: string): string => {
 };
 
 const APIEndPoints = {
+  // User
   LOGIN: 'auth/login',
   SIGNUP: 'auth/signup',
   LOGOUT: 'auth/logout',
@@ -17,6 +18,10 @@ const APIEndPoints = {
   FORGET_PASSWORD: 'auth/reset-password',
   CHANGE_PASSWORD: 'user/change-password',
   UPDATE_PROFILE: 'user/update-profile',
+
+  // Posts
+  POST: 'post',
+  ALL_POST_BY_USER: 'post/user',
 };
 
 export default APIEndPoints;

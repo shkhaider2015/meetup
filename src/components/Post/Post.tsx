@@ -1,6 +1,12 @@
-import { Edit, Heart, MenuHr, Share, Tick, Trash } from '@/assets/icon';
+import { Edit, Heart, MenuHr, Share, Tick } from '@/assets/icon';
 import { useTheme } from '@/theme';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Button } from '../template';
 import { fontFamily } from '@/theme/_config';
 import { IPost } from '@/types/post';
@@ -9,10 +15,18 @@ import { useState } from 'react';
 import { useGlobalBottomSheet } from '@/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationHookProps } from '@/types/navigation';
-import { getIconByID } from '@/utils';
+import {
+  convertImageURLforngRok,
+  getIconByID,
+  getRegionForCoordinates,
+} from '@/utils';
+import _ from 'lodash';
+import RNMapView, { Marker } from 'react-native-maps';
+import DetailText from '../DetailText/DetailText';
+import dayjs from 'dayjs';
 
 const Post = (props: IPost) => {
-  const { user, distance, activity, created_at, desc, main_post, id } = props;
+  const { user, activity, location, createdAt, details, image, _id } = props;
   const [showDetails, setShowDetails] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
@@ -20,7 +34,7 @@ const Post = (props: IPost) => {
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { navigate } = useNavigation<NavigationHookProps>();
 
-  const Icon = getIconByID(activity);
+  const Icon = getIconByID(activity || '');
 
   const _onBottomSheetOpen = () => {
     openBottomSheet(<UserPostMenu />, ['25%']);
@@ -31,8 +45,6 @@ const Post = (props: IPost) => {
       userId: 'some-id',
     });
   };
-
-  
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24]}>
@@ -48,14 +60,17 @@ const Post = (props: IPost) => {
         {/* Header */}
         <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
           <TouchableOpacity onPress={_goToProfile}>
-            <Image source={user.imageSource} style={styles.profile_image} />
+            <Image
+              source={{ uri: convertImageURLforngRok(user.profileImage) }}
+              style={styles.profile_image}
+            />
           </TouchableOpacity>
           <View style={[layout.col, gutters.marginHorizontal_12]}>
             <TouchableOpacity onPress={_goToProfile}>
               <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
             </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-              <Text style={[fonts.size_12, fonts.gray200]}>{distance}</Text>
+              <Text style={[fonts.size_12, fonts.gray200]}>3km</Text>
               <Tick />
             </View>
           </View>
@@ -76,12 +91,56 @@ const Post = (props: IPost) => {
           onPress={_onBottomSheetOpen}
           style={[gutters.padding_8]}
         >
-          <MenuHr />
+          <MenuHr color={colors.gray250} />
         </TouchableOpacity>
       </View>
-      <View>
+      <TouchableOpacity activeOpacity={.8} style={styles.mainCotainer} onPress={() => setShowDetails(true)}>
         {/* Content */}
-        <Image source={main_post} style={styles.location} />
+        {!_.isEmpty(image) && (
+          <Image
+            source={{ uri: convertImageURLforngRok(image || '') }}
+            style={styles.location}
+          />
+        )}
+        {!_.isEmpty(location) && _.isEmpty(image) && (
+          <RNMapView
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+            initialRegion={{
+              ...getRegionForCoordinates([
+                {
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                },
+              ]),
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: location.latitude || 0,
+                longitude: location.longitude || 0,
+              }}
+            />
+          </RNMapView>
+        )}
+      </TouchableOpacity>
+      {/* Details section */}
+      <View style={styles.detailContainer}>
+        {_.isEmpty(image) && _.isEmpty(location) ? (
+          <DetailText
+            text={details}
+            maxLength={200}
+            onPressHighlighText={() => setShowDetails(true)}
+          />
+        ) : (
+          <DetailText
+            text={details}
+            maxLength={50}
+            onPressHighlighText={() => setShowDetails(true)}
+          />
+        )}
       </View>
       <View style={[gutters.paddingBottom_10]}>
         {/* Footer */}
@@ -107,7 +166,7 @@ const Post = (props: IPost) => {
             <Button
               Icon={
                 <Heart
-                  color={favorite ? colors.primary : colors.gray250 }
+                  color={favorite ? colors.primary : colors.gray250}
                   width={23}
                   height={23}
                 />
@@ -115,7 +174,7 @@ const Post = (props: IPost) => {
               isCirculer={true}
               type="SECONDARY"
               containerStyle={[{ width: 40, height: 40 }]}
-              onPress={() => setFavorite(pS => !pS)}
+              onPress={() => setFavorite((pS) => !pS)}
             />
             <Button
               Icon={
@@ -130,20 +189,9 @@ const Post = (props: IPost) => {
               containerStyle={[{ width: 40, height: 40 }]}
             />
           </View>
-          <Text style={[fonts.gray180]}>{created_at}</Text>
+          <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
         </View>
-        <Text style={[gutters.paddingHorizontal_10, fonts.size_16]}>
-          {/* Details */}
-          <Text style={[fontFamily._500_Medium, fonts.black]}>
-            Username_01:{' '}
-          </Text>
-          <Text style={[fonts.gray300]}>
-            {desc.slice(0, 60)}{' '}
-            <Text style={[fonts.primary]} onPress={() => setShowDetails(true)}>
-              See more ..
-            </Text>{' '}
-          </Text>
-        </Text>
+        {/* There should be comments */}
       </View>
       <UserModal
         open={showDetails}
@@ -185,9 +233,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 40,
   },
+  mainCotainer: {
+    width: '100%',
+    maxHeight: 210,
+  },
   location: {
     width: '100%',
-    height: 210,
+    height: '100%',
+  },
+  detailContainer: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    maxHeight: 210,
   },
 });
 
