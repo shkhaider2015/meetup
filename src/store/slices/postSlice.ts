@@ -11,8 +11,6 @@ const postSlice = createSlice({
     initialState,
     reducers: {
         setPosts: (state, action: PayloadAction<IPostReducer[]>) => {
-            console.log("========== reducer data :  ========", action.payload?.[0]);
-            console.log("========== reducer data :  ========", state);
             setItem(POST, action.payload);
             return action.payload
         },

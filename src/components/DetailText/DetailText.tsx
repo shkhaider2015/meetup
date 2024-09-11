@@ -12,7 +12,7 @@ const DetailText = (props: IDetailText) => {
     } = props;
     const { fonts } = useTheme();
 
-    if(_.isUndefined(text)) return <Text></Text>
+    if(_.isEmpty(text) || !text) return <Text></Text>
   
     if (text.length < maxLength) {
       return <Text style={[fonts.gray300, fontFamily._400_Regular, props.style]}>{text}</Text>;

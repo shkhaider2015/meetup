@@ -18,20 +18,22 @@ import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { IInitialMapState } from '@/types/maps';
 import { Close } from '@/assets/icon';
 import { useFocusEffect } from '@react-navigation/native';
+import { getRegionForCoordinates } from '@/utils';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
+  const { location } = route.params;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   const { height } = Dimensions.get('window');
   const screenHeight = Platform.OS === 'android' ? height + 60 : height;
 
-  const [mapState, setMapState] = useState<IInitialMapState>({
-    region: {
-      latitude: route.params.location?.coords.latitude || 37.78825,
-      longitude: route.params.location?.coords.longitude || -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
+  const [region, setRegion] = useState<Region>({
+    ...getRegionForCoordinates([
+      {
+        latitude: location?.latitude || 0,
+        longitude: location?.longitude || 0,
+      },
+    ]),
   });
 
   // useLayoutEffect(() => {
@@ -60,14 +62,14 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   });
 
   const _onRegionChange = (region: Region, details: Details) => {
-    setMapState((pS) => ({ ...pS, region: region }));
+    setRegion(region);
   };
 
   const _onSelectLocation = () => {
-    console.log('Location : ', mapState.region);
+    console.log('Location : ', region);
     route.params.onSelectLocation?.(
-      mapState.region.latitude,
-      mapState.region.longitude,
+      region.latitude,
+      region.longitude,
     );
     _onClose();
   };
@@ -80,8 +82,8 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
     navigation.goBack();
   };
 
-  console.log('route.params.location ', route.params.location?.coords);
-  console.log('State ', mapState.region);
+  console.log('route.params.location ', route.params.location);
+  console.log('State ', region);
 
   return (
     <View
@@ -140,13 +142,13 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
       </View>
       <RNMapView
         style={{ ...StyleSheet.absoluteFillObject }}
-        initialRegion={mapState.region}
+        initialRegion={region}
         onRegionChange={_onRegionChange}
       >
         <Marker
           coordinate={{
-            latitude: mapState.region.latitude,
-            longitude: mapState.region.longitude,
+            latitude: region.latitude,
+            longitude: region.longitude,
           }}
         />
       </RNMapView>

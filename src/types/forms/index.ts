@@ -35,3 +35,16 @@ export interface IEditProfileForm {
 
   activitiesToDelete: string[];
 }
+
+export interface IPostForm {
+  userId: string;
+  image?: Asset;
+  details?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+  };
+  date?: string;
+  time?: string;
+  activity?: string;
+}

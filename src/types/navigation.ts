@@ -23,7 +23,10 @@ export type RootStackParamList = {
 	Post: undefined;
 	PostTab: undefined;
 	PostLocation: {
-		location?: GeoLocation.GeoPosition
+		location?: {
+			latitude: number;
+			longitude: number;
+		}
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
