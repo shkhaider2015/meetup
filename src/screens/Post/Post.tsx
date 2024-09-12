@@ -1,15 +1,5 @@
-import { DummyUser } from '@/assets/dummyImages';
 import {
   Activity,
-  Cat_Drinking,
-  Cat_Fitness,
-  Cat_Mountain_Climb,
-  Cat_Others,
-  Cat_Reading,
-  Cat_Shopping,
-  Cat_Skateboarding,
-  Cat_Sports,
-  Cat_Swimming,
   Clock,
   Close,
   DateIcon,
@@ -17,8 +7,8 @@ import {
   LocationIcon,
 } from '@/assets/icon';
 import { ActivityPicker, DatePicker } from '@/components';
-import { Button, SafeScreen } from '@/components/template';
-import { useGlobalBottomSheet, useKeyboardVisible, useLoader } from '@/hooks';
+import { SafeScreen } from '@/components/template';
+import { useKeyboardVisible, useLoader } from '@/hooks';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
@@ -30,23 +20,19 @@ import {
 } from '@/types/screens/post';
 import {
   getRegionForCoordinates,
-  requestLocationPermission,
   requestLocationPermissionCross,
 } from '@/utils';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   Image,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
-  PermissionsAndroid,
   Platform,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
@@ -54,23 +40,19 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { SvgProps } from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 import Geolocation from 'react-native-geolocation-service';
-import { string } from 'zod';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import RNMapView, { Marker } from 'react-native-maps';
-import { activityData, IActivity } from '@/constants/activities';
+import { IActivity } from '@/constants/activities';
 import { IPostForm } from '@/types/forms';
 import { useMutation } from '@tanstack/react-query';
 import { createPost } from '@/services/posts/indes';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import _ from 'lodash';
-import { useFocusEffect } from '@react-navigation/native';
 import { updatePosts } from '@/store/slices/postSlice';
 
-const isShow = true;
 const postInitialValues: PostData = {
   date: undefined,
   time: undefined,

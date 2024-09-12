@@ -101,8 +101,15 @@ export const updatePost = async () => {
   }
 };
 
-export const deletePost = async () => {
+export const deletePost = async (postId:string, userId:string) => {
   try {
+    const response = await instance.delete(`${END_POINTS.POST}/${postId}`, {
+        json: {
+            userId
+        }
+    }).json();
+
+    return response
   } catch (error: any) {
     if (error?.response) {
       const errorData = await error.response.json();
