@@ -87,8 +87,41 @@ export const getPostById = async () => {
   }
 };
 
-export const updatePost = async () => {
+export const updatePost = async (postId: string,  data: IPostForm, imageURL?: string) => {
   try {
+
+    const anyData: any = data;
+    const formdata = new FormData();
+
+    Object.keys(anyData).forEach((key: string) => {
+      const value = anyData[key];
+    //   if (_.isEmpty(value) || !value) return;
+
+      if (key == 'image') {
+        // if user upload new image
+        if(value) {
+            formdata.append(key, convertAssetToFile(anyData[key]));
+        }
+
+        // case may user remove existing
+        if(!value && !imageURL) formdata.append(key, null)
+
+
+      } else if (key == 'location' && !_.isEmpty(value)) {
+        formdata.append('location[latitude]', anyData[key].latitude);
+        formdata.append('location[longitude]', anyData[key].longitude);
+      } else {
+        if(!_.isEmpty(value)) {
+            formdata.append(key, anyData[key] || null);
+        }
+      }
+    });
+
+    const response:any = await instance.patch(`${END_POINTS.POST}/${postId}`, {
+        body: formdata
+    }).json()
+    
+    return response?.payload;
   } catch (error: any) {
     if (error?.response) {
       const errorData = await error.response.json();

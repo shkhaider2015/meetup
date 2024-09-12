@@ -21,9 +21,11 @@ export type PostInputMenu = {
 export type PostHeaderProps = {
     onCancel?: () => void;
     onPost?: () => void;
+    onUpdate?: () => void;
+    isUpdate: boolean;
 }
 
-export type PostData = {
+export type PostStateType = {
     text?: string;
     location?: {
         latitude?: number;
@@ -32,5 +34,6 @@ export type PostData = {
     date?: Dayjs;
     time?: Dayjs;
     imageUri?: Asset;
+    imageURL?: string;
     activity?: IActivity
 }

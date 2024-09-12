@@ -73,6 +73,9 @@ function TabsNavigator() {
       <Tab.Screen
         name="Post"
         component={Post}
+        initialParams={{
+          initialValues: undefined
+        }}
         options={postOptions}
       />
       <Tab.Screen

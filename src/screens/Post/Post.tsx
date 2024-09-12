@@ -13,12 +13,13 @@ import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import {
-  PostData,
+  PostStateType,
   PostHeaderProps,
   PostInputMenu,
   PostInputProps,
 } from '@/types/screens/post';
 import {
+  convertImageURLforngRok,
   getRegionForCoordinates,
   requestLocationPermissionCross,
 } from '@/utils';
@@ -47,13 +48,17 @@ import RNMapView, { Marker } from 'react-native-maps';
 import { IActivity } from '@/constants/activities';
 import { IPostForm } from '@/types/forms';
 import { useMutation } from '@tanstack/react-query';
-import { createPost } from '@/services/posts/indes';
+import { createPost, updatePost } from '@/services/posts/indes';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import _ from 'lodash';
-import { updatePosts } from '@/store/slices/postSlice';
+import {
+  updatePost as updatePostReducer,
+  updatePosts as updatePostsReducer,
+} from '@/store/slices/postSlice';
+import { useFocusEffect } from '@react-navigation/native';
 
-const postInitialValues: PostData = {
+const postInitialValues: PostStateType = {
   date: undefined,
   time: undefined,
   location: undefined,
@@ -61,37 +66,38 @@ const postInitialValues: PostData = {
   activity: undefined,
 };
 
-const Post = ({ navigation }: PostScreenType) => {
+const Post = ({ navigation, route }: PostScreenType) => {
+  const { initialValues, postId } = route.params;
   const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
   const { height, width } = Dimensions.get('window');
   const screenHeight = height - heights.bottomTabBarHeight;
 
-  const user = useSelector((state:RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user);
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
   const [location, setLocation] = useState<Geolocation.GeoPosition | boolean>(
     false,
   );
-  const [post, setPost] = useState<PostData>(postInitialValues);
+  const [post, setPost] = useState<PostStateType>(postInitialValues);
   const { showLoader, hideLoader } = useLoader();
 
   const isKeyboardVisible = useKeyboardVisible();
-  const dispatch:AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-
+  // create post mutation
   const { mutate } = useMutation({
     mutationFn: (data: IPostForm) => {
       return createPost(data);
     },
     onSuccess: (data) => {
       hideLoader();
-      dispatch(updatePosts(data))
+      dispatch(updatePostsReducer(data));
       Toast.show({
         type: 'success',
         text1: 'Post created successfully',
       });
-      _clearPostState()
+      _clearPostState();
       setTimeout(() => {
         navigation.goBack();
       }, 500);
@@ -106,9 +112,49 @@ const Post = ({ navigation }: PostScreenType) => {
     },
   });
 
+  // Update post mutation
+  const { mutate: updatePostMutation } = useMutation({
+    mutationFn: (data: { data: IPostForm; imageURL?: string}) => {
+      if (_.isEmpty(postId) || !postId) throw 'Post id is not found';
+      return updatePost(postId, data.data, data.imageURL);
+    },
+    onSuccess: (data) => {
+      hideLoader();
+      dispatch(updatePostReducer(data));
+      navigation.setParams({ initialValues: undefined })
+      Toast.show({
+        type: 'success',
+        text1: 'Post updated successfully'
+      });
+      _clearPostState();
+      setTimeout(() => {
+        navigation.goBack();
+      }, 500);
+    },
+    onError: (error) => {
+      hideLoader();
+      Toast.show({
+        type: 'error',
+        text1: 'Post Modification Failed',
+        text2: error.message,
+      });
+    },
+  });
+
+  // set initial values if screen render for update
+  useFocusEffect(
+    useCallback(() => {
+      if (!_.isEmpty(initialValues) && initialValues) {
+        setPost(initialValues);
+      }
+    }, [initialValues]),
+  );
+
+  // function to reset state values 
   const _clearPostState = () => {
-    setPost(postInitialValues)
-  }
+    setPost(postInitialValues);
+  };
+
   const _onPressInput = () => {
     if (!isKeyboardVisible) Keyboard.dismiss();
   };
@@ -156,7 +202,7 @@ const Post = ({ navigation }: PostScreenType) => {
   const _onGoToLocation = (
     location: { latitude: number; longitude: number } | undefined,
   ) => {
-    hideLoader()
+    hideLoader();
     const myLocation = {
       latitude: post.location?.latitude || location?.latitude || 0,
       longitude: post.location?.longitude || location?.longitude || 0,
@@ -176,13 +222,12 @@ const Post = ({ navigation }: PostScreenType) => {
   };
 
   const _onCancelPost = () => {
-    console.log('cancel : ');
-    _clearPostState()
+    _clearPostState();
     navigation.goBack();
   };
 
   const getLocation = async () => {
-    showLoader()
+    showLoader();
     if (Platform.OS === 'ios') {
       const iosResult = await Geolocation.requestAuthorization('whenInUse');
       if (iosResult === 'granted') {
@@ -200,8 +245,8 @@ const Post = ({ navigation }: PostScreenType) => {
           },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
-      }else {
-        hideLoader()
+      } else {
+        hideLoader();
       }
       console.log('IosResult : ', iosResult);
       return;
@@ -270,6 +315,7 @@ const Post = ({ navigation }: PostScreenType) => {
         setPost((post) => ({
           ...post,
           imageUri: undefined,
+          imageURL: undefined
         }));
         break;
       case 'LOCATION':
@@ -283,19 +329,25 @@ const Post = ({ navigation }: PostScreenType) => {
     }
   };
 
-  const _onChangeText = (text:string) => {
-    setPost(pS => ({
+  const _onChangeText = (text: string) => {
+    setPost((pS) => ({
       ...pS,
-      text: text
-    }))
-  } 
+      text: text,
+    }));
+  };
 
   const _onPost = useCallback(() => {
-    console.clear()
-    // console.log("Post Data n _onPost ", post);
-    
+    if (_.isEmpty(post.text) && _.isEmpty(post.imageUri)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Post Creation Failed',
+        text2: 'You must add text or image to post.',
+      });
+      return;
+    }
+
     let postData: IPostForm = {
-      userId: user._id
+      userId: user._id,
     };
     postData.details = post.text;
     postData.date = post.date?.toDate().toISOString();
@@ -308,14 +360,41 @@ const Post = ({ navigation }: PostScreenType) => {
         longitude: post.location.longitude,
       };
     }
-
-    // console.log('Ready Data : ', postData);
     mutate(postData);
     showLoader();
   }, [post]);
 
-  // console.log("Post Data outside ", post);
-  
+  const _onUpdate = () => {
+    if (_.isEmpty(post.text) && _.isEmpty(post.imageUri)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Post Creation Failed',
+        text2: 'You must add text or image to post.',
+      });
+      return;
+    }
+
+    let postData: IPostForm = {
+      userId: user._id,
+    };
+    postData.details = post.text;
+    postData.date = post.date?.toDate().toISOString();
+    postData.time = post.time?.toDate().toISOString();
+    postData.activity = post.activity?.id;
+    postData.image = post.imageUri;
+    if (post.location?.latitude && post.location.longitude) {
+      postData.location = {
+        latitude: post.location.latitude,
+        longitude: post.location.longitude,
+      };
+    }
+    updatePostMutation({
+      data: postData,
+      imageURL: post.imageURL
+    });
+    showLoader();
+  };
+
   return (
     <SafeScreen>
       <KeyboardAvoidingView
@@ -332,10 +411,19 @@ const Post = ({ navigation }: PostScreenType) => {
             },
           ]}
         >
-          <PostHeader onCancel={_onCancelPost} onPost={_onPost} />
-          <PostInput text={post.text} onPress={_onPressInput} onChange={_onChangeText}  />
+          <PostHeader
+            onCancel={_onCancelPost}
+            onPost={_onPost}
+            onUpdate={_onUpdate}
+            isUpdate={!_.isEmpty(initialValues)}
+          />
+          <PostInput
+            text={post.text}
+            onPress={_onPressInput}
+            onChange={_onChangeText}
+          />
           <View style={[{ flex: 2 }]}>
-            {post.location && !post.imageUri && (
+            {post.location && !post.imageUri && !post.imageURL && (
               <View
                 style={[
                   borders.w_1,
@@ -393,6 +481,38 @@ const Post = ({ navigation }: PostScreenType) => {
                   />
                 </RNMapView>
               </View>
+            )}
+            {post.imageURL && !post.imageUri && (
+              <ImageBackground
+                source={{ uri: convertImageURLforngRok(post.imageURL) }}
+                style={{
+                  width: '100%',
+                  height: '70%',
+                  position: 'relative',
+                }}
+                imageStyle={[borders.rounded_16]}
+              >
+                <TouchableOpacity
+                  style={[
+                    layout.absolute,
+                    layout.top0,
+                    layout.right0,
+                    layout.justifyCenter,
+                    layout.itemsCenter,
+                    backgrounds.gray150,
+                    {
+                      width: 30,
+                      height: 30,
+                      borderRadius: 40,
+                      marginTop: -8,
+                      marginRight: -5,
+                    },
+                  ]}
+                  onPress={() => _onCancelData('IMAGE')}
+                >
+                  <Close color={colors.gray800} width={20} height={20} />
+                </TouchableOpacity>
+              </ImageBackground>
             )}
             {post.imageUri && (
               <ImageBackground
@@ -465,12 +585,6 @@ const Post = ({ navigation }: PostScreenType) => {
             onPressImageIcon={_onShowGallery}
             onPressActivityIcon={_onShowActivity}
           />
-          {/* <View style={{ height: 10 }} /> */}
-          {/* {!keyboardVisible && (
-          <View>
-            <Button label="Next" type="PRIMARY" onPress={_onNext} />
-          </View>
-        )} */}
 
           <DatePicker
             open={showDate}
@@ -496,8 +610,13 @@ const Post = ({ navigation }: PostScreenType) => {
   );
 };
 
-const PostHeader = ({ onCancel, onPost }: PostHeaderProps) => {
-  const user = useSelector((state:RootState) => state.user)
+const PostHeader = ({
+  onCancel,
+  onPost,
+  onUpdate,
+  isUpdate,
+}: PostHeaderProps) => {
+  const user = useSelector((state: RootState) => state.user);
   const { fonts, layout, gutters } = useTheme();
   return (
     <View
@@ -519,18 +638,26 @@ const PostHeader = ({ onCancel, onPost }: PostHeaderProps) => {
         <TouchableOpacity onPress={onCancel}>
           <Close width={30} height={30} color={fonts.gray800.color} />
         </TouchableOpacity>
-        <Image source={{ uri: user.profileImage }} style={{
-          width: 50,
-          height: 50,
-          borderRadius: 55
-        }} />
+        <Image
+          source={{ uri: user.profileImage }}
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 55,
+          }}
+        />
         <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
-         {user.name}
+          {user.name}
         </Text>
       </View>
-      <TouchableOpacity onPress={onPost}>
+      <TouchableOpacity
+        onPress={() => {
+          if (isUpdate) onUpdate?.();
+          else onPost?.();
+        }}
+      >
         <Text style={[fontFamily._600_SemiBold, fonts.size_16, fonts.primary]}>
-          Post
+          {isUpdate ? 'Update' : 'Post'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -543,11 +670,10 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-
     return () => {
-      inputRef.current?.clear()
-    }
-  }, [])
+      inputRef.current?.clear();
+    };
+  }, []);
 
   const _onPress = () => {
     onPress?.();

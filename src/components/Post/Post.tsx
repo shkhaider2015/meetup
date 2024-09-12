@@ -25,7 +25,7 @@ import {
 import _ from 'lodash';
 import RNMapView, { Marker } from 'react-native-maps';
 import DetailText from '../DetailText/DetailText';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { SvgProps } from 'react-native-svg';
@@ -33,9 +33,11 @@ import { useMutation } from '@tanstack/react-query';
 import { deletePost as deletePostService } from '@/services/posts/indes';
 import Toast from 'react-native-toast-message';
 import { deletePost as deletePostAction } from '@/store/slices/postSlice';
+import { PostStateType } from '@/types/screens/post';
+import { activityData } from '@/constants/activities';
 
 const Post = (props: IPost) => {
-  const { user, activity, location, createdAt, details, image, _id } = props;
+  const { user, activity, location, createdAt, details, date, time, image, _id } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -88,7 +90,15 @@ const Post = (props: IPost) => {
   };
 
   const _onEdit = () => {
-    navigate('Post');
+    const initialValues: PostStateType = {
+      text: details,
+      imageURL: image,
+      location: location,
+      date: date ? new Dayjs(date) : undefined,
+      time: time ? new Dayjs(time) : undefined,
+      activity: activityData.find(item => item.id === activity),
+    }
+    navigate('Post', { initialValues: initialValues, postId: _id });
   };
 
   const _onDelete = () => {
@@ -312,8 +322,10 @@ const UserPostMenu = (props: IUserPostMenu) => {
               { height: 50 },
             ]}
             onPress={() => {
-              onClose?.()
-              item.onPress?.();
+              onClose?.();
+              setTimeout(() => {
+                item.onPress?.();
+              }, 200)
             }}
           >
             <item.Icon width={35} height={35} />
