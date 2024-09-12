@@ -121,7 +121,6 @@ const Post = ({ navigation, route }: PostScreenType) => {
     onSuccess: (data) => {
       hideLoader();
       dispatch(updatePostReducer(data));
-      navigation.setParams({ initialValues: undefined })
       Toast.show({
         type: 'success',
         text1: 'Post updated successfully'
@@ -153,6 +152,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
   // function to reset state values 
   const _clearPostState = () => {
     setPost(postInitialValues);
+    navigation.setParams({ initialValues: undefined })
   };
 
   const _onPressInput = () => {
