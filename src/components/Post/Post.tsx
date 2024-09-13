@@ -1,4 +1,14 @@
-import { Edit, Heart, MenuHr, Share, Tick, Trash } from '@/assets/icon';
+import {
+  Clock,
+  DateIcon,
+  Edit,
+  Heart,
+  LocationIcon,
+  MenuHr,
+  Share,
+  Tick,
+  Trash,
+} from '@/assets/icon';
 import { useTheme } from '@/theme';
 import {
   ActivityIndicator,
@@ -37,12 +47,22 @@ import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
 
 const Post = (props: IPost) => {
-  const { user, activity, location, createdAt, details, date, time, image, _id } = props;
+  const {
+    user,
+    activity,
+    location,
+    createdAt,
+    details,
+    date,
+    time,
+    image,
+    _id,
+  } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
-  const { layout, gutters, fonts, backgrounds, colors } = useTheme();
+  const { layout, gutters, fonts, backgrounds, colors, borders } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { navigate } = useNavigation<NavigationHookProps>();
   const dispatch: AppDispatch = useDispatch();
@@ -85,7 +105,7 @@ const Post = (props: IPost) => {
 
   const _goToProfile = () => {
     navigate('OtherProfile', {
-      userId: 'some-id',
+      userId: user._id,
     });
   };
 
@@ -94,10 +114,10 @@ const Post = (props: IPost) => {
       text: details,
       imageURL: image,
       location: location,
-      date: date ? new Dayjs(date) : undefined,
-      time: time ? new Dayjs(time) : undefined,
-      activity: activityData.find(item => item.id === activity),
-    }
+      date: !_.isEmpty(date) ? dayjs(date) : undefined,
+      time: !_.isEmpty(time) ? dayjs(time) : undefined,
+      activity: activityData.find((item) => item.id === activity),
+    };
     navigate('Post', { initialValues: initialValues, postId: _id });
   };
 
@@ -325,7 +345,7 @@ const UserPostMenu = (props: IUserPostMenu) => {
               onClose?.();
               setTimeout(() => {
                 item.onPress?.();
-              }, 200)
+              }, 200);
             }}
           >
             <item.Icon width={35} height={35} />

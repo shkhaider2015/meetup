@@ -1,4 +1,13 @@
-import { Close, Heart, MenuHr, Share, Tick } from '@/assets/icon';
+import {
+  Clock,
+  Close,
+  DateIcon,
+  Heart,
+  LocationIcon,
+  MenuHr,
+  Share,
+  Tick,
+} from '@/assets/icon';
 import { Button } from '@/components/template';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
@@ -30,7 +39,8 @@ const text3 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit.`;
 
 const UserModal = (props: UserModalProps) => {
   const { data, open, onClose } = props;
-  const { user, activity, image, location, createdAt, details } = data;
+  const { user, activity, image, location, createdAt, details, date, time } =
+    data;
   const { layout, gutters, fonts, colors, backgrounds, borders } = useTheme();
   const width = Dimensions.get('screen').width;
 
@@ -148,6 +158,62 @@ const UserModal = (props: UserModalProps) => {
                 />
               </RNMapView>
             )}
+          </View>
+          <View
+            style={[
+              gutters.marginVertical_12,
+              gutters.padding_10,
+              layout.row,
+              layout.justifyStart,
+              layout.itemsCenter,
+              gutters.gap_24,
+              backgrounds.gray30,
+            ]}
+          >
+            <View
+              style={[
+                layout.row,
+                gutters.gap_14,
+                layout.justifyStart,
+                layout.itemsCenter,
+              ]}
+            >
+              <LocationIcon color={colors.primary} />
+              <Text>Some Dummy Location, street 3</Text>
+            </View>
+          </View>
+          <View
+            style={[
+              gutters.padding_10,
+              layout.row,
+              layout.justifyStart,
+              layout.itemsCenter,
+              gutters.gap_24,
+              backgrounds.gray30,
+            ]}
+          >
+            <View
+              style={[
+                layout.row,
+                gutters.gap_14,
+                layout.justifyStart,
+                layout.itemsCenter,
+              ]}
+            >
+              <DateIcon color={colors.primary} />
+              <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
+            </View>
+            <View
+              style={[
+                layout.row,
+                gutters.gap_14,
+                layout.justifyStart,
+                layout.itemsCenter,
+              ]}
+            >
+              <Clock color={colors.primary} />
+              <Text>{dayjs(time).format('hh-mm-ss')}</Text>
+            </View>
           </View>
           <View style={[gutters.paddingBottom_10]}>
             {/* Details if there are neither image nor location */}

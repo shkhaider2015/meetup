@@ -114,7 +114,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
 
   // Update post mutation
   const { mutate: updatePostMutation } = useMutation({
-    mutationFn: (data: { data: IPostForm; imageURL?: string}) => {
+    mutationFn: (data: { data: IPostForm; imageURL?: string }) => {
       if (_.isEmpty(postId) || !postId) throw 'Post id is not found';
       return updatePost(postId, data.data, data.imageURL);
     },
@@ -123,7 +123,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
       dispatch(updatePostReducer(data));
       Toast.show({
         type: 'success',
-        text1: 'Post updated successfully'
+        text1: 'Post updated successfully',
       });
       _clearPostState();
       setTimeout(() => {
@@ -149,10 +149,10 @@ const Post = ({ navigation, route }: PostScreenType) => {
     }, [initialValues]),
   );
 
-  // function to reset state values 
+  // function to reset state values
   const _clearPostState = () => {
     setPost(postInitialValues);
-    navigation.setParams({ initialValues: undefined })
+    navigation.setParams({ initialValues: undefined });
   };
 
   const _onPressInput = () => {
@@ -315,7 +315,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
         setPost((post) => ({
           ...post,
           imageUri: undefined,
-          imageURL: undefined
+          imageURL: undefined,
         }));
         break;
       case 'LOCATION':
@@ -337,11 +337,20 @@ const Post = ({ navigation, route }: PostScreenType) => {
   };
 
   const _onPost = useCallback(() => {
-    if (_.isEmpty(post.text) && _.isEmpty(post.imageUri)) {
+    let errors: string[] = [];
+    if (_.isEmpty(post.text)) errors.push('Thoughts');
+    if (_.isEmpty(post.location)) errors.push('Location');
+    if (_.isEmpty(post.date)) errors.push('Date');
+    if (_.isEmpty(post.time)) errors.push('Time');
+    if (_.isEmpty(post.activity)) errors.push('Activity');
+
+    if (!_.isEmpty(errors)) {
+      let message: string = errors.join(',') + ' are required';
+
       Toast.show({
         type: 'error',
-        text1: 'Post Creation Failed',
-        text2: 'You must add text or image to post.',
+        text1: 'Cannot Create Post',
+        text2: message,
       });
       return;
     }
@@ -365,11 +374,20 @@ const Post = ({ navigation, route }: PostScreenType) => {
   }, [post]);
 
   const _onUpdate = () => {
-    if (_.isEmpty(post.text) && _.isEmpty(post.imageUri)) {
+    let errors: string[] = [];
+    if (_.isEmpty(post.text)) errors.push('Thoughts');
+    if (_.isEmpty(post.location)) errors.push('Location');
+    if (_.isEmpty(post.date)) errors.push('Date');
+    if (_.isEmpty(post.time)) errors.push('Time');
+    if (_.isEmpty(post.activity)) errors.push('Activity');
+
+    if (!_.isEmpty(errors)) {
+      let message: string = errors.join(',') + ' are required';
+
       Toast.show({
         type: 'error',
-        text1: 'Post Creation Failed',
-        text2: 'You must add text or image to post.',
+        text1: 'Cannot Create Post',
+        text2: message,
       });
       return;
     }
@@ -390,7 +408,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     }
     updatePostMutation({
       data: postData,
-      imageURL: post.imageURL
+      imageURL: post.imageURL,
     });
     showLoader();
   };
