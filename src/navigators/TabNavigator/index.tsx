@@ -1,6 +1,4 @@
-import { DummyUser } from '@/assets/dummyImages';
 import {
-  Cat_Cooking,
   ChevronLeft,
   Key,
   MenuHr,
@@ -36,7 +34,6 @@ import { FC } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { useDispatch, useSelector } from 'react-redux';
-import PostNavigator from '../Post';
 import { useGlobalBottomSheet, useLoader } from '@/hooks';
 import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -74,8 +71,11 @@ function TabsNavigator() {
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
       <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
       <Tab.Screen
-        name="PostTab"
-        component={PostNavigator}
+        name="Post"
+        component={Post}
+        initialParams={{
+          initialValues: undefined
+        }}
         options={postOptions}
       />
       <Tab.Screen
@@ -101,7 +101,7 @@ const tabBarIconOption = (
     case 'Chat':
       Icon = focused ? Tab_Chat_Selected : Tab_Chat_Default;
       break;
-    case 'PostTab':
+    case 'Post':
       Icon = Tab_Post_Default;
       break;
     case 'Notifications':
@@ -308,7 +308,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
 
       return (
         <Button
-          Icon={<MenuHr width={17} height={17} />}
+          Icon={<MenuHr width={17} height={17} color={'#000000'} />}
           type="SECONDARY"
           isCirculer={true}
           containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}

@@ -12,3 +12,27 @@ export interface IUserReducer {
     activities: string[];
     bio: string;
   }
+
+export interface IPostReducer {
+  _id: string;
+  details?: string;
+  image?: string;
+  location?: IPostLocation;
+  date?: Date;
+  time?: Date;
+  activity?: string;
+  user: IPostUser;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IPostLocation {
+  latitude: number;
+  longitude: number;
+}
+
+interface IPostUser {
+  _id: string;
+  name: string;
+  profileImage: string;
+}

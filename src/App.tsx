@@ -16,10 +16,12 @@ import Toast from "react-native-toast-message";
 import { PermissionsAndroid, Platform } from "react-native";
 import { CometChatUIKit, UIKitSettings } from "@cometchat/chat-uikit-react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"; 
 
 export const queryClient = new QueryClient();
 
-
+dayjs.extend(relativeTime)
 
 function App() {
 

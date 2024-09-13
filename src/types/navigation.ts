@@ -2,6 +2,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { ImageSourcePropType } from 'react-native';
 import GeoLocation from "react-native-geolocation-service"
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { PostStateType } from './screens/post';
 
 export type RootStackParamList = {
 	Startup: undefined;
@@ -20,10 +21,18 @@ export type RootStackParamList = {
 	Ineterests: undefined;
 	Explore: undefined;
 	Chat: undefined;
-	Post: undefined;
-	PostTab: undefined;
+	Post: {
+		initialValues?: PostStateType,
+		postId?: string
+	};
+	PostTab: {
+		initialValues?: PostStateType
+	}
 	PostLocation: {
-		location?: GeoLocation.GeoPosition
+		location?: {
+			latitude: number;
+			longitude: number;
+		}
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;

@@ -42,6 +42,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   const { height, width } = Dimensions.get('window');
 
   const _goBack = () => {
+    navigation.setParams({ userId: undefined })
     navigation.goBack();
   };
 

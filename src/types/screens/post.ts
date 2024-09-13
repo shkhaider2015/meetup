@@ -1,11 +1,13 @@
 import { IActivity } from "@/constants/activities";
 import { Dayjs } from "dayjs";
 import React from "react";
+import { Asset } from "react-native-image-picker";
 import { SvgProps } from "react-native-svg";
 
 export type PostInputProps = {
     onPress?: () => void;
-    data?: PostData
+    onChange?: (text:string) => void;
+    text?: string
 }
 
 export type PostInputMenu = {
@@ -19,9 +21,11 @@ export type PostInputMenu = {
 export type PostHeaderProps = {
     onCancel?: () => void;
     onPost?: () => void;
+    onUpdate?: () => void;
+    isUpdate: boolean;
 }
 
-export type PostData = {
+export type PostStateType = {
     text?: string;
     location?: {
         latitude?: number;
@@ -29,6 +33,7 @@ export type PostData = {
     };
     date?: Dayjs;
     time?: Dayjs;
-    imageUri?: string;
+    imageUri?: Asset;
+    imageURL?: string;
     activity?: IActivity
 }
