@@ -19,19 +19,22 @@ import { IInitialMapState } from '@/types/maps';
 import { Close } from '@/assets/icon';
 import { useFocusEffect } from '@react-navigation/native';
 import { getRegionForCoordinates } from '@/utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
-  const { location } = route.params;
+  const { location:locationParam } = route.params;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   const { height } = Dimensions.get('window');
   const screenHeight = Platform.OS === 'android' ? height + 60 : height;
+  const location = useSelector((state:RootState) => state.location);
 
   const [region, setRegion] = useState<Region>({
     ...getRegionForCoordinates([
       {
-        latitude: location?.latitude || 0,
-        longitude: location?.longitude || 0,
+        latitude: locationParam?.latitude || location.latitude,
+        longitude: locationParam?.longitude || location.longitude,
       },
     ]),
   });

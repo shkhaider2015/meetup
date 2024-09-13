@@ -3,8 +3,8 @@ import { Persons } from '@/assets/icon';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { widthInPercentage } from '@/utils';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Button } from '../template';
+import { StyleSheet, Text, View } from 'react-native';
+import { Button, Image } from '../template';
 
 const ProfileHeadSection = (props: IProfileHeadSection) => {
   const { profileImage, isCurrentUser, onPressButton } = props;
@@ -39,14 +39,19 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
           },
         ]}
       >
-        <Image
+        {/* <Image
           source={!isCurrentUser ? DummyJohnsonPost : { uri: profileImage }}
           style={{
             width: widthInPercentage(39),
             height: widthInPercentage(39),
             borderRadius: 100,
           }}
-        />
+        /> */}
+        <Image imageURL={profileImage} containerStyle={{
+          width: widthInPercentage(39),
+          height: widthInPercentage(39),
+          borderRadius: 300
+        }} />
       </View>
       {/* Details Column */}
       <View style={[{ flex: 1, rowGap: 20 }]}>

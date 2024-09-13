@@ -210,6 +210,7 @@ const Post = (props: IPost) => {
         )}
         {!_.isEmpty(location) && _.isEmpty(image) && (
           <RNMapView
+            provider="google"
             style={{
               width: '100%',
               height: '100%',
@@ -222,6 +223,10 @@ const Post = (props: IPost) => {
                 },
               ]),
             }}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            rotateEnabled={false}
+            pitchEnabled={false}
           >
             <Marker
               coordinate={{

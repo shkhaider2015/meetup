@@ -86,8 +86,11 @@ export function getRegionForCoordinates(
 
   const midX = (minX + maxX) / 2;
   const midY = (minY + maxY) / 2;
-  const deltaX = maxX - minX;
-  const deltaY = maxY - minY;
+  let deltaX = maxX - minX;
+  let deltaY = maxY - minY;
+
+  if(deltaX === 0) deltaX = 0.2
+  if(deltaY === 0) deltaY = 0.2
 
   return {
     latitude: midX,
