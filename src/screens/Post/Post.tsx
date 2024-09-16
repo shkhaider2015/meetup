@@ -98,9 +98,8 @@ const Post = ({ navigation, route }: PostScreenType) => {
         text1: 'Post created successfully',
       });
       _clearPostState();
-      setTimeout(() => {
-        navigation.goBack();
-      }, 500);
+
+      navigation.goBack();
     },
     onError: (error) => {
       hideLoader();

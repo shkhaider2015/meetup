@@ -137,6 +137,7 @@ const UserModal = (props: UserModalProps) => {
             )}
             {!_.isEmpty(location) && _.isEmpty(image) && (
               <RNMapView
+                provider="google"
                 style={{
                   width: '100%',
                   height: '100%',

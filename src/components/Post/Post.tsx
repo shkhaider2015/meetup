@@ -13,13 +13,13 @@ import { useTheme } from '@/theme';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   StyleSheet,
+  Image,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Button } from '../template';
+import { Button, Image as ImageComp } from '../template';
 import { fontFamily } from '@/theme/_config';
 import { IPost } from '@/types/post';
 import UserModal from '../Modals/User';
@@ -203,13 +203,20 @@ const Post = (props: IPost) => {
       >
         {/* Content */}
         {!_.isEmpty(image) && (
+          <ImageComp
+            imageURL={convertImageURLforngRok(image || '')}
+            containerStyle={styles.location}
+          />
+        )}
+        {/* {!_.isEmpty(image) && (
           <Image
             source={{ uri: convertImageURLforngRok(image || '') }}
             style={styles.location}
           />
-        )}
+        )} */}
         {!_.isEmpty(location) && _.isEmpty(image) && (
           <RNMapView
+            provider="google"
             style={{
               width: '100%',
               height: '100%',
@@ -222,6 +229,10 @@ const Post = (props: IPost) => {
                 },
               ]),
             }}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            rotateEnabled={false}
+            pitchEnabled={false}
           >
             <Marker
               coordinate={{

@@ -76,3 +76,5 @@ yarn-error.log
 release/*.apk
 
 test.js
+
+.env
