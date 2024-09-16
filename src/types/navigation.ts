@@ -3,6 +3,7 @@ import { ImageSourcePropType } from 'react-native';
 import GeoLocation from "react-native-geolocation-service"
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { PostStateType } from './screens/post';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
 
 export type RootStackParamList = {
 	Startup: undefined;
@@ -21,6 +22,9 @@ export type RootStackParamList = {
 	Ineterests: undefined;
 	Explore: undefined;
 	Chat: undefined;
+	Messages:  {
+		chatWith?: CometChat.User
+	},
 	Post: {
 		initialValues?: PostStateType,
 		postId?: string

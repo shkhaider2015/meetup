@@ -45,6 +45,7 @@ import Toast from 'react-native-toast-message';
 import { deletePost as deletePostAction } from '@/store/slices/postSlice';
 import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
 
 const Post = (props: IPost) => {
   const {
@@ -129,6 +130,20 @@ const Post = (props: IPost) => {
     if (isPending) return;
     setShowDetails(true);
   };
+
+  const _startChat = async () => {
+    try {
+      const cometChatUser:CometChat.User = await CometChat.getUser(user.cometchat.id)
+      navigate("Messages", {
+        chatWith: cometChatUser
+      })
+    } catch (error:any) {
+      Toast.show({
+        type: "error",
+        text1: error?.message || "Can't start chat with this user" 
+      })
+    }
+  }
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
@@ -304,6 +319,7 @@ const Post = (props: IPost) => {
               isCirculer={true}
               type="SECONDARY"
               containerStyle={[{ width: 40, height: 40 }]}
+              onPress={_startChat}
             />
           </View>
           <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
