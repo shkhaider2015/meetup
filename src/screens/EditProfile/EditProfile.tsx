@@ -133,6 +133,18 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       });
     }
 
+    const fileSize = result.assets?.[0].fileSize || 0;
+    const fileSizeInMB = (fileSize / (1024 * 1024)).toFixed(2);
+
+    if(Number(fileSizeInMB) >= 5) {
+      Toast.show({
+        type: "info",
+        text1: "Image size must be less than 5 MB"
+      })
+      return
+    }
+    
+
     formik.setFieldValue('profileImage', result.assets?.[0]);
   };
 

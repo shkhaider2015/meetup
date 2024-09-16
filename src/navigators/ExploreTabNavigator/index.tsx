@@ -29,10 +29,7 @@ function ExploreTabs() {
             marginVertical: 10,
             borderRadius: 20
         },
-        tabBarIconStyle: {
-            
-        },
-    })} initialRouteName="ListView" >
+    })} initialRouteName="MapView" >
       <Tab.Screen name="MapView" component={MapView} />
       <Tab.Screen name="ListView" component={ListView} />
     </Tab.Navigator>

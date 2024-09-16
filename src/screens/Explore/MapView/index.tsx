@@ -4,7 +4,7 @@ import { ExploreTabsParamList } from '@/types/navigation';
 import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import RNMapView, { Details, Region } from 'react-native-maps';
-import { useCallback, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { IInitialMapState } from '@/types/maps';
 import {
   Cat_Charity,
@@ -46,15 +46,23 @@ const MapView = ({ navigation }: MapViewScreenType) => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
   const location = useSelector((state: RootState) => state.location);
+  const posts = useSelector((state: RootState) => state.posts);
+
+
   const { showLoader, hideLoader } = useLoader();
   const dispatch: AppDispatch = useDispatch();
 
-  useFocusEffect(
-    useCallback(() => {
-      getLocation();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getLocation();
+  //   }, []),
+  // );
+
+  useLayoutEffect(() => {
+    getLocation();
+  }, [])
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));
@@ -148,12 +156,15 @@ const MapView = ({ navigation }: MapViewScreenType) => {
         onRegionChange={_onRegionChange}
         zoomControlEnabled={true}
       >
-        {data.map((item) => (
+        {/* {data.map((item) => (
           <CustomMarker key={item.latitude} {...item} />
-        ))}
+        ))} */}
+        {
+          posts.map(post => <CustomMarker key={post._id} {...post} />)
+        }
       </RNMapView>
     ),
-    [location],
+    [location, posts],
   );
 
   return (
