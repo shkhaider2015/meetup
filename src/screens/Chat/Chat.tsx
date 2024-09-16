@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { RootStackParamList } from '@/types/navigation';
 import { Dimensions, ScrollView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import LimitTimePicker from 'react-native-limit-timepicker';
-import { CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react-native';
+import { CometChatConversations, CometChatConversationsWithMessages } from '@cometchat/chat-uikit-react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
-const Chat = ({}: ChatScreenType) => {
+const Chat = ({ navigation, route }: ChatScreenType) => {
+  // const { chatWith } = route.params;
   const { layout, gutters, backgrounds, fonts } = useTheme();
   const screenHeight = Dimensions.get('window').height;
   const user = useSelector((state: RootState) => state.user);
@@ -20,23 +22,31 @@ const Chat = ({}: ChatScreenType) => {
   // Add the below state to load the UI component after user logs in.
   const [renderUI, setRenderUI] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      CometChat.getLoggedinUser()
-        .then((user) => {
-          setCometChatUser(user || undefined)
-        })
-        .catch((err) => console.log('CometChat logged In User : ', err));
+  // useEffect(() => {
+  //   if (user) {
+  //     CometChat.getLoggedinUser()
+  //       .then((user) => {
+  //         setCometChatUser(user || undefined)
+  //       })
+  //       .catch((err) => console.log('CometChat logged In User : ', err));
+  //   }
+  // }, [user]);
+
+  const _onItemPress = (item:CometChat.Conversation) => {
+    const chatWith = item.getConversationWith();
+    if(chatWith instanceof CometChat.User) {
+      navigation.navigate("Messages", {
+        chatWith
+      })
     }
-  }, [user]);
+    
+  }
 
   return (
     <SafeScreen>
       <View style={{ height: '100%', width: '100%' }}>
-        {
-          cometChatUser && <CometChatConversationsWithMessages />
-        }
-        
+       {/* <CometChatConversationsWithMessages user={chatWith}  /> */}
+       <CometChatConversations onItemPress={_onItemPress} />
       </View>
     </SafeScreen>
   );

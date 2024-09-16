@@ -35,4 +35,7 @@ interface IPostUser {
   _id: string;
   name: string;
   profileImage: string;
+  cometchat: {
+    id: string
+  }
 }

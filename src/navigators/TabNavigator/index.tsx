@@ -69,7 +69,7 @@ function TabsNavigator() {
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
-      <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
+      <Tab.Screen name="Chat" component={Chat} initialParams={{ chatWith: undefined }} options={chatOptions} />
       <Tab.Screen
         name="Post"
         component={Post}

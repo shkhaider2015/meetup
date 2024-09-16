@@ -130,7 +130,7 @@ export const loadUser = async (accessToken: string) => {
         },
       })
       .json();
-
+    await CometChat.getLoggedinUser()
     return response?.payload;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {

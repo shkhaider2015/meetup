@@ -21,6 +21,7 @@ import { IUserReducer } from '@/types/reducer';
 import { convertImageURLforngRok } from '@/utils';
 import { getItem } from '@/storage';
 import { USER } from '@/constants';
+import Messages from '@/screens/Messages/Messages';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -86,6 +87,11 @@ const ProtectedScreens = () => {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name="Messages"
+        component={Messages}
+        initialParams={{ chatWith: undefined }}
       />
     </Stack.Navigator>
   );
