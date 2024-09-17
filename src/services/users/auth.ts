@@ -130,7 +130,7 @@ export const loadUser = async (accessToken: string) => {
         },
       })
       .json();
-    await CometChat.getLoggedinUser()
+    await CometChat.getLoggedinUser();
     return response?.payload;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {
@@ -263,19 +263,18 @@ export const updateProfile = async (userId: string, data: any) => {
         if (key == 'profileImage') {
           formData.append(key, convertAssetToFile(data.profileImage));
         } else if (key == 'activitiesToAdd') {
-          data[key]?.forEach((item:string) => {
-            formData.append('activitiesToAdd[]', item)
-          })
+          data[key]?.forEach((item: string) => {
+            formData.append('activitiesToAdd[]', item);
+          });
         } else if (key == 'activitiesToDelete') {
-          data[key]?.forEach((item:string) => {
-            formData.append('activitiesToDelete[]', item)
-          })
+          data[key]?.forEach((item: string) => {
+            formData.append('activitiesToDelete[]', item);
+          });
         } else {
           formData.append(key, data[key]);
         }
       }
     });
-
 
     const response: any = await instance
       .post(`${END_POINTS.UPDATE_PROFILE}/${userId}`, {
@@ -293,6 +292,26 @@ export const updateProfile = async (userId: string, data: any) => {
       const errorData = await error.response.json();
       console.log('Error update ', errorData?.message);
 
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+};
+
+export const getUserDetails = async (data:{userId: string; currentUserId: string;}) => {
+  try {
+    
+    const response: any = await instance.post(`${END_POINTS.USER}/${data.userId}`, {
+      json: {
+        userId: data.currentUserId,
+      },
+    }).json();
+    
+    return response?.payload;
+  } catch (error: any) {
+    if (error?.response) {
+      const errorData = await error.response.json();
       throw new Error(errorData.message || 'Something went wrong');
     } else {
       throw new Error('An unknown error occurred');

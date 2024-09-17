@@ -6,14 +6,20 @@ import {
   ProfileSectionImageGallery,
 } from '@/components';
 import { SafeScreen } from '@/components/template';
+import { getAllPostByUser } from '@/services/posts/indes';
 import { logout } from '@/services/users';
-import { AppDispatch } from '@/store';
+import { getUserDetails } from '@/services/users/auth';
+import { AppDispatch, RootState } from '@/store';
 import { clearUser } from '@/store/slices/userSlice';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
+import { IPostReducer } from '@/types/reducer';
+import { convertImageURLforngRok } from '@/utils';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -22,33 +28,75 @@ import {
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { useDispatch } from 'react-redux';
+import Toast from 'react-native-toast-message';
+import { useDispatch, useSelector } from 'react-redux';
 
 const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
 
 const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   const { userId } = route.params;
+
+  const currentUser = useSelector((state: RootState) => state.user);
+  const [userInfo, setUserInfo] = useState<IUserInfo>();
+  const [userPosts, setUserPosts] = useState<IPostReducer[]>([])
+
   const dispatch: AppDispatch = useDispatch();
   const { layout, gutters, backgrounds, fonts } = useTheme();
-  const { isError, isPending, isSuccess, mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: () => {
-      return logout();
+      return getUserDetails({
+        userId: userId || '',
+        currentUserId: currentUser._id,
+      });
     },
-    onSuccess(data, variables, context) {
-      console.log('Success Logout : ', data, variables, context);
-      dispatch(clearUser());
+    onSuccess: (data, variables, context) => {
+      console.log("Data : ", data);
+      
+      setUserInfo(data);
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: error.message,
+      });
+    },
+  });
+  const { isPending:postsPending, mutate:postsMutation } = useMutation({
+    mutationFn: () => {
+      return getAllPostByUser(userId|| "");
+    },
+    onSuccess: (data, variables, context) => {
+      console.log("Post success Data : ", data);
+      
+      setUserPosts(data);
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: error.message,
+      });
     },
   });
   const { height, width } = Dimensions.get('window');
 
+  useFocusEffect(useCallback(() => {
+    if(userId && currentUser) {
+      mutate();
+      postsMutation()
+    }
+  }, [userId, currentUser]));
+
   const _goBack = () => {
-    navigation.setParams({ userId: undefined })
+    navigation.setParams({ userId: undefined });
     navigation.goBack();
   };
 
+  const _followUser = () => {};
+  console.log("UserPosts : ", userPosts);
+  
   return (
     <SafeScreen>
-      <ProfileHeader onBack={_goBack} title="Jhonson" />
+      <ProfileHeader onBack={_goBack} title={userInfo?.name} />
       <ScrollView>
         <View
           style={[
@@ -60,14 +108,18 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             },
           ]}
         >
-          <ProfileSectionHead isCurrentUser={false} />
-          <ProfileSectionDescription
-            name={'Jhonson'}
-            profession="Athelete"
-            description={text}
+          <ProfileSectionHead
+            isCurrentUser={false}
+            onPressButton={_followUser}
+            profileImage={convertImageURLforngRok(userInfo?.profileImage || '')}
           />
-          <ProfileSectionActivities />
-          <ProfileSectionImageGallery />
+          <ProfileSectionDescription
+            name={userInfo?.name}
+            profession="Athelete"
+            description={userInfo?.bio}
+          />
+          <ProfileSectionActivities activities={userInfo?.activities} />
+          <ProfileSectionImageGallery posts={userPosts} />
         </View>
       </ScrollView>
     </SafeScreen>
@@ -126,6 +178,18 @@ const ProfileHeader = ({
     </View>
   );
 };
+
+interface IUserInfo {
+  _id: string;
+  name: string;
+  email: string;
+  profileImage: string;
+  cometchat: {
+    id: string;
+  };
+  bio: string;
+  activities: string[];
+}
 
 type OtherProfileScreenType = NativeStackScreenProps<
   RootStackParamList,

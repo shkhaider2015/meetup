@@ -51,7 +51,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
           width: widthInPercentage(39),
           height: widthInPercentage(39),
           borderRadius: 300
-        }} />
+        }} fastImageProp={{ style: { borderRadius: 300 } }} />
       </View>
       {/* Details Column */}
       <View style={[{ flex: 1, rowGap: 20 }]}>

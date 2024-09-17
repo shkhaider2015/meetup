@@ -5,10 +5,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Region } from 'react-native-maps';
 
 const initialState: Region = getItem<Region>(LOCATION) || {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+  latitude: 0,
+  longitude: 0,
+  latitudeDelta: 0,
+  longitudeDelta: 0,
 };
 
 const locationSlice = createSlice({
@@ -22,10 +22,10 @@ const locationSlice = createSlice({
     clearLocatioin: () => {
       removeItem(LOCATION);
       return {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0,
+        longitudeDelta: 0,
       };
     },
   },

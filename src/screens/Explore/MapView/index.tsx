@@ -40,16 +40,10 @@ const MapView = ({ navigation }: MapViewScreenType) => {
       heights.exploreTabsHeader +
       40);
 
-  const [mapState, setMapState] = useState<Region>({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-
   const location = useSelector((state: RootState) => state.location);
-  const posts = useSelector((state: RootState) => state.posts);
+  const [mapState, setMapState] = useState<Region>(location);
 
+  const posts = useSelector((state: RootState) => state.posts);
 
   const { showLoader, hideLoader } = useLoader();
   const dispatch: AppDispatch = useDispatch();
@@ -61,8 +55,10 @@ const MapView = ({ navigation }: MapViewScreenType) => {
   // );
 
   useLayoutEffect(() => {
-    getLocation();
-  }, [])
+    if (location.latitude === 0 && location.longitude === 0) {
+      getLocation();
+    }
+  }, [location]);
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));
@@ -159,9 +155,9 @@ const MapView = ({ navigation }: MapViewScreenType) => {
         {/* {data.map((item) => (
           <CustomMarker key={item.latitude} {...item} />
         ))} */}
-        {
-          posts.map(post => <CustomMarker key={post._id} {...post} />)
-        }
+        {posts.map((post) => (
+          <CustomMarker key={post._id} {...post} />
+        ))}
       </RNMapView>
     ),
     [location, posts],
