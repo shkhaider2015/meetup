@@ -30,9 +30,7 @@ const ListView = ({}: ListViewScreenType) => {
   const screenHeight =
     Dimensions.get('window').height -
     (heights.bottomTabBarHeight +
-      heights.tabNavigationHeader +
-      heights.exploreTabsHeader +
-      40);
+      heights.tabNavigationHeader);
   const dispatch: AppDispatch = useDispatch();
 
   const { isPending, mutate } = useMutation({
@@ -65,7 +63,6 @@ const ListView = ({}: ListViewScreenType) => {
     <SafeScreen>
       <View
         style={[
-          gutters.paddingVertical_12,
           backgrounds.gray30,
           {
             height: screenHeight,
@@ -76,7 +73,7 @@ const ListView = ({}: ListViewScreenType) => {
           data={posts}
           renderItem={({ item }) => <Post {...item} />}
           keyExtractor={(item, ind) => item._id || ind.toString()}
-          contentContainerStyle={[{ paddingBottom: 40 }]}
+          contentContainerStyle={[{ paddingBottom: 40, paddingTop: heights.exploreTabsHeader }]}
           refreshControl={
             <RefreshControl
               refreshing={refreshData}

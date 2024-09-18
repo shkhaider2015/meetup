@@ -36,9 +36,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
   const screenHeight =
     Dimensions.get('window').height -
     (heights.bottomTabBarHeight +
-      heights.tabNavigationHeader +
-      heights.exploreTabsHeader +
-      40);
+      heights.tabNavigationHeader);
 
   const location = useSelector((state: RootState) => state.location);
   const [mapState, setMapState] = useState<Region>(location);
