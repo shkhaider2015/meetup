@@ -18,6 +18,7 @@ const APIEndPoints = {
   FORGET_PASSWORD: 'auth/reset-password',
   CHANGE_PASSWORD: 'user/change-password',
   UPDATE_PROFILE: 'user/update-profile',
+  USER: 'USER',
 
   // Posts
   POST: 'post',

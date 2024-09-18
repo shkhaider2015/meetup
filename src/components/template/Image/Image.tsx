@@ -16,6 +16,9 @@ const Image = (props: IImageProps) => {
   const { shimmerStyle, containerStyle, fastImageProp, imageURL } = props;
   const [isImageLoaded, setImageLoaded] = useState(false);
 
+  console.log("URL ", imageURL);
+  
+
   return (
     <View style={[styles.container, containerStyle]}>
       {/* Shimmer Placeholder */}
@@ -36,6 +39,7 @@ const Image = (props: IImageProps) => {
         onLoad={() => {
             setImageLoaded(true)
         }}
+        onError={() => setImageLoaded(true)}
         resizeMode={FastImage.resizeMode.cover}
       />
     </View>
