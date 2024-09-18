@@ -40,9 +40,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { SvgProps } from 'react-native-svg';
 import { useMutation } from '@tanstack/react-query';
-import { deletePost as deletePostService } from '@/services/posts/indes';
+import { deletePost as deletePostService, likeOrDislikePost } from '@/services/posts/indes';
 import Toast from 'react-native-toast-message';
-import { deletePost as deletePostAction } from '@/store/slices/postSlice';
+import { deletePost as deletePostAction, updatePost } from '@/store/slices/postSlice';
 import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
@@ -58,6 +58,7 @@ const Post = (props: IPost) => {
     time,
     image,
     _id,
+    isLikedByMe
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
@@ -88,6 +89,27 @@ const Post = (props: IPost) => {
       });
     },
   });
+
+  const { isPending:likePending, mutate: likeMutation  } = useMutation({
+    mutationFn: () => {
+      return likeOrDislikePost({
+        userId: currentUser._id,
+        postId: _id,
+        isLike: !isLikedByMe
+      })
+    },
+    onSuccess: (data) => {
+      console.log("Data success: ", data);
+      dispatch(updatePost(data))
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: error.name,
+        text2: error.message
+      })
+    }
+  })
 
   const Icon = getIconByID(activity || '');
 
@@ -150,6 +172,11 @@ const Post = (props: IPost) => {
       });
     }
   };
+
+  const _onLikeOrDislike = () => {
+    likeMutation()
+  }
+  
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
@@ -304,7 +331,7 @@ const Post = (props: IPost) => {
             <Button
               Icon={
                 <Heart
-                  color={favorite ? colors.primary : colors.gray250}
+                  color={isLikedByMe ? colors.primary : colors.gray250}
                   width={23}
                   height={23}
                 />
@@ -312,7 +339,8 @@ const Post = (props: IPost) => {
               isCirculer={true}
               type="SECONDARY"
               containerStyle={[{ width: 40, height: 40 }]}
-              onPress={() => setFavorite((pS) => !pS)}
+              onPress={_onLikeOrDislike}
+              disabled={likePending}
             />
             {user._id !== currentUser._id && (
               <Button

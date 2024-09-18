@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const ListView = ({}: ListViewScreenType) => {
   const posts = useSelector((state: RootState) => state.posts);
+  const user = useSelector((state: RootState) => state.user);
   const [refreshData, setRefreshData] = useState(false);
 
   const { layout, gutters, backgrounds, colors } = useTheme();
@@ -36,7 +37,7 @@ const ListView = ({}: ListViewScreenType) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => {
-      return getAllPost();
+      return getAllPost({ userId: user._id});
     },
     onSuccess: (data:IPostReducer[]) => {
       console.log('data : ', data?.[0]);
@@ -50,8 +51,10 @@ const ListView = ({}: ListViewScreenType) => {
   });
 
   useEffect(() => {
-    mutate();
-  }, [dispatch]);
+    if(user._id) {
+      mutate();
+    }
+  }, [dispatch, user]);
 
   const _onRefresh = () => {
     setRefreshData(true);
