@@ -1,4 +1,4 @@
-import { Post } from '@/components';
+import { EmptyList, Post } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { getAllPost } from '@/services/posts/indes';
 import { AppDispatch, RootState } from '@/store';
@@ -23,20 +23,19 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const ListView = ({}: ListViewScreenType) => {
   const posts = useSelector((state: RootState) => state.posts);
+  const user = useSelector((state: RootState) => state.user);
   const [refreshData, setRefreshData] = useState(false);
 
   const { layout, gutters, backgrounds, colors } = useTheme();
   const screenHeight =
     Dimensions.get('window').height -
     (heights.bottomTabBarHeight +
-      heights.tabNavigationHeader +
-      heights.exploreTabsHeader +
-      40);
+      heights.tabNavigationHeader);
   const dispatch: AppDispatch = useDispatch();
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => {
-      return getAllPost();
+      return getAllPost({ userId: user._id});
     },
     onSuccess: (data:IPostReducer[]) => {
       console.log('data : ', data?.[0]);
@@ -50,8 +49,10 @@ const ListView = ({}: ListViewScreenType) => {
   });
 
   useEffect(() => {
-    mutate();
-  }, [dispatch]);
+    if(user._id) {
+      mutate();
+    }
+  }, [dispatch, user]);
 
   const _onRefresh = () => {
     setRefreshData(true);
@@ -62,7 +63,6 @@ const ListView = ({}: ListViewScreenType) => {
     <SafeScreen>
       <View
         style={[
-          gutters.paddingVertical_12,
           backgrounds.gray30,
           {
             height: screenHeight,
@@ -73,7 +73,7 @@ const ListView = ({}: ListViewScreenType) => {
           data={posts}
           renderItem={({ item }) => <Post {...item} />}
           keyExtractor={(item, ind) => item._id || ind.toString()}
-          contentContainerStyle={[{ paddingBottom: 40 }]}
+          contentContainerStyle={[{ paddingBottom: 40, paddingTop: heights.exploreTabsHeader }]}
           refreshControl={
             <RefreshControl
               refreshing={refreshData}
@@ -81,6 +81,8 @@ const ListView = ({}: ListViewScreenType) => {
               tintColor={colors.primary}
             />
           }
+          ListEmptyComponent={<EmptyList containerStyle={[ { minHeight: screenHeight } ]} />}
+          
         />
       </View>
     </SafeScreen>

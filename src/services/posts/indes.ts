@@ -42,9 +42,11 @@ export const createPost = async (data: IPostForm) => {
   }
 };
 
-export const getAllPost = async () => {
+export const getAllPost = async (queryParams: { userId: string }) => {
   try {
-    const response: any = await instance.get(END_POINTS.POST).json();
+    const response: any = await instance.get(END_POINTS.POST, {
+      searchParams: queryParams
+    }).json();
 
     return response?.payload;
   } catch (error: any) {
@@ -59,10 +61,11 @@ export const getAllPost = async () => {
   }
 };
 
-export const getAllPostByUser = async (userId:string) => {
+export const getAllPostByUser = async (userId: string) => {
   try {
-    
-    const response: any = await instance.get(`${END_POINTS.POST}/user/${userId}`).json();
+    const response: any = await instance
+      .get(`${END_POINTS.POST}/user/${userId}`)
+      .json();
 
     return response?.payload;
   } catch (error: any) {
@@ -77,7 +80,7 @@ export const getAllPostByUser = async (userId:string) => {
   }
 };
 
-export const getPostById = async () => {
+export const getPostById = async (queryParams: { userId: string }) => {
   try {
   } catch (error: any) {
     if (error?.response) {
@@ -152,6 +155,34 @@ export const deletePost = async (postId: string, userId: string) => {
       .json();
 
     return response;
+  } catch (error: any) {
+    if (error?.response) {
+      const errorData = await error.response.json();
+      console.log('HTTP response:', errorData);
+      throw new Error(errorData.message);
+    } else {
+      console.log('Error ', error);
+      throw new Error(error?.message || 'An unknown error occurred');
+    }
+  }
+};
+
+export const likeOrDislikePost = async (data: {
+  userId: string;
+  postId: string;
+  isLike: boolean;
+}) => {
+  try {
+    console.log("Data in service ", data);
+    const response:any = await instance.post(END_POINTS.LIKE_OR_DISLIKE, {
+      json: data
+    }).json();
+
+    if(!response?.payload) {
+      throw(response)
+    }
+    
+    return await response?.payload;
   } catch (error: any) {
     if (error?.response) {
       const errorData = await error.response.json();

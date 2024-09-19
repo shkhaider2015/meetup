@@ -23,6 +23,7 @@ const APIEndPoints = {
   // Posts
   POST: 'post',
   ALL_POST_BY_USER: 'post/user',
+  LIKE_OR_DISLIKE: 'post/like'
 };
 
 export default APIEndPoints;
