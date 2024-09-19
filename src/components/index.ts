@@ -9,3 +9,4 @@ export { default as ProfileSectionDescription } from "@/components/ProfileSectio
 export { default as ProfileSectionActivities } from "@/components/ProfileSectionActivities/ProfileSectionActivities";
 export { default as ProfileSectionImageGallery } from "@/components/ProfileSectionImageGallery/ProfileSectionImageGallery";
 export { default as DetailText } from '@/components/DetailText/DetailText';
+export { default as EmptyList } from "@/components/EmptyList/EmptyList";

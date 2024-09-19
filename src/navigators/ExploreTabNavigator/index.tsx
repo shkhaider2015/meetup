@@ -27,7 +27,8 @@ function ExploreTabs() {
             backgroundColor: colors.gray00,
             height: 60,
             marginVertical: 10,
-            borderRadius: 20
+            borderRadius: 20,
+            position: 'absolute'
         },
     })} initialRouteName="MapView" >
       <Tab.Screen name="MapView" component={MapView} />
