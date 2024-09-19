@@ -1,4 +1,4 @@
-import { Post } from '@/components';
+import { EmptyList, Post } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { getAllPost } from '@/services/posts/indes';
 import { AppDispatch, RootState } from '@/store';
@@ -81,6 +81,8 @@ const ListView = ({}: ListViewScreenType) => {
               tintColor={colors.primary}
             />
           }
+          ListEmptyComponent={<EmptyList containerStyle={[ { minHeight: screenHeight } ]} />}
+          
         />
       </View>
     </SafeScreen>

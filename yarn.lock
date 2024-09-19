@@ -8131,6 +8131,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lottie-react-native@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "lottie-react-native@npm:7.0.0"
+  peerDependencies:
+    "@dotlottie/react-player": ^1.6.1
+    "@lottiefiles/react-lottie-player": ^3.5.3
+    react: "*"
+    react-native: ">=0.46"
+    react-native-windows: ">=0.63.x"
+  peerDependenciesMeta:
+    "@dotlottie/react-player":
+      optional: true
+    "@lottiefiles/react-lottie-player":
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: b81d716ecbdc1ce51c642acd8a5d8f522b840f73f4472ca77f67f429c8cb06bd2ab2d92a12868a8bc642b36211bee652c16afbbb717de798d3d4865766556a38
+  languageName: node
+  linkType: hard
+
 "lower-case@npm:^2.0.2":
   version: 2.0.2
   resolution: "lower-case@npm:2.0.2"
@@ -8299,6 +8319,7 @@ __metadata:
     jest: ^29.6.3
     ky: ^1.2.4
     lodash: ^4.17.21
+    lottie-react-native: ^7.0.0
     prettier: ^3.3.3
     react: 18.2.0
     react-i18next: ^14.1.0

@@ -12,8 +12,17 @@ import { IPostReducer } from '@/types/reducer';
 import { convertImageURLforngRok, widthInPercentage } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import _ from 'lodash';
-import { Image, ImageURISource, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ImageURISource,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Image as CustomImage } from '@/components/template';
+import LottieView from 'lottie-react-native';
+import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
+import { fontFamily } from '@/theme/_config';
 
 const ProfileSectionImageGallery = (props: IProfileSectionImageGallery) => {
   const navigation: NavigationHookProps = useNavigation();
@@ -38,8 +47,33 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery) => {
     console.log('Clicked : ', id);
   };
 
-  console.log("Image Post : ", imagePost, props.posts);
-  
+  if (postLength === 0) {
+    return (
+      <View
+        style={[
+          gutters.paddingVertical_16,
+          layout.itemsCenter,
+          layout.justifyCenter,
+          {
+            minHeight: '35%'
+          }
+        ]}
+      >
+        <LottieView
+          source={EmptyAnimation}
+          autoPlay={true}
+          loop={false}
+          style={{
+            width: '100%',
+            height: 200,
+          }}
+        />
+        <Text style={[fonts.gray300, fontFamily._400_Regular, fonts.size_14]}>
+          No Posts To Show
+        </Text>
+      </View>
+    );
+  }
 
   if (postLength <= 2) {
     return (
