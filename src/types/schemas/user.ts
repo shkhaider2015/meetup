@@ -71,7 +71,8 @@ export const editProfileSchema = yup.object().shape({
     .max(50, 'Name is too large')
     .required('Display name is required'),
   bio: yup.string(),
-  interests: yup.string()
+  interests: yup.string(),
+  profession: yup.string()
 
 });
 

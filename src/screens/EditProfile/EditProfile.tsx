@@ -47,13 +47,14 @@ import { useDispatch, useSelector } from 'react-redux';
 const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   const { layout, fonts, colors, gutters, backgrounds } = useTheme();
   const { height } = Dimensions.get('screen');
+  const professionRef = useRef<TextInput>(null);
   const bioRef = useRef<TextInput>(null);
   const [showActivity, setShowActivity] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   const { showLoader, hideLoader } = useLoader();
 
-  const { isPending, mutate } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async (data: IEditProfileForm) => {
       return updateProfile(user._id, data);
     },
@@ -72,6 +73,8 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
           profileImage: convertImageURLforngRok(data.profileImage),
         }),
       );
+
+      navigation.goBack();
     },
     onError: (error) => {
       hideLoader();
@@ -89,6 +92,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       bio: user.bio,
       activitiesToAdd: [],
       activitiesToDelete: [],
+      profession: user.profession
     },
     validationSchema: editProfileSchema,
     onSubmit: (values) => {
@@ -258,7 +262,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                 onChangeText={formik.handleChange('name')}
                 onBlur={formik.handleBlur('name')}
                 value={formik.values.name}
-                onSubmitEditing={() => _handleNext(bioRef)}
+                onSubmitEditing={() => _handleNext(professionRef)}
                 returnKeyType="next"
                 keyboardType="default"
                 autoCapitalize="none"
@@ -270,6 +274,37 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
                 {formik.touched.name && formik.errors.name
                   ? formik.errors.name
+                  : ''}
+              </Text>
+            </View>
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                Profession
+              </Text>
+              <InputField
+                placeholder="Profession"
+                onChangeText={formik.handleChange('profession')}
+                onBlur={formik.handleBlur('profession')}
+                value={formik.values.profession}
+                onSubmitEditing={() => _handleNext(bioRef)}
+                returnKeyType="next"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.profession && formik.errors.profession ? true : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.profession && formik.errors.profession
+                  ? formik.errors.profession
                   : ''}
               </Text>
             </View>

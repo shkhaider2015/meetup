@@ -95,7 +95,7 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
           />
           <ProfileSectionDescription
             name={user.name}
-            profession="Athlete"
+            profession={user.profession}
             description={user.bio}
           />
 

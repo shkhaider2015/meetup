@@ -34,6 +34,8 @@ export interface IEditProfileForm {
   activitiesToAdd: string[];
 
   activitiesToDelete: string[];
+
+  profession?: string
 }
 
 export interface IPostForm {
