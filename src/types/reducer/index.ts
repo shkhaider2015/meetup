@@ -11,6 +11,7 @@ export interface IUserReducer {
     },
     activities: string[];
     bio: string;
+    profession: string
   }
 
 export interface IPostReducer {
