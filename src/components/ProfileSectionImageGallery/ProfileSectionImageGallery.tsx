@@ -49,11 +49,6 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   let imagePost = props.posts?.filter((post) => !_.isEmpty(post.image)) || [];
   const postLength = imagePost.length;
 
-  const _onPressImage = (id: string) => {
-    console.log('Clicked : ', id);
-  };
-
-
   const _showDetails = (posting: IPost) => {
     setSelectedPost(posting); 
   };
