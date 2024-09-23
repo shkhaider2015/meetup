@@ -36,9 +36,9 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery) => {
     Image.resolveAssetSource(DummyLaraProfile_3),
   ];
 
-  const _onImagePress = (id: number) => {
-    navigation.navigate('Carousel', { images, selectedIndex: id });
-  };
+  // const _onImagePress = (id: number) => {
+  //   navigation.navigate('Carousel', { images, selectedIndex: id });
+  // };
 
   let imagePost = props.posts?.filter((post) => !_.isEmpty(post.image)) || [];
   const postLength = imagePost.length;
@@ -46,6 +46,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery) => {
   const _onPressImage = (id: string) => {
     console.log('Clicked : ', id);
   };
+
 
   if (postLength === 0) {
     return (
