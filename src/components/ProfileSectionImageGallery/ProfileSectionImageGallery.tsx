@@ -39,13 +39,12 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
     Image.resolveAssetSource(DummyLaraProfile_2),
     Image.resolveAssetSource(DummyLaraProfile_3),
   ];
-  const [showDetails, setShowDetails] = useState(false);
   const [selectedPost, setSelectedPost] = useState<IPost | null>();
 
 
-  // const _onImagePress = (id: number) => {
-  //   navigation.navigate('Carousel', { images, selectedIndex: id });
-  // };
+  const _onImagePress = (id: number) => {
+    navigation.navigate('Carousel', { images, selectedIndex: id });
+  };
 
   let imagePost = props.posts?.filter((post) => !_.isEmpty(post.image)) || [];
   const postLength = imagePost.length;
@@ -56,9 +55,11 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
 
 
   const _showDetails = (posting: IPost) => {
-    setShowDetails(true);
     setSelectedPost(posting); 
   };
+  const onClose = () => {
+    setSelectedPost(null);
+  }
   
 
   if (postLength === 0) {
@@ -114,8 +115,8 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         ))}
         {selectedPost && (
       <UserModal
-       open={showDetails}
-       onClose={() => setShowDetails(false)}
+       open={!_.isEmpty(selectedPost)}
+       onClose={onClose}
        data={selectedPost}
      />)}
       </View>
@@ -169,12 +170,11 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           </TouchableOpacity>
         </View>
         {selectedPost && (
-          <UserModal
-            open={showDetails}
-            onClose={() => setShowDetails(false)}
-            data={selectedPost}
-          />
-        )}
+      <UserModal
+       open={!_.isEmpty(selectedPost)}
+       onClose={onClose}
+       data={selectedPost}
+     />)}
       </View>
     );
   }
@@ -242,12 +242,11 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         ))}
       </View>
       {selectedPost && (
-          <UserModal
-            open={showDetails}
-            onClose={() => setShowDetails(false)}
-            data={selectedPost}
-          />
-        )}
+      <UserModal
+       open={!_.isEmpty(selectedPost)}
+       onClose={onClose}
+       data={selectedPost}
+     />)}
     </View>
   );
 };
