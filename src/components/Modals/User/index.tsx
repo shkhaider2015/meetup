@@ -9,9 +9,11 @@ import {
   Tick,
 } from '@/assets/icon';
 import { Button } from '@/components/template';
+import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { UserModalProps } from '@/types/modals';
+import { NavigationHookProps } from '@/types/navigation';
 import { IPost } from '@/types/post';
 import {
   convertImageURLforngRok,
@@ -19,6 +21,7 @@ import {
   getRegionForCoordinates,
   widthInPercentage,
 } from '@/utils';
+import { useNavigation } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useEffect, useLayoutEffect } from 'react';
@@ -30,8 +33,10 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import RNMapView, { Marker } from 'react-native-maps';
+import { useSelector } from 'react-redux';
 
 const text1 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat quas officia aspernatur repellendus velit nisi, harum quis nemo itaque deserunt neque magnam cumque fugiat deleniti eligendi nam odio asperiores autem? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat quas officia aspernatur repellendus velit nisi, harum quis nemo itaque deserunt neque magnam cumque fugiat deleniti eligendi nam odio asperiores autem?`;
 const text2 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat quas officia aspernatur repellendus velit nisi, harum quis nemo itaque deserunt neque magnam cumque fugiat deleniti eligendi nam odio asperiores autem?`;
@@ -41,7 +46,11 @@ const UserModal = (props: UserModalProps) => {
   const { data, open, onClose } = props;
   const { user, activity, image, location, createdAt, details, date, time } =
     data;
+  
+  const currentUser = useSelector((state: RootState) => state.user);
+
   const { layout, gutters, fonts, colors, backgrounds, borders } = useTheme();
+  const { navigate } = useNavigation<NavigationHookProps>();
   const width = Dimensions.get('screen').width;
 
   const Icon = getIconByID(activity || '');
@@ -54,13 +63,16 @@ const UserModal = (props: UserModalProps) => {
     onClose();
   };
 
-  //   useLayoutEffect(() => {
-  //     if (open) {
-  //       StatusBar.setBackgroundColor("#0000004D");
-  //       StatusBar.setBarStyle("light-content");
-  //       StatusBar.setTranslucent(true);
-  //     }
-  //   }, [open]);
+  const _goToProfile = () => {
+    _handleClose()
+    if (user._id == currentUser._id) {
+      navigate('Profile');
+      return;
+    }
+    navigate('OtherProfile', {
+      userId: user._id,
+    });
+  };
 
   return (
     <Modal
@@ -97,14 +109,17 @@ const UserModal = (props: UserModalProps) => {
           >
             {/* Header */}
             <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
+              <TouchableOpacity onPress={_goToProfile}>
               <Image
                 source={{
                   uri: convertImageURLforngRok(user.profileImage || ''),
                 }}
                 style={styles.profile_image}
               />
+
+              </TouchableOpacity>
               <View style={[layout.col, gutters.marginHorizontal_12]}>
-                <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+                <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
                 <View
                   style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
                 >
