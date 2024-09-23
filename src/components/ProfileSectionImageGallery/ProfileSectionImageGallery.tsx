@@ -42,9 +42,9 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   const [selectedPost, setSelectedPost] = useState<IPost | null>();
 
 
-  const _onImagePress = (id: number) => {
-    navigation.navigate('Carousel', { images, selectedIndex: id });
-  };
+  // const _onImagePress = (id: number) => {
+  //   navigation.navigate('Carousel', { images, selectedIndex: id });
+  // };
 
   let imagePost = props.posts?.filter((post) => !_.isEmpty(post.image)) || [];
   const postLength = imagePost.length;
