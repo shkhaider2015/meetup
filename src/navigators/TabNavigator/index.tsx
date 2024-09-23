@@ -69,7 +69,7 @@ function TabsNavigator() {
       })}
     >
       <Tab.Screen name="Explore" component={Explore} options={exploreOptions} />
-      <Tab.Screen name="Chat" component={Chat} initialParams={{ chatWith: undefined }} options={chatOptions} />
+      <Tab.Screen name="Chat" component={Chat} options={chatOptions} />
       <Tab.Screen
         name="Post"
         component={Post}
@@ -122,6 +122,8 @@ const exploreOptions = (): BottomTabNavigationOptions => {
     (state: RootState) => state.user.profileImage,
   );
 
+  const navigation = useNavigation<NavigationHookProps>();
+
   return {
     headerTitle: '',
     headerLeftContainerStyle: {
@@ -136,7 +138,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
       <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
     ),
     headerRight: () => (
-      <View
+      <TouchableOpacity
         style={{
           borderRadius: 50,
           shadowColor: '#000',
@@ -148,12 +150,13 @@ const exploreOptions = (): BottomTabNavigationOptions => {
           shadowRadius: 3.84,
           elevation: 5,
         }}
+        onPress={() => navigation.navigate("Profile")}
       >
         <Image
           source={{ uri: profile_image }}
           style={{ width: 40, height: 40, borderRadius: 50 }}
         />
-      </View>
+      </TouchableOpacity>
     ),
   };
 };
@@ -201,11 +204,12 @@ const profileOptions = (): BottomTabNavigationOptions => {
       const navigation = useNavigation();
 
       // To be removed
-      return (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ChevronLeft />
-        </TouchableOpacity>
-      );
+      // return (
+      //   <TouchableOpacity onPress={() => navigation.goBack()}>
+      //     <ChevronLeft />
+      //   </TouchableOpacity>
+      // );
+      return <View />
     },
     headerRight: () => {
       const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
