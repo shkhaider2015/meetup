@@ -255,7 +255,6 @@ export const changePassword = async (userId: string, data: IChangePassword) => {
 
 export const updateProfile = async (userId: string, data: any) => {
   try {
-    let isFilePresent = false;
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {

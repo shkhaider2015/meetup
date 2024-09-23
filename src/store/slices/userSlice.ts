@@ -16,6 +16,7 @@ const initialState: IUserReducer = getItem<IUserReducer>('user') || {
   },
   activities: [],
   bio: '',
+  profession: ''
 };
 
 const userSlice = createSlice({
@@ -41,6 +42,7 @@ const userSlice = createSlice({
         },
         activities: [],
         bio: '',
+        profession: ''
       };
     },
   },
