@@ -56,7 +56,7 @@ const Chat = ({ navigation, route }: ChatScreenType) => {
       <View style={{ height: '100%', width: '100%' }}>
         {/* <CometChatConversationsWithMessages user={chatWith}  /> */}
         <CometChatContextProvider theme={myTheme}>
-          <CometChatConversations onItemPress={_onItemPress} />
+          <CometChatConversations onItemPress={_onItemPress} hideSubmitIcon={true}/>
         </CometChatContextProvider>
       </View>
     </SafeScreen>
