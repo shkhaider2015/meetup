@@ -24,24 +24,17 @@ const Messages = ({ navigation, route }: ChatScreenType) => {
 
   let myTheme: CometChatTheme = new CometChatTheme({});
   myTheme.palette.setPrimary({
-    light: '#ff747e',
+    light: '#FE434E',
     dark: '#ff747e',
   });
   myTheme.palette.setSecondary({
-    light: '#000000',
-    dark: '#FFFFFF'
-  })
+    light: '#FFFFFF',
+    dark: '#000000'
+  });
   myTheme.palette.setAccent({
     light: '#000000',
     dark: '#FFFFFF'
-  })
-  // myTheme.typography.setFontFamily([
-  //   fontFamily._400_Regular.fontFamily,
-  //   fontFamily._500_Medium.fontFamily,
-  //   fontFamily._600_SemiBold.fontFamily,
-  //   fontFamily._700_Bold.fontFamily,
-  // ]);
-
+  });
   const _onBack = () => {
     console.log('OPress ');
     navigation.goBack();
