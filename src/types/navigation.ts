@@ -40,6 +40,7 @@ export type RootStackParamList = {
 		onSelectLocation?: (lat:number, long:number) => void
 	};
 	Notifications: undefined;
+	NotificationsPermission: undefined;
 	Profile: undefined;
 	Carousel: {
 		images: ImageSourcePropType[],
