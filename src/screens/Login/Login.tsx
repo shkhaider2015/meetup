@@ -1,5 +1,5 @@
-import { SafeScreen, InputField, Button } from "@/components/template";
-import { useTheme } from "@/theme";
+import { SafeScreen, InputField, Button } from '@/components/template';
+import { useTheme } from '@/theme';
 import {
   Keyboard,
   ScrollView,
@@ -8,89 +8,86 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-} from "react-native";
-import { fontFamily } from "@/theme/_config";
-import { AppleLogo, GoogleLogo } from "@/assets/icon";
-import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootStackParamList } from "@/types/navigation";
-import { Formik, useFormik } from "formik";
-import { userLoginSchema } from "@/types/schemas/user";
-import { useEffect, useRef, useState } from "react";
-import { Mutation, useMutation } from "@tanstack/react-query";
-import { IUserLoginForm } from "@/types/forms"
-import { login } from "@/services/users";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store";
-import { setUser } from "@/store/slices/userSlice";
-import Toast from "react-native-toast-message";
-import { IUserReducer } from "@/types/reducer";
-import { convertImageURLforngRok } from "@/utils";
-import { CometChat } from "@cometchat/chat-sdk-react-native";
+} from 'react-native';
+import { fontFamily } from '@/theme/_config';
+import { AppleLogo, GoogleLogo } from '@/assets/icon';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import { RootStackParamList } from '@/types/navigation';
+import { Formik, useFormik } from 'formik';
+import { userLoginSchema } from '@/types/schemas/user';
+import { useEffect, useRef, useState } from 'react';
+import { Mutation, useMutation } from '@tanstack/react-query';
+import { IUserLoginForm } from '@/types/forms';
+import { login } from '@/services/users';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { setUser } from '@/store/slices/userSlice';
+import Toast from 'react-native-toast-message';
+import { IUserReducer } from '@/types/reducer';
+import { convertImageURLforngRok } from '@/utils';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
+import { updateFCMToken } from '@/services/users/auth';
 
 const LoginScreen = (props: LoginScreenType) => {
   const { navigation } = props;
   const dispatch: AppDispatch = useDispatch();
 
   const { fonts, gutters, layout, backgrounds } = useTheme();
-  const { height } = Dimensions.get("screen");
+  const { height } = Dimensions.get('screen');
   const { isPending, mutate } = useMutation({
     mutationFn: (data: IUserLoginForm) => {
       return login(data);
     },
-    onSuccess:(data) => {
-      console.log("Success : ", data);
-      if(!data.isActivated) {
+    onSuccess: (data) => {
+      console.log('Success : ', data);
+      if (!data.isActivated) {
         // User is not activated yet
         Toast.show({
-          type: "error",
-          text1: "Login Failed",
-          text2: "Your account is not activated, Plaese enter activation code"
-        })
+          type: 'error',
+          text1: 'Login Failed',
+          text2: 'Your account is not activated, Plaese enter activation code',
+        });
 
         setTimeout(() => {
-          navigation.navigate("OTP", {
+          navigation.navigate('OTP', {
             id: data._id,
             email: data.email,
-            type: "ACCOUNT_ACTIVATION"
-          })
-        }, 500)
-        return
+            type: 'ACCOUNT_ACTIVATION',
+          });
+        }, 500);
+        return;
       }
 
-      Toast.show({
-        type: "success",
-        text1: "Successfully logged in"
-      })
-
-      const user:IUserReducer = {
+      const user: IUserReducer = {
         ...data,
         profileImage: convertImageURLforngRok(data.profileImage),
         isLoggedIn: true,
-      }
+      };
 
-      // CometChat.login(data.cometchat.authToken).then(res => console.log("cometchat successfully Logged In")).catch(err => console.log("CometChat login failed"))
+      Toast.show({
+        type: 'success',
+        text1: 'Successfully logged in',
+      });
 
       setTimeout(() => {
-        dispatch(
-          setUser(user)
-        );
-      }, 500)
+        dispatch(setUser(user));
+      }, 500);
     },
-    onError: (error:any) => {
+    onError: (error: any) => {
       Toast.show({
-        type: "error",
-        text1: "Login Failed",
-        text2: error?.message || "An unknown error accurred"
-      })
-    }
+        type: 'error',
+        text1: 'Login Failed',
+        text2: error?.message || 'An unknown error accurred',
+      });
+    },
   });
 
   const passwordRef = useRef<TextInput>(null);
 
   const formik = useFormik<IUserLoginForm>({
     initialValues: {
-      email: __DEV__ ? "shakeel7@yopmail.com" : "",
-      password: __DEV__ ? "Admin@1735" : "",
+      email: __DEV__ ? 'shakeel7@yopmail.com' : '',
+      password: __DEV__ ? 'Admin@1735' : '',
     },
     validationSchema: userLoginSchema,
     onSubmit: (values) => {
@@ -100,10 +97,10 @@ const LoginScreen = (props: LoginScreenType) => {
   });
 
   const _navigateToSignup = () => {
-    navigation.navigate("Signup");
+    navigation.navigate('Signup');
   };
   const _navigateToForgetPassword = () => {
-    navigation.navigate("ForgetPassword");
+    navigation.navigate('ForgetPassword');
   };
 
   const _handleNext = (nextRef: React.RefObject<TextInput>) => {
@@ -133,8 +130,8 @@ const LoginScreen = (props: LoginScreenType) => {
             <View style={[gutters.marginTop_40]}>
               <InputField
                 placeholder="Email Address"
-                onChangeText={formik.handleChange("email")}
-                onBlur={formik.handleBlur("email")}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
                 value={formik.values.email}
                 onSubmitEditing={() => _handleNext(passwordRef)}
                 returnKeyType="next"
@@ -158,8 +155,8 @@ const LoginScreen = (props: LoginScreenType) => {
                 ref={passwordRef}
                 placeholder="Password"
                 inputType="PASSWORD"
-                onChangeText={formik.handleChange("password")}
-                onBlur={formik.handleBlur("password")}
+                onChangeText={formik.handleChange('password')}
+                onBlur={formik.handleBlur('password')}
                 value={formik.values.password}
                 onSubmitEditing={() => Keyboard.dismiss()}
                 isError={
@@ -270,6 +267,6 @@ const LoginScreen = (props: LoginScreenType) => {
   );
 };
 
-type LoginScreenType = NativeStackScreenProps<RootStackParamList, "Login">;
+type LoginScreenType = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export default LoginScreen;

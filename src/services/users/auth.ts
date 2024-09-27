@@ -12,6 +12,8 @@ import { END_POINTS } from '@/constants';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import _ from 'lodash';
 import { convertAssetToFile } from '@/utils';
+import messaging from '@react-native-firebase/messaging';
+import DeviceInfo from 'react-native-device-info';
 
 export const login = async (data: IUserLoginForm) => {
   try {
@@ -22,6 +24,19 @@ export const login = async (data: IUserLoginForm) => {
       .json();
 
     await CometChat.login(response?.payload?.cometchat?.authToken);
+
+    await messaging().registerDeviceForRemoteMessages();
+    const deviceToken = await messaging().getToken();
+
+    const userId = response?.payload?._id;
+    const deviceId = await DeviceInfo.getUniqueId();
+
+    await updateFCMToken({
+      userId: userId,
+      deviceId: deviceId,
+      fcmToken: deviceToken,
+      authToken: response?.payload?.token
+    });
 
     return response?.payload;
   } catch (error: any) {
@@ -298,15 +313,58 @@ export const updateProfile = async (userId: string, data: any) => {
   }
 };
 
-export const getUserDetails = async (data:{userId: string; currentUserId: string;}) => {
+export const getUserDetails = async (data: {
+  userId: string;
+  currentUserId: string;
+}) => {
   try {
-    
-    const response: any = await instance.post(`${END_POINTS.USER}/${data.userId}`, {
-      json: {
-        userId: data.currentUserId,
+    const response: any = await instance
+      .post(`${END_POINTS.USER}/${data.userId}`, {
+        json: {
+          userId: data.currentUserId,
+        },
+      })
+      .json();
+
+    return response?.payload;
+  } catch (error: any) {
+    if (error?.response) {
+      const errorData = await error.response.json();
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+};
+
+export const updateFCMToken = async (data: {
+  userId: string;
+  deviceId: string;
+  fcmToken: string;
+  authToken: string;
+}) => {
+  try {
+    if (
+      _.isEmpty(data.userId) ||
+      _.isEmpty(data.deviceId) ||
+      _.isEmpty(data.fcmToken)
+    ) {
+      throw 'Somethig wrong happened';
+    }
+
+    console.log('Request Data : ', data);
+    const { authToken, ...reqInfo } = data;
+
+    const response: any = await instance
+      .post(END_POINTS.UPDATE_FCM_TOKEN, {
+        json: reqInfo,
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Add your Authorization token here
+        },
       },
-    }).json();
-    
+    )
+      .json();
+
     return response?.payload;
   } catch (error: any) {
     if (error?.response) {
