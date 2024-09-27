@@ -6,3 +6,4 @@ export { default as Confirmationbackground } from './images/confirm_password.png
 export { default as ProfileImagePlaceholder } from './images/Profile_image_placeholder.png';
 export { default as EmptyAnimation } from './animation/empty.json';
 export { default as LoadingAnimation } from './animation/loader.json';
+export { default as NotificationAnimation } from './animation/notificatio.json';
