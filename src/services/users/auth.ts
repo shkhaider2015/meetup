@@ -28,6 +28,8 @@ export const login = async (data: IUserLoginForm) => {
     await messaging().registerDeviceForRemoteMessages();
     const deviceToken = await messaging().getToken();
 
+    console.log("Token ", deviceToken);
+    
     const userId = response?.payload?._id;
     const deviceId = await DeviceInfo.getUniqueId();
 
