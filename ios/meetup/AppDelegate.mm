@@ -1,4 +1,6 @@
 #import "AppDelegate.h"
+#import <Firebase.h>
+
 
 #import <React/RCTBundleURLProvider.h>
 
@@ -8,6 +10,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   [GMSServices provideAPIKey:@"AIzaSyDo0GR9qo2eeNWbxSS9e935vGURoBuqO5M"]; // add this line using the api key obtained from Google Console
   self.moduleName = @"meetup";
   // You can add your custom initial props in the dictionary below.
