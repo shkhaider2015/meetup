@@ -1,10 +1,4 @@
-import {
-  PermissionsAndroid,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '@/types/navigation';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { NotificationAnimation } from '@/assets/images';
@@ -13,27 +7,25 @@ import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { Button } from '@/components/template';
 import {
-  checkLocationPermission,
+  requestLocationPermission,
   requestNotificationPermissionCross,
 } from '@/utils';
 import { useSelector } from 'react-redux';
+import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import { RootState } from '@/store';
 
-const NotificationScreenPermission = ({
-  navigation,
-}: NotificationsScreenType) => {
-  console.log('NotificationScreenPermission component is rendered!');
+const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
   const { layout, gutters, fonts } = useTheme();
   const user = useSelector((state: RootState) => state.user);
 
-  const getNotificationPermission = async () => {
-    await requestNotificationPermissionCross();
+  const getLocationPermission = async () => {
+    const result =
+      Platform.OS === 'android'
+        ? await requestLocationPermission()
+        : await Geolocation.requestAuthorization('whenInUse');
 
-    let isLocationAllowed = await checkLocationPermission();
     let isActivitiesAdded = user.activities.length > 0;
-    if (!isLocationAllowed) {
-      navigation.navigate('LocationPermission');
-    } else if (!isActivitiesAdded) {
+    if (!isActivitiesAdded) {
       navigation.navigate('Ineterests');
     } else {
       navigation.navigate('Tabs');
@@ -69,7 +61,7 @@ const NotificationScreenPermission = ({
             fonts.size_24,
           ]}
         >
-          NOTIFICATIONS
+          LOCATION
         </Text>
         <Text
           style={[
@@ -99,16 +91,16 @@ const NotificationScreenPermission = ({
           </Text>
         </TouchableOpacity>
         <Button
-          label="ENABLE NOTIFICATIONS"
+          label="ENABLE LOCATION"
           containerStyle={[{ width: '80%', height: '20%' }]}
-          onPress={getNotificationPermission}
+          onPress={getLocationPermission}
         />
       </View>
     </View>
   );
 };
-type NotificationsScreenType = NativeStackScreenProps<
+type LocationsScreenType = NativeStackScreenProps<
   RootStackParamList,
-  'NotificationsPermission'
+  'LocationPermission'
 >;
-export default NotificationScreenPermission;
+export default LocationPermissionScreen;

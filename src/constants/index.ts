@@ -1,2 +1,3 @@
 export {default as END_POINTS} from "./endpoints";
-export { USER } from "./reducer"
+export { USER, POST } from "./reducer";
+export { localKey } from './keys';

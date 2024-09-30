@@ -17,3 +17,6 @@ export { default as EditProfile } from './EditProfile/EditProfile';
 export { default as OtherProfile } from './OthersProfile/OthersProfile';
 export { default as ChangePassword } from './ChangePassword/ChangePassword';
 export { default as ForgetPasswordComplete } from './ForgetPasswordComplete/ForgetPasswordComplete';
+export { default as NotificationsPermission } from './NotificationsPermission/NotificationsPermission';
+export { default as LoadingScreen  } from './Loading/Loading';
+export { default as LocationPermission } from './LocationPermission/LocationPermission';

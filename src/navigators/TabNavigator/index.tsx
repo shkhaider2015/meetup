@@ -37,6 +37,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGlobalBottomSheet, useLoader } from '@/hooks';
 import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { removeItem, setItem } from '@/storage';
+import { localKey, POST, USER } from '@/constants';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -74,7 +76,7 @@ function TabsNavigator() {
         name="Post"
         component={Post}
         initialParams={{
-          initialValues: undefined
+          initialValues: undefined,
         }}
         options={postOptions}
       />
@@ -150,7 +152,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
           shadowRadius: 3.84,
           elevation: 5,
         }}
-        onPress={() => navigation.navigate("Profile")}
+        onPress={() => navigation.navigate('Profile')}
       >
         <Image
           source={{ uri: profile_image }}
@@ -198,7 +200,7 @@ const notificationOptions: BottomTabNavigationOptions = {
 const profileOptions = (): BottomTabNavigationOptions => {
   const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
-  const { colors } = useTheme()
+  const { colors } = useTheme();
   return {
     headerLeft: () => {
       const navigation = useNavigation();
@@ -209,7 +211,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
       //     <ChevronLeft />
       //   </TouchableOpacity>
       // );
-      return <View />
+      return <View />;
     },
     headerRight: () => {
       const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
@@ -223,6 +225,8 @@ const profileOptions = (): BottomTabNavigationOptions => {
           closeBottomSheet();
           hideLoader();
           dispatch(clearUser());
+          removeItem(USER);
+          removeItem(POST);
         },
         onError: (error) => {
           hideLoader();
