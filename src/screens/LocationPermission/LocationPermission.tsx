@@ -1,7 +1,7 @@
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '@/types/navigation';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { NotificationAnimation } from '@/assets/images';
+import { LocationAnimation } from '@/assets/images';
 import LottieView from 'lottie-react-native';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
@@ -45,7 +45,7 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
         ]}
       >
         <LottieView
-          source={NotificationAnimation}
+          source={LocationAnimation}
           autoPlay={true}
           loop={true}
           style={{
