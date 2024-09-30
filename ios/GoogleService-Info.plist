@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD877msXjYiiRKXmIWoAtAK3jwRJDKiA44</string>
+	<string>AIzaSyBbWB6h5g1Wh-S9P0AAOUpVf4N6IwgsZQY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1025144099900</string>
+	<string>406727123693</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.reactjs.native.example.meetup</string>
 	<key>PROJECT_ID</key>
-	<string>meetup-6be82</string>
+	<string>meetup-app-project-76774</string>
 	<key>STORAGE_BUCKET</key>
-	<string>meetup-6be82.appspot.com</string>
+	<string>meetup-app-project-76774.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1025144099900:ios:6bb9920db489380a591f39</string>
+	<string>1:406727123693:ios:6e8af250541fa7c72362e4</string>
 </dict>
 </plist>
