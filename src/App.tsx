@@ -30,7 +30,6 @@ function App() {
       PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
       ]);
     }
 }

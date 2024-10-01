@@ -19,17 +19,18 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
   const user = useSelector((state: RootState) => state.user);
 
   const getLocationPermission = async () => {
-    const result =
-      Platform.OS === 'android'
-        ? await requestLocationPermission()
-        : await Geolocation.requestAuthorization('whenInUse');
+    Platform.OS === 'android'
+      ? await requestLocationPermission()
+      : await Geolocation.requestAuthorization('whenInUse');
 
     let isActivitiesAdded = user.activities.length > 0;
-    if (!isActivitiesAdded) {
-      navigation.navigate('Ineterests');
-    } else {
-      navigation.navigate('Tabs');
-    }
+    setTimeout(() => {
+      if (!isActivitiesAdded) {
+        navigation.navigate('Ineterests');
+      } else {
+        navigation.navigate('Tabs');
+      }
+    }, 1000);
   };
 
   return (
