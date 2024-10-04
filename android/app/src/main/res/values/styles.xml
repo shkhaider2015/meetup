@@ -5,10 +5,13 @@
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
+        <item name="colorPrimaryDark">@color/statusbar_bg</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
     </style>
 
 </resources>

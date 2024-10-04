@@ -1,4 +1,5 @@
 import { LoadingAnimation } from '@/assets/images';
+import { SafeScreen } from '@/components/template';
 import { localKey, USER } from '@/constants';
 import { loadUser } from '@/services/users';
 import { getItem, setItem } from '@/storage';
@@ -51,16 +52,16 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
         isLoggedIn: true,
       };
       dispatch(setUser(user));
-      console.log("Is Just logged in  before");
+      console.log('Is Just logged in  before');
       const isJustLoggedIn = getItem<boolean>(localKey.JUST_LOGGED_IN);
 
-      console.log("Is Just logged in ", isJustLoggedIn, typeof isJustLoggedIn);
-      
+      console.log('Is Just logged in ', isJustLoggedIn, typeof isJustLoggedIn);
+
       if (!isJustLoggedIn) {
         navigation.navigate('Tabs');
-        return
+        return;
       } else {
-        setItem(localKey.JUST_LOGGED_IN, false)
+        setItem(localKey.JUST_LOGGED_IN, false);
       }
 
       let isNotificationAllowed = await checkNotificationPermission();
@@ -89,25 +90,27 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
   }, [dispatch]);
 
   return (
-    <View
-      style={[
-        layout.fullHeight,
-        layout.flex_1,
-        layout.justifyCenter,
-        layout.itemsCenter,
-        backgrounds.gray00,
-      ]}
-    >
-      <LottieView
-        source={LoadingAnimation}
-        autoPlay={true}
-        loop={true}
-        style={{
-          width: '80%',
-          height: 300,
-        }}
-      />
-    </View>
+    <SafeScreen>
+      <View
+        style={[
+          layout.fullHeight,
+          layout.flex_1,
+          layout.justifyCenter,
+          layout.itemsCenter,
+          backgrounds.gray00,
+        ]}
+      >
+        <LottieView
+          source={LoadingAnimation}
+          autoPlay={true}
+          loop={true}
+          style={{
+            width: '80%',
+            height: 300,
+          }}
+        />
+      </View>
+    </SafeScreen>
   );
 };
 type LoadingScreenType = NativeStackScreenProps<RootStackParamList, 'Loading'>;
