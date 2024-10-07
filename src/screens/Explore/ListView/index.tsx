@@ -37,7 +37,8 @@ const ListView = ({}: ListViewScreenType) => {
     mutationFn: () => {
       return getAllPost({ userId: user._id});
     },
-    onSuccess: (data:IPostReducer[]) => {
+    onSuccess: (payload:any) => {
+      const data: IPostReducer[] = payload?.data
       console.log('data : ', data?.[0]);
       dispatch(setPosts(data));
       setRefreshData(false);
