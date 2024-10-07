@@ -51,7 +51,7 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
     },
     onSuccess: (data, variables, context) => {
       console.log("Post success Data on profile  : ", data);
-      setUserPosts(data);
+      setUserPosts(data?.data);
     },
     onError: (error) => {
       Toast.show({

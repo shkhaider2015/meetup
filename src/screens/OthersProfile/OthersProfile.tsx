@@ -68,7 +68,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
     onSuccess: (data, variables, context) => {
       console.log("Post success Data : ", data);
       
-      setUserPosts(data);
+      setUserPosts(data?.data);
     },
     onError: (error) => {
       Toast.show({
