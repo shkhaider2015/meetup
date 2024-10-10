@@ -48,8 +48,8 @@ const Profile = ({ navigation }: ProfileScreenType) => {
       return getAllPostByUser(user._id);
     },
     onSuccess: (data, variables, context) => {
-      // console.log('Post success Data on profile  : ', data);
-      setUserPosts(data);
+      console.log("Post success Data on profile  : ", data);
+      setUserPosts(data?.data);
     },
     onError: (error) => {
       Toast.show({
