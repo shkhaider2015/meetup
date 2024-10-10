@@ -16,14 +16,14 @@ import { RootState } from '@/store';
 
 const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
   const { layout, gutters, fonts } = useTheme();
-  const user = useSelector((state: RootState) => state.user);
+  const currentUser = useSelector((state: RootState) => state.user);
 
   const getLocationPermission = async () => {
     Platform.OS === 'android'
       ? await requestLocationPermission()
       : await Geolocation.requestAuthorization('whenInUse');
 
-    let isActivitiesAdded = user.activities.length > 0;
+    let isActivitiesAdded = currentUser.activities.length > 0;
     setTimeout(() => {
       if (!isActivitiesAdded) {
         navigation.navigate('Ineterests');

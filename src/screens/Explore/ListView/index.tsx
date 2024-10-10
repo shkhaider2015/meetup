@@ -49,11 +49,11 @@ const ListView = ({}: ListViewScreenType) => {
     },
   });
 
-  useEffect(() => {
-    if(user._id) {
-      mutate();
-    }
-  }, [dispatch, user]);
+  // useEffect(() => {
+  //   if(user._id) {
+  //     mutate();
+  //   }
+  // }, [dispatch, user]);
 
   const _onRefresh = () => {
     setRefreshData(true);
