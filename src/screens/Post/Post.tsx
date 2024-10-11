@@ -57,6 +57,13 @@ import {
   updatePosts as updatePostsReducer,
 } from '@/store/slices/postSlice';
 import { useFocusEffect } from '@react-navigation/native';
+import {
+  AddActivityLogo,
+  AddDateLogo,
+  AddImageLogo,
+  AddLocatioLogo,
+  AddTimeLogo,
+} from '@/assets/images';
 
 const postInitialValues: PostStateType = {
   date: undefined,
@@ -73,6 +80,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
   const screenHeight = height - heights.bottomTabBarHeight;
 
   const user = useSelector((state: RootState) => state.user);
+  const userLocation = useSelector((state: RootState) => state.location);
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -226,6 +234,16 @@ const Post = ({ navigation, route }: PostScreenType) => {
   };
 
   const getLocation = async () => {
+    const { latitude, longitude } = userLocation;
+
+    if (latitude !== 0 && longitude !== 0) {
+      _onGoToLocation({
+        latitude,
+        longitude,
+      });
+      return;
+    }
+
     showLoader();
     if (Platform.OS === 'ios') {
       const iosResult = await Geolocation.requestAuthorization('whenInUse');
@@ -686,11 +704,22 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
   const isKeyboardVisible = useKeyboardVisible();
   const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => {
-    return () => {
-      inputRef.current?.clear();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     inputRef.current?.clear();
+  //   };
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      inputRef.current?.focus();
+
+      return () => {
+        inputRef.current?.blur();
+        inputRef.current?.clear();
+      };
+    }, []),
+  );
 
   const _onPress = () => {
     onPress?.();
@@ -725,6 +754,7 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
         scrollEnabled={true}
         autoFocus={true}
         onChangeText={onChange}
+        keyboardType="default"
       />
     </TouchableOpacity>
     // </KeyboardAvoidingView>
@@ -780,19 +810,24 @@ const PostMenu = (props: PostInputMenu) => {
       ]}
     >
       <TouchableOpacity onPress={() => _onPressIcon('IMAGE')}>
-        <ImageIcon width={30} height={30} color={colors.gray800} />
+        {/* <ImageIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddImageLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('LOCATION')}>
-        <LocationIcon width={30} height={30} color={colors.gray800} />
+        {/* <LocationIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddLocatioLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('ACTIVITY')}>
-        <Activity width={30} height={30} color={colors.gray800} />
+        {/* <Activity width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddActivityLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('DATE')}>
-        <DateIcon width={30} height={30} color={colors.gray800} />
+        {/* <DateIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddDateLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('TIME')}>
-        <Clock width={30} height={30} color={colors.gray800} />
+        {/* <Clock width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddTimeLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
     </View>
   );
