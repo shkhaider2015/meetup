@@ -58,7 +58,8 @@ export type RootStackParamList = {
 	},
 	ChangePassword: undefined;
 	Loading: undefined;
-	LocationPermission: undefined
+	LocationPermission: undefined;
+	Settings: undefined;
 };
 
 export type ExploreTabsParamList = {

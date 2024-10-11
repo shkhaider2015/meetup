@@ -1,9 +1,6 @@
 import {
-  ChevronLeft,
-  Key,
   MenuHr,
   Search,
-  Signout,
   Star,
   Tab_Chat_Default,
   Tab_Chat_Selected,
@@ -18,9 +15,7 @@ import {
 import { ExploreHeader, MeetupIcon } from '@/assets/images';
 import { Button } from '@/components/template';
 import { Chat, Explore, Notifications, Post, Profile } from '@/screens';
-import { logout } from '@/services/users/auth';
-import { AppDispatch, RootState } from '@/store';
-import { clearUser } from '@/store/slices/userSlice';
+import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { NavigationHookProps, RootStackParamList } from '@/types/navigation';
@@ -29,16 +24,11 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { useMutation } from '@tanstack/react-query';
 import { FC } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { useGlobalBottomSheet, useLoader } from '@/hooks';
+import { useSelector } from 'react-redux';
 import { Platform } from 'react-native';
-import Toast from 'react-native-toast-message';
-import { removeItem, setItem } from '@/storage';
-import { localKey, POST, USER } from '@/constants';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -203,124 +193,16 @@ const profileOptions = (): BottomTabNavigationOptions => {
   const { colors } = useTheme();
   return {
     headerLeft: () => {
-      const navigation = useNavigation();
-
-      // To be removed
-      // return (
-      //   <TouchableOpacity onPress={() => navigation.goBack()}>
-      //     <ChevronLeft />
-      //   </TouchableOpacity>
-      // );
       return <View />;
     },
     headerRight: () => {
-      const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
-      const { showLoader, hideLoader } = useLoader();
-      const dispatch: AppDispatch = useDispatch();
-      const { mutate } = useMutation({
-        mutationFn: () => {
-          return logout();
-        },
-        onSuccess: () => {
-          closeBottomSheet();
-          hideLoader();
-          dispatch(clearUser());
-          removeItem(USER);
-          removeItem(POST);
-        },
-        onError: (error) => {
-          hideLoader();
-          Toast.show({
-            type: 'error',
-            text1: 'Logout Failed',
-            text2: error?.message || 'Something wrong happened',
-          });
-        },
-      });
-
-      const _logout = () => {
-        showLoader();
-        mutate();
-      };
-
-      const _goToChangePassword = () => {
-        closeBottomSheet();
-        navigation.navigate('ChangePassword');
-      };
-
-      const handleOpenBottomSheet = () => {
-        openBottomSheet(
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-start',
-              paddingHorizontal: 35,
-              paddingTop: 30,
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                columnGap: 30,
-                alignItems: 'center',
-                paddingHorizontal: 5,
-                paddingVertical: 5,
-              }}
-              onPress={_goToChangePassword}
-            >
-              <Key width={25} height={25} color={'#9f9f9f'} />
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: '600',
-                  fontFamily: 'Poppins Regular',
-                  color: '#000000',
-                }}
-              >
-                Change Password
-              </Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                height: 2,
-                backgroundColor: '#eeeeee',
-                marginVertical: 5,
-              }}
-            />
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                columnGap: 30,
-                alignItems: 'center',
-                paddingHorizontal: 5,
-                paddingVertical: 5,
-              }}
-              onPress={_logout}
-            >
-              <Signout width={25} height={25} color={'#9f9f9f'} />
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: '600',
-                  fontFamily: 'Poppins Regular',
-                  color: '#000000',
-                }}
-              >
-                Logout
-              </Text>
-            </TouchableOpacity>
-          </View>,
-          ['20%'],
-        );
-      };
-
       return (
         <Button
           Icon={<MenuHr width={17} height={17} color={'#000000'} />}
           type="SECONDARY"
           isCirculer={true}
           containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}
-          onPress={handleOpenBottomSheet}
+          onPress={() => navigation.navigate('Settings')}
         />
       );
     },

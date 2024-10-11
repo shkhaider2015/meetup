@@ -20,3 +20,4 @@ export { default as ForgetPasswordComplete } from './ForgetPasswordComplete/Forg
 export { default as NotificationsPermission } from './NotificationsPermission/NotificationsPermission';
 export { default as LoadingScreen  } from './Loading/Loading';
 export { default as LocationPermission } from './LocationPermission/LocationPermission';
+export { default as Settings } from './Settings/Settings';
