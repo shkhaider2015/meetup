@@ -95,7 +95,7 @@ const Profile = ({ navigation }: ProfileScreenType) => {
           />
 
           <ProfileSectionActivities activities={user.activities} />
-          <ProfileSectionImageGallery posts={userPosts} />
+          <ProfileSectionImageGallery posts={userPosts} isLoading={postsPending} />
         </View>
       </ScrollView>
     </SafeScreen>

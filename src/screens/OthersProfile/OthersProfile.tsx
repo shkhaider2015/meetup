@@ -119,7 +119,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             description={userInfo?.bio}
           />
           <ProfileSectionActivities activities={userInfo?.activities} />
-          <ProfileSectionImageGallery posts={userPosts} />
+          <ProfileSectionImageGallery posts={userPosts} isLoading={postsPending} />
         </View>
       </ScrollView>
     </SafeScreen>
