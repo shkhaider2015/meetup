@@ -748,8 +748,9 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
         ref={inputRef}
         style={[fonts.gray800, fonts.size_14]}
         placeholder="Enter your thoughts...."
+        placeholderTextColor={colors.gray200}
         multiline={true}
-        selectionColor={colors.gray800}
+        selectionColor={colors.gray200}
         value={text}
         scrollEnabled={true}
         autoFocus={true}
