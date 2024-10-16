@@ -56,7 +56,10 @@ export type RootStackParamList = {
 	OtherProfile: {
 		userId?: string
 	},
-	ChangePassword: undefined
+	ChangePassword: undefined;
+	PostDetails: {
+		postId: string
+	}
 };
 
 export type ExploreTabsParamList = {

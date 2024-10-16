@@ -9,6 +9,7 @@ import {
   ChangePassword,
   ForgetPasswordComplete,
   PostLocation,
+  PostDetails,
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -97,6 +98,11 @@ const ProtectedScreens = () => {
         name="Messages"
         component={Messages}
         initialParams={{ chatWith: undefined }}
+      />
+      <Stack.Screen 
+        name="PostDetails"
+        component={PostDetails}
+        initialParams={{ postId: undefined }}
       />
     </Stack.Navigator>
   );

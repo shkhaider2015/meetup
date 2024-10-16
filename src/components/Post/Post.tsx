@@ -183,6 +183,13 @@ const Post = (props: IPost) => {
     likeMutation();
   };
 
+  const _gotoPostDetails = () => {
+    if(isPending) return
+    navigate("PostDetails", {
+      postId: _id
+    })
+  }
+
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
       {isPending && (
@@ -252,7 +259,7 @@ const Post = (props: IPost) => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.mainCotainer}
-        onPress={_showDetails}
+        onPress={_gotoPostDetails}
       >
         {/* Content */}
         {!_.isEmpty(image) && (
@@ -302,13 +309,13 @@ const Post = (props: IPost) => {
           <DetailText
             text={details}
             maxLength={200}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         ) : (
           <DetailText
             text={details}
             maxLength={50}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         )}
       </View>
