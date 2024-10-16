@@ -86,8 +86,8 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   console.log('State ', region);
 
   const _navigateToSearchScreen = () => {
-    console.log('Navigating to LocationSearchScreen');
-    navigation.navigate('LocationSearchScreen');
+    console.log('Navigating to LocationSearch');
+    navigation.navigate('LocationSearch');
   };
 
   return (

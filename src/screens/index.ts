@@ -17,3 +17,4 @@ export { default as EditProfile } from './EditProfile/EditProfile';
 export { default as OtherProfile } from './OthersProfile/OthersProfile';
 export { default as ChangePassword } from './ChangePassword/ChangePassword';
 export { default as ForgetPasswordComplete } from './ForgetPasswordComplete/ForgetPasswordComplete';
+export { default as LocationSearch } from './LocationSearch/LocationSearch';

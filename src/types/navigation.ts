@@ -17,53 +17,53 @@ export type RootStackParamList = {
     user_id: string;
   };
   ForgetPasswordComplete: {
-		type: "ForgetPassword" | "ChangePassword"
+    type: 'ForgetPassword' | 'ChangePassword';
   };
   Ineterests: undefined;
   Explore: undefined;
   Chat: undefined;
-	Messages:  {
-		chatWith?: CometChat.User
-	},
+  Messages: {
+    chatWith?: CometChat.User;
+  };
   Post: {
-		initialValues?: PostStateType,
-		postId?: string
+    initialValues?: PostStateType;
+    postId?: string;
   };
   PostTab: {
-		initialValues?: PostStateType
-	}
+    initialValues?: PostStateType;
+  };
   PostLocation: {
     location?: {
       latitude: number;
       longitude: number;
-		}
-		onSelectLocation?: (lat:number, long:number) => void
-	};
+    };
+    onSelectLocation?: (lat: number, long: number) => void;
+  };
   Notifications: undefined;
   NotificationsPermission: undefined;
   Profile: undefined;
   Carousel: {
-		images: ImageSourcePropType[],
-		selectedIndex?: number
+    images: ImageSourcePropType[];
+    selectedIndex?: number;
   };
   Tabs: undefined;
   OTP: {
     id: string;
     email: string;
-		type: "ACCOUNT_ACTIVATION" | "FORGOT_PASSWORD"
-	},
+    type: 'ACCOUNT_ACTIVATION' | 'FORGOT_PASSWORD';
+  };
   EditProfile: undefined;
   OtherProfile: {
-		userId?: string
-	},
-	ChangePassword: undefined;
-	LocationSearchScreen: undefined;
+    userId?: string;
+  };
+  ChangePassword: undefined;
+  LocationSearch: undefined;
 };
 
 export type ExploreTabsParamList = {
   MapView: undefined;
   ListView: undefined;
-}
+};
 
 export type NavigationHookProps = NativeStackNavigationProp<RootStackParamList>;
 

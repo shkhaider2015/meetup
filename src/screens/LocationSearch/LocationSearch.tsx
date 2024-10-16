@@ -15,7 +15,7 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { Search } from '@/assets/icon';
 const { height } = Dimensions.get('window');
 
-const LocationSearchScreen = ({ navigation }: LocationSearchScreenType) => {
+const LocationSearch = ({ navigation }: LocationSearchScreenType) => {
   const inputRef = useRef<TextInput>(null);
   const { layout, gutters, colors, fonts, backgrounds } = useTheme();
 
@@ -38,7 +38,6 @@ const LocationSearchScreen = ({ navigation }: LocationSearchScreenType) => {
     { id: '10', title: 'SunnyVale', subtitle: 'SunnyVale' },
     { id: '11', title: 'Union City', subtitle: 'Union City' },
     { id: '12', title: 'Castro Valley', subtitle: 'Castro Valley' },
-    
   ];
 
   const handleFocus = () => {
@@ -74,13 +73,14 @@ const LocationSearchScreen = ({ navigation }: LocationSearchScreenType) => {
   );
 
   return (
-    <View style={[gutters.paddingHorizontal_12, layout.justifyCenter,{ height:height }]}>
-      <View
-        style={[
-          layout.relative,
-          { width: '100%', marginTop: 80 },
-        ]}
-      >
+    <View
+      style={[
+        gutters.paddingHorizontal_12,
+        layout.justifyCenter,
+        { height: height },
+      ]}
+    >
+      <View style={[layout.relative, { width: '100%', marginTop: 80 }]}>
         <InputField
           ref={inputRef}
           placeholder="Enter location"
@@ -98,17 +98,16 @@ const LocationSearchScreen = ({ navigation }: LocationSearchScreenType) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={[
-          gutters.paddingVertical_10, 
-          gutters.paddingHorizontal_12, 
+          gutters.paddingVertical_10,
+          gutters.paddingHorizontal_12,
         ]}
       />
     </View>
   );
 };
 
-export default LocationSearchScreen;
-
 type LocationSearchScreenType = NativeStackScreenProps<
   RootStackParamList,
-  'LocationSearchScreen'
+  'LocationSearch'
 >;
+export default LocationSearch;
