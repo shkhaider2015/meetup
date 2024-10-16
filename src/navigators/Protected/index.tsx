@@ -10,6 +10,7 @@ import {
   ForgetPasswordComplete,
   PostLocation,
   PostDetails,
+  LocationSearch,
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -99,11 +100,12 @@ const ProtectedScreens = () => {
         component={Messages}
         initialParams={{ chatWith: undefined }}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="PostDetails"
         component={PostDetails}
         initialParams={{ postId: undefined }}
       />
+      <Stack.Screen name="LocationSearch" component={LocationSearch} />
     </Stack.Navigator>
   );
 };

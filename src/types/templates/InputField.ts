@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactElement } from "react"
 import { TextInputProps } from "react-native"
 
 // export type IInputFieldProps = {
@@ -10,7 +10,8 @@ export interface IInputFieldProps extends TextInputProps {
     inputType?: InputTypes;
     isError?: boolean;
     disable?: boolean;
-    rows?: number
+    rows?: number;
+    Lefticon?: React.ReactElement;
 }
 
 type InputTypes = "TEXT" | "PASSWORD" | "NUMBER"

@@ -18,3 +18,4 @@ export { default as OtherProfile } from './OthersProfile/OthersProfile';
 export { default as ChangePassword } from './ChangePassword/ChangePassword';
 export { default as ForgetPasswordComplete } from './ForgetPasswordComplete/ForgetPasswordComplete';
 export { default as PostDetails } from "@/screens/PostDetails/PostDetails";
+export { default as LocationSearch } from './LocationSearch/LocationSearch';
