@@ -1,4 +1,5 @@
 import {
+    ChevronLeft,
   Clock,
   Close,
   DateIcon,
@@ -15,10 +16,7 @@ import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
-import {
-  getIconByID,
-  getRegionForCoordinates,
-} from '@/utils';
+import { getIconByID, getRegionForCoordinates } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import _ from 'lodash';
@@ -46,8 +44,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     queryFn: () => getPostById(postId),
     enabled: !!postId,
   });
+
   const { user, activity, image, location, createdAt, details, date, time } =
-    data as IPostReducer;
+  data as IPostReducer;
 
   const Icon = getIconByID(activity || '');
 
@@ -121,6 +120,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
           >
             {/* Header */}
             <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
+            <ChevronLeft style={{ paddingHorizontal: 5 }} onPress={() => navigation.goBack()} />
               <TouchableOpacity onPress={_goToProfile}>
                 <Image
                   imageURL={user.profileImage}
@@ -304,7 +304,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   containerStyle={[{ width: 40, height: 40 }]}
                 />
               </View>
-              <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
+              <Text style={[fonts.gray180]}>
+                {dayjs(createdAt).fromNow()}
+              </Text>
             </View>
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (

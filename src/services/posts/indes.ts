@@ -82,11 +82,7 @@ export const getAllPostByUser = async (userId: string) => {
 
 export const getPostById = async (id: string) => {
   try {
-    const response: any = await instance.get(END_POINTS.POST, {
-      searchParams: {
-        id
-      }
-    }).json();
+    const response: any = await instance.get(`${END_POINTS.POST}/${id}`).json();
 
     return response?.payload;
   } catch (error: any) {

@@ -26,7 +26,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { location: locationParam } = route.params;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
-  const { height } = Dimensions.get('window');
+  const { height } = Dimensions.get('screen');
   const screenHeight = Platform.OS === 'android' ? height + 0 : height;
   const location = useSelector((state: RootState) => state.location);
 
