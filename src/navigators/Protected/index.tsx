@@ -9,6 +9,8 @@ import {
   ChangePassword,
   ForgetPasswordComplete,
   PostLocation,
+  LocationSearch,
+  
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -23,6 +25,7 @@ import { getItem } from '@/storage';
 import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -97,6 +100,10 @@ const ProtectedScreens = () => {
         name="Messages"
         component={Messages}
         initialParams={{ chatWith: undefined }}
+      />
+       <Stack.Screen
+        name="LocationSearch"
+        component={LocationSearch}
       />
     </Stack.Navigator>
   );
