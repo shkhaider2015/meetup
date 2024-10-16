@@ -1,6 +1,6 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ImageSourcePropType } from 'react-native';
-import GeoLocation from "react-native-geolocation-service"
+import GeoLocation from 'react-native-geolocation-service';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { PostStateType } from './screens/post';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
@@ -60,15 +60,19 @@ export type RootStackParamList = {
 	Loading: undefined;
 	LocationPermission: undefined;
 	Settings: undefined;
+	LocationSearch: undefined;
+	PostDetails: {
+	  postId: string;
+	};
 };
 
 export type ExploreTabsParamList = {
-	MapView: undefined;
-	ListView: undefined;
-}
+  MapView: undefined;
+  ListView: undefined;
+};
 
 export type NavigationHookProps = NativeStackNavigationProp<RootStackParamList>;
 
 export type RootScreenProps<
-	S extends keyof RootStackParamList = keyof RootStackParamList,
+  S extends keyof RootStackParamList = keyof RootStackParamList,
 > = StackScreenProps<RootStackParamList, S>;

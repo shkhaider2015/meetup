@@ -12,6 +12,8 @@ import {
   LoadingScreen,
   LocationPermission,
   Settings,
+  PostDetails,
+  LocationSearch,
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -104,6 +106,12 @@ const ProtectedScreens = () => {
         initialParams={{ chatWith: undefined }}
       />
       <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="PostDetails"
+        component={PostDetails}
+        initialParams={{ postId: undefined }}
+      />
+      <Stack.Screen name="LocationSearch" component={LocationSearch} />
     </Stack.Navigator>
   );
 };

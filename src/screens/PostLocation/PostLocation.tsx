@@ -1,4 +1,4 @@
-import { Button, SafeScreen } from '@/components/template';
+import { Button, InputField, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
@@ -16,19 +16,19 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import RNMapView, { Details, Marker, Region } from 'react-native-maps';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { IInitialMapState } from '@/types/maps';
-import { Close } from '@/assets/icon';
+import { Close, Search } from '@/assets/icon';
 import { useFocusEffect } from '@react-navigation/native';
 import { getRegionForCoordinates } from '@/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
-  const { location:locationParam } = route.params;
+  const { location: locationParam } = route.params;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
-  const { height } = Dimensions.get('window');
-  const screenHeight = Platform.OS === 'android' ? height + 60 : height;
-  const location = useSelector((state:RootState) => state.location);
+  const { height } = Dimensions.get('screen');
+  const screenHeight = Platform.OS === 'android' ? height + 0 : height;
+  const location = useSelector((state: RootState) => state.location);
 
   const [region, setRegion] = useState<Region>({
     ...getRegionForCoordinates([
@@ -70,10 +70,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
 
   const _onSelectLocation = () => {
     console.log('Location : ', region);
-    route.params.onSelectLocation?.(
-      region.latitude,
-      region.longitude,
-    );
+    route.params.onSelectLocation?.(region.latitude, region.longitude);
     _onClose();
   };
 
@@ -88,6 +85,11 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   console.log('route.params.location ', route.params.location);
   console.log('State ', region);
 
+  const _navigateToSearchScreen = () => {
+    console.log('Navigating to LocationSearch');
+    navigation.navigate('LocationSearch');
+  };
+
   return (
     <View
       style={[
@@ -101,22 +103,32 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
         style={[
           layout.row,
           layout.justifyBetween,
-          layout.itemsEnd,
-          gutters.paddingVertical_16,
+          layout.itemsCenter,
+          // gutters.paddingTop_32,
           gutters.paddingHorizontal_12,
           layout.absolute,
           layout.top0,
           layout.z1,
           {
             width: '100%',
-            height: 120,
+            height:120,
+            marginTop: 40,
           },
         ]}
       >
-        <Text />
-        <Text style={[fonts.gray800, fontFamily._700_Bold, { fontSize: 20 }]}>
-          Select Location
-        </Text>
+        <View />
+        <View style={[{ width: '70%' }]}>
+          <TouchableOpacity onPress={_navigateToSearchScreen} activeOpacity={0.8}>
+            <InputField
+              placeholder="Search location"
+              // placeholderTextColor={fonts.black.color}
+              editable={false}
+              Lefticon={<Search color={colors.black} />}
+              // pointerEvents="box-only"
+              // onPress={_navigateToSearchScreen}
+            />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity onPress={_onClose} style={{ marginBottom: 5 }}>
           <Close color={colors.gray800} />
         </TouchableOpacity>

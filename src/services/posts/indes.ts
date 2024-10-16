@@ -80,8 +80,11 @@ export const getAllPostByUser = async (userId: string) => {
   }
 };
 
-export const getPostById = async (queryParams: { userId: string }) => {
+export const getPostById = async (id: string) => {
   try {
+    const response: any = await instance.get(`${END_POINTS.POST}/${id}`).json();
+
+    return response?.payload;
   } catch (error: any) {
     if (error?.response) {
       const errorData = await error.response.json();

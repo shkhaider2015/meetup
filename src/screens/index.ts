@@ -21,3 +21,5 @@ export { default as NotificationsPermission } from './NotificationsPermission/No
 export { default as LoadingScreen  } from './Loading/Loading';
 export { default as LocationPermission } from './LocationPermission/LocationPermission';
 export { default as Settings } from './Settings/Settings';
+export { default as PostDetails } from "@/screens/PostDetails/PostDetails";
+export { default as LocationSearch } from './LocationSearch/LocationSearch';
