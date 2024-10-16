@@ -1,6 +1,6 @@
 import { useTheme } from '@/theme';
 import { IInputFieldProps } from '@/types/templates/InputField';
-import { useState, useRef, useEffect, forwardRef } from 'react';
+import { useState, useRef, useEffect, forwardRef, ReactElement } from 'react';
 import {
   Image,
   TextInput,
@@ -19,6 +19,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
       isError = false,
       disable = false,
       rows = 1,
+      Lefticon, 
     } = props;
     const { borders, backgrounds, gutters, layout, fonts } = useTheme();
     const [isActive, setIsActive] = useState<boolean>(false);
@@ -40,7 +41,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
     // Interpolate the border color value
     const interpolatedBorderColor = borderColor.interpolate({
       inputRange: [0, 1],
-      outputRange: [borders.gray150.borderColor, borders.gray400.borderColor], // Adjust these colors to match your theme
+      outputRange: [borders.gray150.borderColor, borders.gray400.borderColor], 
     });
 
     // Interpolate the error border color value
@@ -89,6 +90,14 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
           },
         ]}
       >
+        {Lefticon  &&(
+          <View style={[layout.justifyCenter, {
+            height:60,
+          }]}>
+            {Lefticon}
+          </View>
+        )}
+
         <TextInput
           {...props}
           ref={ref}

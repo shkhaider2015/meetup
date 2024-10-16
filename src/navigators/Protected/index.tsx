@@ -23,6 +23,7 @@ import { getItem } from '@/storage';
 import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
+import LocationSearchScreen from '@/screens/PostLocation/LocationSearchScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -97,6 +98,10 @@ const ProtectedScreens = () => {
         name="Messages"
         component={Messages}
         initialParams={{ chatWith: undefined }}
+      />
+       <Stack.Screen
+        name="LocationSearchScreen"
+        component={LocationSearchScreen}
       />
     </Stack.Navigator>
   );
