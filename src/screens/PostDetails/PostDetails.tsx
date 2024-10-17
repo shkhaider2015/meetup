@@ -1,5 +1,5 @@
 import {
-    ChevronLeft,
+  ChevronLeft,
   Clock,
   Close,
   DateIcon,
@@ -9,14 +9,19 @@ import {
   Tick,
 } from '@/assets/icon';
 import { EmptyAnimation } from '@/assets/images';
+import { Header } from '@/components';
 import { Button, Image, SafeScreen } from '@/components/template';
 import { getPostById } from '@/services/posts/indes';
 import { RootState } from '@/store';
 import { useTheme } from '@/theme';
-import { fontFamily } from '@/theme/_config';
+import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
-import { getIconByID, getRegionForCoordinates } from '@/utils';
+import {
+  convertImageURLforngRok,
+  getIconByID,
+  getRegionForCoordinates,
+} from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import _ from 'lodash';
@@ -37,7 +42,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
 
   const currentUser = useSelector((state: RootState) => state.user);
-  const screenHeight = Dimensions.get('screen').height;
+  const screenHeight = Dimensions.get('screen').height - heights.tabNavigationHeader ;
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
   const { data, error, isLoading } = useQuery({
     queryKey: ['postdetail', postId],
@@ -46,7 +51,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   });
 
   const { user, activity, image, location, createdAt, details, date, time } =
-  data as IPostReducer;
+    (data as IPostReducer) || {};
 
   const Icon = getIconByID(activity || '');
 
@@ -105,61 +110,59 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     );
   }
 
+  const headerLeftSection = () => (
+    <View style={[layout.row, layout.justifyStart, layout.itemsCenter, gutters.paddingHorizontal_10]}>
+      <TouchableOpacity onPress={_goToProfile}>
+        <Image
+          imageURL={convertImageURLforngRok(user.profileImage)}
+          containerStyle={styles.profile_image}
+          fastImageProp={{
+            style: {
+              borderRadius: 60,
+              borderWidth: 1,
+              borderColor: colors.gray100,
+            },
+          }}
+        />
+      </TouchableOpacity>
+      <View style={[layout.col, gutters.marginHorizontal_12]}>
+        <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
+          {user.name}
+        </Text>
+        <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
+          <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
+          <Tick />
+        </View>
+      </View>
+      {Icon && (
+        <View
+          style={[
+            layout.justifyCenter,
+            layout.itemsCenter,
+            backgrounds.primary,
+            { width: 40, height: 40, borderRadius: 50 },
+          ]}
+        >
+          <Icon color={colors.gray00} />
+        </View>
+      )}
+    </View>
+  );
+
   return (
     <SafeScreen>
+      <Header
+        leftComponent={headerLeftSection}
+        rightComponnent={() => (
+          <Close color={colors.gray800} onPress={() => navigation.goBack()} />
+        )}
+      />
       <ScrollView>
-        <View style={[backgrounds.gray00]}>
-          <View
-            style={[
-              layout.row,
-              layout.justifyBetween,
-              layout.itemsCenter,
-              gutters.paddingHorizontal_12,
-              gutters.paddingVertical_8,
-            ]}
-          >
-            {/* Header */}
-            <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
-            <ChevronLeft style={{ paddingHorizontal: 5 }} onPress={() => navigation.goBack()} />
-              <TouchableOpacity onPress={_goToProfile}>
-                <Image
-                  imageURL={user.profileImage}
-                  containerStyle={styles.profile_image}
-                />
-              </TouchableOpacity>
-              <View style={[layout.col, gutters.marginHorizontal_12]}>
-                <Text
-                  onPress={_goToProfile}
-                  style={[fonts.size_16, fonts.gray800]}
-                >
-                  {user.name}
-                </Text>
-                <View
-                  style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
-                >
-                  <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
-                  <Tick />
-                </View>
-              </View>
-              {Icon && (
-                <View
-                  style={[
-                    layout.justifyCenter,
-                    layout.itemsCenter,
-                    backgrounds.primary,
-                    { width: 40, height: 40, borderRadius: 50 },
-                  ]}
-                >
-                  <Icon color={colors.gray00} />
-                </View>
-              )}
-            </View>
-            <Close color={colors.gray800} onPress={() => {}} />
-          </View>
-          <View style={styles.mainCotainer}>
+        <View style={[backgrounds.gray00, gutters.paddingHorizontal_24, { minHeight: screenHeight }]}>
+          <View style={[styles.mainCotainer, backgrounds.gray100, gutters.padding_4, borders.rounded_16]}>
             {/* Content */}
             {!_.isEmpty(image) && (
-              <Image imageURL={image} containerStyle={styles.location} />
+              <Image imageURL={convertImageURLforngRok(image || '')} containerStyle={styles.location} fastImageProp={{ style: {borderRadius: 10}}} />
             )}
             {!_.isEmpty(location) && _.isEmpty(image) && (
               <RNMapView
@@ -189,7 +192,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
           <View
             style={[
               gutters.marginVertical_12,
-              gutters.padding_10,
+              gutters.paddingVertical_10,
               layout.row,
               layout.justifyStart,
               layout.itemsCenter,
@@ -205,13 +208,13 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 layout.itemsCenter,
               ]}
             >
-              <LocationIcon color={colors.primary} />
+              <LocationIcon color={colors.primary3} />
               <Text>Some Dummy Location, street 3</Text>
             </View>
           </View>
           <View
             style={[
-              gutters.padding_10,
+              gutters.paddingVertical_10,
               layout.row,
               layout.justifyStart,
               layout.itemsCenter,
@@ -227,7 +230,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 layout.itemsCenter,
               ]}
             >
-              <DateIcon color={colors.primary} />
+              <DateIcon color={colors.primary3} />
               <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
             </View>
             <View
@@ -238,7 +241,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 layout.itemsCenter,
               ]}
             >
-              <Clock color={colors.primary} />
+              <Clock color={colors.primary3} />
               <Text>{dayjs(time).format('hh-mm-ss')}</Text>
             </View>
           </View>
@@ -266,7 +269,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 layout.justifyBetween,
                 layout.itemsCenter,
                 gutters.paddingVertical_10,
-                gutters.paddingHorizontal_10,
+                gutters.marginTop_10
               ]}
             >
               {/* Buttons */}
@@ -304,15 +307,12 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   containerStyle={[{ width: 40, height: 40 }]}
                 />
               </View>
-              <Text style={[fonts.gray180]}>
-                {dayjs(createdAt).fromNow()}
-              </Text>
+              <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
             </View>
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (
               <View
                 style={[
-                  gutters.paddingHorizontal_16,
                   gutters.paddingBottom_16,
                   styles.details_container,
                 ]}
@@ -335,11 +335,12 @@ const styles = StyleSheet.create({
   profile_image: {
     width: 50,
     height: 50,
-    borderRadius: 40,
+    borderRadius: 60,
   },
   mainCotainer: {
     width: '100%',
     maxHeight: 300,
+    marginTop: 20
   },
   location: {
     width: '100%',
