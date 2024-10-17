@@ -53,6 +53,7 @@ import {
 import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import PostMenu from '../PostMenu/PostMenu';
 
 const Post = (props: IPost) => {
   const {
@@ -123,7 +124,7 @@ const Post = (props: IPost) => {
   const _onBottomSheetOpen = () => {
     if (isPending) return;
     openBottomSheet(
-      <UserPostMenu
+      <PostMenu
         isCurrentUser={currentUser._id === user._id}
         onDelete={_onDelete}
         onEdit={_onEdit}

@@ -10,20 +10,27 @@ import {
   Tick,
 } from '@/assets/icon';
 import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
-import { Header } from '@/components';
+import { Header, PostMenu } from '@/components';
 import { Button, Image, SafeScreen } from '@/components/template';
-import { getPostById } from '@/services/posts/indes';
-import { RootState } from '@/store';
+import { activityData } from '@/constants/activities';
+import { useGlobalBottomSheet } from '@/hooks';
+import {
+  getPostById,
+  deletePost as deletePostService,
+  likeOrDislikePost,
+} from '@/services/posts/indes';
+import { AppDispatch, RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
+import { PostStateType } from '@/types/screens/post';
 import {
   convertImageURLforngRok,
   getIconByID,
   getRegionForCoordinates,
 } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import LottieView from 'lottie-react-native';
@@ -37,23 +44,84 @@ import {
 } from 'react-native';
 import RNMapView, { Marker } from 'react-native-maps';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  deletePost as deletePostAction,
+  updatePost,
+} from '@/store/slices/postSlice';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
 
   const currentUser = useSelector((state: RootState) => state.user);
+  const dispatch: AppDispatch = useDispatch();
   const screenHeight =
     Dimensions.get('screen').height - heights.tabNavigationHeader;
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
+  const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
+
   const { data, error, isLoading } = useQuery({
     queryKey: ['postdetail', postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
   });
 
-  const { user, activity, image, location, createdAt, details, date, time } =
-    (data as IPostReducer) || {};
+  const {
+    user,
+    activity,
+    image,
+    location,
+    createdAt,
+    details,
+    date,
+    time,
+    _id,
+    isLikedByMe
+  } = (data as IPostReducer) || {};
+
+  const { isPending, mutate: deleteMutation } = useMutation({
+    mutationFn: () => {
+      return deletePostService(_id, currentUser._id);
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Your post deleted successfully',
+      });
+
+      dispatch(deletePostAction({ id: _id }));
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Post Deletion Failed',
+        text2: error.message,
+      });
+    },
+  });
+
+  const { isPending: likePending, mutate: likeMutation } = useMutation({
+    mutationFn: () => {
+      return likeOrDislikePost({
+        userId: currentUser._id,
+        postId: _id,
+        isLike: !isLikedByMe,
+      });
+    },
+    onSuccess: (data) => {
+      console.log('Data success: ', data);
+      dispatch(updatePost(data));
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: error.name,
+        text2: error.message,
+      });
+    },
+  });
 
   const Icon = getIconByID(activity || '');
 
@@ -65,6 +133,55 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     navigation.navigate('OtherProfile', {
       userId: user._id,
     });
+  };
+
+  const _onBottomSheetOpen = () => {
+    if (isLoading || isPending || likePending) return;
+    openBottomSheet(
+      <PostMenu
+        isCurrentUser={currentUser._id === user._id}
+        onDelete={_onDelete}
+        onEdit={_onEdit}
+        onClose={closeBottomSheet}
+      />,
+      ['25%'],
+    );
+  };
+
+  const _onEdit = () => {
+    const initialValues: PostStateType = {
+      text: details,
+      imageURL: image,
+      location: location,
+      date: !_.isEmpty(date) ? dayjs(date) : undefined,
+      time: !_.isEmpty(time) ? dayjs(time) : undefined,
+      activity: activityData.find((item) => item.id === activity),
+    };
+    navigation.navigate('Post', { initialValues: initialValues, postId: _id });
+  };
+
+  const _onDelete = () => {
+    deleteMutation();
+  };
+
+  const _startChat = async () => {
+    try {
+      const cometChatUser: CometChat.User = await CometChat.getUser(
+        user.cometchat.id,
+      );
+      navigation.navigate('Messages', {
+        chatWith: cometChatUser,
+      });
+    } catch (error: any) {
+      Toast.show({
+        type: 'error',
+        text1: error?.message || "Can't start chat with this user",
+      });
+    }
+  };
+
+  const _onLikeOrDislike = () => {
+    likeMutation();
   };
 
   if (isLoading) {
@@ -183,10 +300,16 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       <Header
         leftComponent={headerLeftSection}
         rightComponnent={() => (
-          <View style={[ gutters.paddingRight_24, layout.itemsCenter, layout.justifyCenter ]} >
+          <View
+            style={[
+              gutters.paddingRight_24,
+              layout.itemsCenter,
+              layout.justifyCenter,
+            ]}
+          >
             <MenuHr
               color={colors.gray300}
-              onPress={() => navigation.goBack()}
+              onPress={() => _onBottomSheetOpen()}
             />
           </View>
         )}
@@ -349,6 +472,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
+                  onPress={_onLikeOrDislike}
                 />
                 <Button
                   Icon={
