@@ -5,6 +5,7 @@ import {
   DateIcon,
   Heart,
   LocationIcon,
+  MenuHr,
   Share,
   Tick,
 } from '@/assets/icon';
@@ -42,7 +43,8 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
 
   const currentUser = useSelector((state: RootState) => state.user);
-  const screenHeight = Dimensions.get('screen').height - heights.tabNavigationHeader ;
+  const screenHeight =
+    Dimensions.get('screen').height - heights.tabNavigationHeader;
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
   const { data, error, isLoading } = useQuery({
     queryKey: ['postdetail', postId],
@@ -68,7 +70,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   if (isLoading) {
     return (
       <SafeScreen>
-        <Header label='Post Details' />
+        <Header label="Post Details" />
         <View
           style={[
             layout.justifyCenter,
@@ -77,7 +79,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             { height: screenHeight },
           ]}
         >
-          <View style={[ layout.itemsCenter, { minHeight: 400,width: '100%' }]} >
+          <View style={[layout.itemsCenter, { minHeight: 400, width: '100%' }]}>
             <LottieView
               source={LoadingAnimation}
               autoPlay={true}
@@ -96,7 +98,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   if (error) {
     return (
       <SafeScreen>
-        <Header label='Post Details' />
+        <Header label="Post Details" />
         <View
           style={[
             layout.justifyCenter,
@@ -105,7 +107,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             { height: screenHeight },
           ]}
         >
-          <View style={[ layout.itemsCenter, { minHeight: 400,width: '100%' }]} >
+          <View style={[layout.itemsCenter, { minHeight: 400, width: '100%' }]}>
             <LottieView
               source={EmptyAnimation}
               autoPlay={true}
@@ -115,7 +117,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 height: 300,
               }}
             />
-            <Text style={[fonts.size_16, fontFamily._700_Bold, fonts.alignCenter]}>
+            <Text
+              style={[fonts.size_16, fontFamily._700_Bold, fonts.alignCenter]}
+            >
               Oops! something wrong happened
             </Text>
           </View>
@@ -125,7 +129,18 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   }
 
   const headerLeftSection = () => (
-    <View style={[layout.row, layout.justifyStart, layout.itemsCenter, gutters.paddingHorizontal_10]}>
+    <View
+      style={[
+        layout.row,
+        layout.justifyStart,
+        layout.itemsCenter,
+        gutters.paddingHorizontal_10,
+      ]}
+    >
+      <ChevronLeft
+        style={{ marginRight: 20 }}
+        onPress={() => navigation.goBack()}
+      />
       <TouchableOpacity onPress={_goToProfile}>
         <Image
           imageURL={convertImageURLforngRok(user.profileImage)}
@@ -168,98 +183,126 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       <Header
         leftComponent={headerLeftSection}
         rightComponnent={() => (
-          <Close color={colors.gray800} onPress={() => navigation.goBack()} />
+          <View style={[ gutters.paddingRight_24, layout.itemsCenter, layout.justifyCenter ]} >
+            <MenuHr
+              color={colors.gray300}
+              onPress={() => navigation.goBack()}
+            />
+          </View>
         )}
       />
       <ScrollView>
-        <View style={[backgrounds.gray00, gutters.paddingHorizontal_24, { minHeight: screenHeight }]}>
-          <View style={[styles.mainCotainer, backgrounds.gray100, gutters.padding_4, borders.rounded_16]}>
-            {/* Content */}
-            {!_.isEmpty(image) && (
-              <Image imageURL={convertImageURLforngRok(image || '')} containerStyle={styles.location} fastImageProp={{ style: {borderRadius: 10}}} />
-            )}
-            {!_.isEmpty(location) && _.isEmpty(image) && (
-              <RNMapView
-                provider="google"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                initialRegion={{
-                  ...getRegionForCoordinates([
-                    {
-                      latitude: location.latitude,
-                      longitude: location.longitude,
-                    },
-                  ]),
-                }}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: location.latitude || 0,
-                    longitude: location.longitude || 0,
-                  }}
+        <View style={[backgrounds.gray00, { minHeight: screenHeight }]}>
+          <View style={[gutters.paddingHorizontal_24]}>
+            <View
+              style={[
+                styles.mainCotainer,
+                backgrounds.gray100,
+                gutters.padding_4,
+                borders.rounded_16,
+              ]}
+            >
+              {/* Content */}
+              {!_.isEmpty(image) && (
+                <Image
+                  imageURL={convertImageURLforngRok(image || '')}
+                  containerStyle={styles.location}
+                  fastImageProp={{ style: { borderRadius: 10 } }}
                 />
-              </RNMapView>
-            )}
-          </View>
-          <View
-            style={[
-              gutters.marginVertical_12,
-              gutters.paddingVertical_10,
-              layout.row,
-              layout.justifyStart,
-              layout.itemsCenter,
-              gutters.gap_24,
-              backgrounds.gray30,
-            ]}
-          >
+              )}
+              {!_.isEmpty(location) && _.isEmpty(image) && (
+                <RNMapView
+                  provider="google"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  initialRegion={{
+                    ...getRegionForCoordinates([
+                      {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                      },
+                    ]),
+                  }}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: location.latitude || 0,
+                      longitude: location.longitude || 0,
+                    }}
+                  />
+                </RNMapView>
+              )}
+            </View>
             <View
               style={[
+                gutters.marginVertical_12,
+                gutters.paddingVertical_10,
                 layout.row,
-                gutters.gap_14,
                 layout.justifyStart,
                 layout.itemsCenter,
+                gutters.gap_24,
+                backgrounds.gray30,
               ]}
             >
-              <LocationIcon color={colors.primary3} />
-              <Text>Some Dummy Location, street 3</Text>
+              <View
+                style={[
+                  layout.row,
+                  gutters.gap_14,
+                  layout.justifyStart,
+                  layout.itemsCenter,
+                ]}
+              >
+                <LocationIcon color={colors.primary3} />
+                <Text>Some Dummy Location, street 3</Text>
+              </View>
+            </View>
+            <View
+              style={[
+                gutters.paddingVertical_10,
+                layout.row,
+                layout.justifyStart,
+                layout.itemsCenter,
+                gutters.gap_24,
+                backgrounds.gray30,
+              ]}
+            >
+              <View
+                style={[
+                  layout.row,
+                  gutters.gap_14,
+                  layout.justifyStart,
+                  layout.itemsCenter,
+                ]}
+              >
+                <DateIcon color={colors.primary3} />
+                <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
+              </View>
+              <View
+                style={[
+                  layout.row,
+                  gutters.gap_14,
+                  layout.justifyStart,
+                  layout.itemsCenter,
+                ]}
+              >
+                <Clock color={colors.primary3} />
+                <Text>{dayjs(time).format('hh-mm-ss')}</Text>
+              </View>
             </View>
           </View>
           <View
             style={[
-              gutters.paddingVertical_10,
-              layout.row,
-              layout.justifyStart,
-              layout.itemsCenter,
-              gutters.gap_24,
-              backgrounds.gray30,
+              backgrounds.gray150,
+              layout.fullWidth,
+              gutters.marginTop_16,
+              { height: 2 },
             ]}
+          />
+          <View
+            style={[gutters.paddingBottom_10, gutters.paddingHorizontal_24]}
           >
-            <View
-              style={[
-                layout.row,
-                gutters.gap_14,
-                layout.justifyStart,
-                layout.itemsCenter,
-              ]}
-            >
-              <DateIcon color={colors.primary3} />
-              <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
-            </View>
-            <View
-              style={[
-                layout.row,
-                gutters.gap_14,
-                layout.justifyStart,
-                layout.itemsCenter,
-              ]}
-            >
-              <Clock color={colors.primary3} />
-              <Text>{dayjs(time).format('hh-mm-ss')}</Text>
-            </View>
-          </View>
-          <View style={[gutters.paddingBottom_10]}>
             {/* Details if there are neither image nor location */}
             {_.isEmpty(image) && _.isEmpty(location) && (
               <View
@@ -283,7 +326,6 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 layout.justifyBetween,
                 layout.itemsCenter,
                 gutters.paddingVertical_10,
-                gutters.marginTop_10
               ]}
             >
               {/* Buttons */}
@@ -326,10 +368,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (
               <View
-                style={[
-                  gutters.paddingBottom_16,
-                  styles.details_container,
-                ]}
+                style={[gutters.paddingBottom_16, styles.details_container]}
               >
                 <ScrollView>
                   <Text style={[fonts.gray300, fontFamily._400_Regular]}>
@@ -354,7 +393,7 @@ const styles = StyleSheet.create({
   mainCotainer: {
     width: '100%',
     maxHeight: 300,
-    marginTop: 20
+    marginTop: 20,
   },
   location: {
     width: '100%',
