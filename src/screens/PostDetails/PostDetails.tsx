@@ -8,7 +8,7 @@ import {
   Share,
   Tick,
 } from '@/assets/icon';
-import { EmptyAnimation } from '@/assets/images';
+import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
 import { Header } from '@/components';
 import { Button, Image, SafeScreen } from '@/components/template';
 import { getPostById } from '@/services/posts/indes';
@@ -68,14 +68,26 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   if (isLoading) {
     return (
       <SafeScreen>
+        <Header label='Post Details' />
         <View
           style={[
             layout.justifyCenter,
             layout.itemsCenter,
+            gutters.paddingHorizontal_24,
             { height: screenHeight },
           ]}
         >
-          <Text style={[fonts.size_24, fontFamily._700_Bold]}>...Loading</Text>
+          <View style={[ layout.itemsCenter, { minHeight: 400,width: '100%' }]} >
+            <LottieView
+              source={LoadingAnimation}
+              autoPlay={true}
+              loop={true}
+              style={{
+                width: '100%',
+                height: 300,
+              }}
+            />
+          </View>
         </View>
       </SafeScreen>
     );
@@ -84,24 +96,26 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   if (error) {
     return (
       <SafeScreen>
+        <Header label='Post Details' />
         <View
           style={[
             layout.justifyCenter,
             layout.itemsCenter,
+            gutters.paddingHorizontal_24,
             { height: screenHeight },
           ]}
         >
-          <View>
+          <View style={[ layout.itemsCenter, { minHeight: 400,width: '100%' }]} >
             <LottieView
               source={EmptyAnimation}
               autoPlay={true}
               loop={true}
               style={{
                 width: '100%',
-                height: 200,
+                height: 300,
               }}
             />
-            <Text style={[fonts.size_24, fontFamily._700_Bold]}>
+            <Text style={[fonts.size_16, fontFamily._700_Bold, fonts.alignCenter]}>
               Oops! something wrong happened
             </Text>
           </View>
