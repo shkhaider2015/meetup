@@ -51,6 +51,11 @@ import {
   updatePost,
 } from '@/store/slices/postSlice';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import PostDetailsPlaceholder from './Postdetails.placeholder';
+import { useEffect, useState } from 'react';
+import { queryClient } from '@/App';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
@@ -62,9 +67,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
 
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['postdetail', postId],
-    queryFn: () => getPostById(postId),
+    queryFn: () => getPostById({ id: postId, userId: currentUser._id }),
     enabled: !!postId,
   });
 
@@ -78,7 +83,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     date,
     time,
     _id,
-    isLikedByMe
+    isLikedByMe,
   } = (data as IPostReducer) || {};
 
   const { isPending, mutate: deleteMutation } = useMutation({
@@ -92,6 +97,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       });
 
       dispatch(deletePostAction({ id: _id }));
+      navigation.goBack();
     },
     onError: (error) => {
       Toast.show({
@@ -110,9 +116,21 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         isLike: !isLikedByMe,
       });
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log('Data success: ', data);
       dispatch(updatePost(data));
+      queryClient.setQueryData(
+        ['postdetail', postId],
+        (oldData: IPostReducer | undefined) => {
+          if (!oldData) return oldData;
+
+          // Return the updated post with new 'isLikedByMe' status
+          return {
+            ...oldData,
+            isLikedByMe: data?.isLikedByMe, // Toggle like status in the cached data
+          };
+        },
+      );
     },
     onError: (error) => {
       Toast.show({
@@ -184,32 +202,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     likeMutation();
   };
 
+  console.log('Is Like By me ', isLikedByMe);
+  console.log('Data : ', data?.isLikedByMe);
+
   if (isLoading) {
-    return (
-      <SafeScreen>
-        <Header label="Post Details" />
-        <View
-          style={[
-            layout.justifyCenter,
-            layout.itemsCenter,
-            gutters.paddingHorizontal_24,
-            { height: screenHeight },
-          ]}
-        >
-          <View style={[layout.itemsCenter, { minHeight: 400, width: '100%' }]}>
-            <LottieView
-              source={LoadingAnimation}
-              autoPlay={true}
-              loop={true}
-              style={{
-                width: '100%',
-                height: 300,
-              }}
-            />
-          </View>
-        </View>
-      </SafeScreen>
-    );
+    return <PostDetailsPlaceholder />;
   }
 
   if (error) {
@@ -237,8 +234,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             <Text
               style={[fonts.size_16, fontFamily._700_Bold, fonts.alignCenter]}
             >
-              Oops! something wrong happened
+              Oops! Post not found
             </Text>
+
           </View>
         </View>
       </SafeScreen>
@@ -464,7 +462,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 <Button
                   Icon={
                     <Heart
-                      color={backgrounds.primary.backgroundColor}
+                      color={isLikedByMe ? colors.primary : colors.gray200}
                       width={23}
                       height={23}
                     />
@@ -473,15 +471,10 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
                   onPress={_onLikeOrDislike}
+                  disabled={isPending || isLoading || likePending}
                 />
                 <Button
-                  Icon={
-                    <Share
-                      color={backgrounds.primary.backgroundColor}
-                      width={20}
-                      height={20}
-                    />
-                  }
+                  Icon={<Share color={colors.primary} width={20} height={20} />}
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
