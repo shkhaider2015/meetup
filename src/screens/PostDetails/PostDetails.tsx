@@ -13,7 +13,7 @@ import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
 import { Header, PostMenu } from '@/components';
 import { Button, Image, SafeScreen } from '@/components/template';
 import { activityData } from '@/constants/activities';
-import { useGlobalBottomSheet } from '@/hooks';
+import { useGlobalBottomSheet, useLoader } from '@/hooks';
 import {
   getPostById,
   deletePost as deletePostService,
@@ -66,6 +66,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     Dimensions.get('screen').height - heights.tabNavigationHeader;
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
+  const { showLoader, hideLoader } = useLoader();
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['postdetail', postId],
@@ -95,11 +96,12 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         type: 'success',
         text1: 'Your post deleted successfully',
       });
-
+      hideLoader()
       dispatch(deletePostAction({ id: _id }));
       navigation.goBack();
     },
     onError: (error) => {
+      hideLoader()
       Toast.show({
         type: 'error',
         text1: 'Post Deletion Failed',
@@ -179,6 +181,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _onDelete = () => {
+    showLoader()
     deleteMutation();
   };
 
