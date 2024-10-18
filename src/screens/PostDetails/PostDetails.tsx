@@ -119,7 +119,6 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       });
     },
     onSuccess: async (data) => {
-      console.log('Data success: ', data);
       dispatch(updatePost(data));
       queryClient.setQueryData(
         ['postdetail', postId],
@@ -204,9 +203,6 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const _onLikeOrDislike = () => {
     likeMutation();
   };
-
-  console.log('Is Like By me ', isLikedByMe);
-  console.log('Data : ', data?.isLikedByMe);
 
   if (isLoading) {
     return <PostDetailsPlaceholder />;
