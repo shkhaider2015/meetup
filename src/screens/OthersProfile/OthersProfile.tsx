@@ -93,7 +93,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
 
   const _followUser = () => {};
   console.log("UserPosts : ", userPosts);
-  
+
   return (
     <SafeScreen>
       <ProfileHeader onBack={_goBack} title={userInfo?.name} />
@@ -119,7 +119,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             description={userInfo?.bio}
           />
           <ProfileSectionActivities activities={userInfo?.activities} />
-          <ProfileSectionImageGallery posts={userPosts} />
+          <ProfileSectionImageGallery posts={userPosts} isLoading={postsPending} />
         </View>
       </ScrollView>
     </SafeScreen>
@@ -166,7 +166,9 @@ const ProfileHeader = ({
           layout.justifyCenter,
           layout.itemsCenter,
           gutters.gap_4,
-          layout.flex_1,
+          {
+            flex: 4
+          }
         ]}
       >
         <Text style={[fonts.gray800, fonts.size_24, fontFamily._700_Bold]}>

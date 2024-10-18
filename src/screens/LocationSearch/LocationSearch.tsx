@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { Search } from '@/assets/icon';
+import { ChevronLeft, Search } from '@/assets/icon';
 const { height } = Dimensions.get('window');
 
 const LocationSearch = ({ navigation }: LocationSearchScreenType) => {
@@ -73,23 +73,29 @@ const LocationSearch = ({ navigation }: LocationSearchScreenType) => {
   );
 
   return (
-    <View
-      style={[
-        gutters.paddingHorizontal_12,
-        layout.justifyCenter,
-        { height: height },
-      ]}
-    >
-      <View style={[layout.relative, { width: '100%', marginTop: 80 }]}>
-        <InputField
-          ref={inputRef}
-          placeholder="Enter location"
-          inputType="TEXT"
-          editable={true}
-          onFocus={handleFocus}
-          keyboardType="default"
-          Lefticon={<Search color={colors.black} />}
-        />
+    <View style={[gutters.paddingHorizontal_12, { height: height }]}>
+      <View
+        style={[layout.relative, layout.row, { width: '100%', marginTop: 80 }]}
+      >
+        <View
+          style={[layout.justifyCenter, layout.itemsCenter, { width: '10%' }]}
+        >
+          <ChevronLeft
+            color={colors.black}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        <View style={[{ width: '85%' }]}>
+          <InputField
+            ref={inputRef}
+            placeholder="Search location"
+            inputType="TEXT"
+            editable={true}
+            onFocus={handleFocus}
+            keyboardType="default"
+            Lefticon={<Search color={colors.black} />}
+          />
+        </View>
       </View>
 
       <FlatList

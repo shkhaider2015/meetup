@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MMKV } from "react-native-mmkv";
 
 import { ThemeProvider } from "@/theme";
-
+import firebase from '@react-native-firebase/app';
 import ApplicationNavigator from "./navigators/Application";
 import "./translations";
 import { Provider } from "react-redux";

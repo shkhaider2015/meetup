@@ -16,7 +16,7 @@ const Image = (props: IImageProps) => {
   const { shimmerStyle, containerStyle, fastImageProp, imageURL } = props;
   const [isImageLoaded, setImageLoaded] = useState(false);
 
-  console.log("URL ", imageURL);
+  // console.log("URL ", imageURL);
   
 
   return (

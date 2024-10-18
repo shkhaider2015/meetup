@@ -5,7 +5,7 @@ import {
   Heart,
   LocationIcon,
   MenuHr,
-  Share,
+  Share as ShareIcon,
   Tick,
   Trash,
 } from '@/assets/icon';
@@ -18,6 +18,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Share,
 } from 'react-native';
 import { Button, Image as ImageComp } from '../template';
 import { fontFamily } from '@/theme/_config';
@@ -183,6 +184,41 @@ const Post = (props: IPost) => {
     likeMutation();
   };
 
+  const _sharePost = async () => {
+    try {
+      const result = await Share.share({
+        title: 'React Native Share',
+        message:
+          'React Native | A framework for building native apps using React https://example.com/post/123',
+        url: 'https://example.com/post/123',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+          console.log('What is this  ');
+        } else {
+          // shared
+          console.log('Shared ');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+        console.log('Dont wanna Shared ');
+      }
+    } catch (error: any) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to share post',
+        text2: error?.message || 'Something wrong happened',
+      });
+    }
+  };
+  const _gotoPostDetails = () => {
+    if(isPending) return
+    navigate("PostDetails", {
+      postId: _id
+    })
+  }
+
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
       {isPending && (
@@ -252,7 +288,7 @@ const Post = (props: IPost) => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.mainCotainer}
-        onPress={_showDetails}
+        onPress={_gotoPostDetails}
       >
         {/* Content */}
         {!_.isEmpty(image) && (
@@ -302,13 +338,13 @@ const Post = (props: IPost) => {
           <DetailText
             text={details}
             maxLength={200}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         ) : (
           <DetailText
             text={details}
             maxLength={50}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         )}
       </View>
@@ -350,7 +386,7 @@ const Post = (props: IPost) => {
             {user._id !== currentUser._id && (
               <Button
                 Icon={
-                  <Share
+                  <ShareIcon
                     color={backgrounds.primary.backgroundColor}
                     width={20}
                     height={20}

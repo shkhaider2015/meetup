@@ -12,18 +12,34 @@ import LottieView from 'lottie-react-native';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { Button } from '@/components/template';
+import {
+  checkLocationPermission,
+  requestNotificationPermissionCross,
+} from '@/utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 const NotificationScreenPermission = ({
   navigation,
 }: NotificationsScreenType) => {
   console.log('NotificationScreenPermission component is rendered!');
   const { layout, gutters, fonts } = useTheme();
-  const getNotificationPermission = () => {
-    if (Platform.OS === 'android') {
-        const platformcheck = PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS;
-        console.log('permission acess',platformcheck);
-    }
-    
+  const user = useSelector((state: RootState) => state.user);
+
+  const getNotificationPermission = async () => {
+    await requestNotificationPermissionCross();
+
+    let isLocationAllowed = await checkLocationPermission();
+    let isActivitiesAdded = user.activities.length > 0;
+    setTimeout(() => {
+      if (!isLocationAllowed) {
+        navigation.navigate('LocationPermission');
+      } else if (!isActivitiesAdded) {
+        navigation.navigate('Ineterests');
+      } else {
+        navigation.navigate('Tabs');
+      }
+    }, 1000);
   };
 
   return (

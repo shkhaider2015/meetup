@@ -111,8 +111,8 @@ const MapView = ({ navigation }: MapViewScreenType) => {
         initialRegion={mapState}
         onRegionChange={_onRegionChange}
         zoomControlEnabled={true}
-        loadingEnabled={true}
-        loadingIndicatorColor={colors.primary}
+        // loadingEnabled={true}
+        // loadingIndicatorColor={colors.primary}
       >
         {posts.map((post) => (
           <CustomMarker key={post._id} {...post} />

@@ -9,8 +9,11 @@ import {
   ChangePassword,
   ForgetPasswordComplete,
   PostLocation,
+  LoadingScreen,
+  LocationPermission,
+  Settings,
+  PostDetails,
   LocationSearch,
-  
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -26,59 +29,60 @@ import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
 
-
 const Stack = createStackNavigator<RootStackParamList>();
 
 const ProtectedScreens = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const isFirstTimeLoggedIn = false;
-  const { mutate: loadUserMutation } = useMutation({
-    mutationFn: (token: string) => {
-      return loadUser(token);
-    },
-    onError: (error) => {
-      if (error?.message?.includes('expired')) {
-        Toast.show({
-          type: 'error',
-          text1: 'Session Expired',
-          text2: error?.message,
-        });
+  // const dispatch: AppDispatch = useDispatch();
+  // const isFirstTimeLoggedIn = false;
+  // const { mutate: loadUserMutation } = useMutation({
+  //   mutationFn: (token: string) => {
+  //     return loadUser(token);
+  //   },
+  //   onError: (error) => {
+  //     if (error?.message?.includes('expired')) {
+  //       Toast.show({
+  //         type: 'error',
+  //         text1: 'Session Expired',
+  //         text2: error?.message,
+  //       });
 
-        setTimeout(() => {
-          dispatch(clearUser());
-        }, 500);
-      }
-    },
-    onSuccess: (data: any) => {
-      console.log('Load User Data ', data);
-      const user: IUserReducer = {
-        ...data,
-        profileImage: convertImageURLforngRok(data.profileImage),
-        isLoggedIn: true,
-      };
-      dispatch(setUser(user));
-    },
-  });
+  //       setTimeout(() => {
+  //         dispatch(clearUser());
+  //       }, 500);
+  //     }
+  //   },
+  //   onSuccess: (data: any) => {
+  //     console.log('Load User Data ', data);
+  //     const user: IUserReducer = {
+  //       ...data,
+  //       profileImage: convertImageURLforngRok(data.profileImage),
+  //       isLoggedIn: true,
+  //     };
+  //     dispatch(setUser(user));
+  //   },
+  // });
 
-  useEffect(() => {
-    const initializeUser = () => {
-      const user: any = getItem(USER);
-      if (user.token) {
-        loadUserMutation(user.token);
-      }
-    };
-    initializeUser();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const initializeUser = () => {
+  //     const user: any = getItem(USER);
+  //     if (user.token) {
+  //       loadUserMutation(user.token);
+  //     }
+  //   };
+  //   initializeUser();
+  // }, [dispatch]);
 
   return (
     <Stack.Navigator
-      initialRouteName={isFirstTimeLoggedIn ? 'Ineterests' : 'Tabs'}
+      initialRouteName={'Loading'}
       screenOptions={{ headerShown: false }}
     >
+      <Stack.Screen name="Loading" component={LoadingScreen} />
       <Stack.Screen
         name="NotificationsPermission"
         component={NotificationScreenPermission}
       />
+      <Stack.Screen name="LocationPermission" component={LocationPermission} />
       <Stack.Screen name="Tabs" component={TabsNavigator} />
       <Stack.Screen name="Carousel" component={Carousel} />
       <Stack.Screen name="Ineterests" component={Interests} />
@@ -101,10 +105,13 @@ const ProtectedScreens = () => {
         component={Messages}
         initialParams={{ chatWith: undefined }}
       />
-       <Stack.Screen
-        name="LocationSearch"
-        component={LocationSearch}
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="PostDetails"
+        component={PostDetails}
+        initialParams={{ postId: undefined }}
       />
+      <Stack.Screen name="LocationSearch" component={LocationSearch} />
     </Stack.Navigator>
   );
 };

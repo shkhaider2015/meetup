@@ -5,7 +5,7 @@ import {
   ProfileSectionActivities,
 } from '@/components';
 import { SafeScreen } from '@/components/template';
-import { useState,useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { logout } from '@/services/users';
 import { AppDispatch, RootState } from '@/store';
 import { clearUser } from '@/store/slices/userSlice';
@@ -21,10 +21,8 @@ import { IPostReducer } from '@/types/reducer';
 import { getAllPostByUser } from '@/services/posts/indes';
 import Toast from 'react-native-toast-message';
 import { useFocusEffect } from '@react-navigation/native';
-import { convertImageURLforngRok } from '@/utils';
 
-
-const Profile = ({ navigation, route }: ProfileScreenType) => {
+const Profile = ({ navigation }: ProfileScreenType) => {
   const user = useSelector((state: RootState) => state.user);
   const { backgrounds } = useTheme();
   const [userPosts, setUserPosts] = useState<IPostReducer[]>([]);
@@ -43,9 +41,9 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
   const _OpenEditProfile = () => {
     navigation.navigate('EditProfile');
   };
-  console.log(user._id, "user idd");
+  // console.log(user._id, 'user idd');
 
-  const { isPending:postsPending, mutate:postsMutation } = useMutation({
+  const { isPending: postsPending, mutate: postsMutation } = useMutation({
     mutationFn: () => {
       return getAllPostByUser(user._id);
     },
@@ -60,19 +58,17 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
       });
     },
   });
-  console.log('User ID is :', user._id);
+  // console.log('User ID is :', user._id);
 
-  useFocusEffect(useCallback(() => {
-    if(user._id) {
-      postsMutation();
-     
-    } else {
-      console.log("no user exist")
-    }
-  }, [user]));
-  console.log("UserPosts : ", userPosts);
-  console.log("profile image",user.profileImage);
-  console.log(convertImageURLforngRok(user.profileImage));
+  useFocusEffect(
+    useCallback(() => {
+      if (user._id) {
+        postsMutation();
+      } else {
+        console.log('no user exist');
+      }
+    }, [user]),
+  );
 
   return (
     <SafeScreen>
@@ -91,7 +87,6 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
             isCurrentUser={true}
             onPressButton={_OpenEditProfile}
             profileImage={user.profileImage}
-            
           />
           <ProfileSectionDescription
             name={user.name}
@@ -100,7 +95,7 @@ const Profile = ({ navigation, route }: ProfileScreenType) => {
           />
 
           <ProfileSectionActivities activities={user.activities} />
-          <ProfileSectionImageGallery  posts={userPosts} />
+          <ProfileSectionImageGallery posts={userPosts} isLoading={postsPending} />
         </View>
       </ScrollView>
     </SafeScreen>

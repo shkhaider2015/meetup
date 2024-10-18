@@ -7,3 +7,9 @@ export { default as ProfileImagePlaceholder } from './images/Profile_image_place
 export { default as EmptyAnimation } from './animation/empty.json';
 export { default as LoadingAnimation } from './animation/loader.json';
 export { default as NotificationAnimation } from './animation/notificatio.json';
+export { default as LocationAnimation } from './animation/location.json';
+export { default as AddImageLogo } from './images/picture.png';
+export { default as AddLocatioLogo } from './images/map.png';
+export { default as AddActivityLogo } from './images/puzzle-pieces.png';
+export { default as AddDateLogo } from './images/schedule.png';
+export { default as AddTimeLogo } from './images/clock.png';

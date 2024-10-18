@@ -57,7 +57,13 @@ export type RootStackParamList = {
     userId?: string;
   };
   ChangePassword: undefined;
+  Loading: undefined;
+  LocationPermission: undefined;
+  Settings: undefined;
   LocationSearch: undefined;
+  PostDetails: {
+    postId: string;
+  };
 };
 
 export type ExploreTabsParamList = {

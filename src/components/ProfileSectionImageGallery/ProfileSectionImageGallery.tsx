@@ -57,7 +57,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   }
   
 
-  if (postLength === 0) {
+  if (postLength === 0 && !props.isLoading ) {
     return (
       <View
         style={[
@@ -72,7 +72,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         <LottieView
           source={EmptyAnimation}
           autoPlay={true}
-          loop={false}
+          loop={true}
           style={{
             width: '100%',
             height: 200,
@@ -248,6 +248,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
 
 interface IProfileSectionImageGallery {
   posts?: IPostReducer[];
+  isLoading?: boolean;
 }
 
 export default ProfileSectionImageGallery;

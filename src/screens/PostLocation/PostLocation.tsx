@@ -26,7 +26,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { location: locationParam } = route.params;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
-  const { height } = Dimensions.get('window');
+  const { height } = Dimensions.get('screen');
   const screenHeight = Platform.OS === 'android' ? height + 0 : height;
   const location = useSelector((state: RootState) => state.location);
 
@@ -117,15 +117,12 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
         ]}
       >
         <View />
-        <View style={[{ width: '70%' }]}>
+        <View style={[{ width: '80%' }]}>
           <TouchableOpacity onPress={_navigateToSearchScreen} activeOpacity={0.8}>
             <InputField
               placeholder="Search location"
-              // placeholderTextColor={fonts.black.color}
               editable={false}
               Lefticon={<Search color={colors.black} />}
-              // pointerEvents="box-only"
-              // onPress={_navigateToSearchScreen}
             />
           </TouchableOpacity>
         </View>
