@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ProtectedScreens from './Protected';
 import { useEffect, useState } from 'react';
+import  NetworkStatusBar  from '@/components/NetworkStatusBar/NetworkStatusBar';
 
 function ApplicationNavigator() {
   const { navigationTheme } = useTheme();
@@ -16,6 +17,7 @@ function ApplicationNavigator() {
       <NavigationContainer theme={navigationTheme}>
         { user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator /> }
       </NavigationContainer>
+      <NetworkStatusBar />
     </SafeAreaProvider>
   );
 }
