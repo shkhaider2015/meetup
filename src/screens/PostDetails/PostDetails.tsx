@@ -97,12 +97,12 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         type: 'success',
         text1: 'Your post deleted successfully',
       });
-      hideLoader()
+      hideLoader();
       dispatch(deletePostAction({ id: _id }));
       navigation.goBack();
     },
     onError: (error) => {
-      hideLoader()
+      hideLoader();
       Toast.show({
         type: 'error',
         text1: 'Post Deletion Failed',
@@ -181,7 +181,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _onDelete = () => {
-    showLoader()
+    showLoader();
     deleteMutation();
   };
 
@@ -209,7 +209,10 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     try {
       const result = await Share.share({
         title: 'Meetup Post',
-        message: details + " \nclick on link to see post " + "\nhttps://example.com/post/123",
+        message:
+          details +
+          ' \nclick on link to see post ' +
+          '\nhttps://example.com/post/123',
         url: 'https://example.com/post/123',
       });
       if (result.action === Share.sharedAction) {
@@ -264,7 +267,6 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             >
               Oops! Post not found
             </Text>
-
           </View>
         </View>
       </SafeScreen>
@@ -341,7 +343,12 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         )}
       />
       <ScrollView>
-        <View style={[backgrounds.gray00, { height: screenHeight }]}>
+        <View
+          style={[
+            backgrounds.gray00,
+            { minHeight: screenHeight },
+          ]}
+        >
           <View style={[gutters.paddingHorizontal_24]}>
             <View
               style={[
@@ -502,7 +509,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   disabled={isPending || isLoading || likePending}
                 />
                 <Button
-                  Icon={<ShareIcon color={colors.primary} width={20} height={20} />}
+                  Icon={
+                    <ShareIcon color={colors.primary} width={20} height={20} />
+                  }
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
@@ -513,13 +522,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             </View>
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (
-              <View
-                style={[gutters.paddingBottom_16]}
-              >
+              <View style={[gutters.paddingBottom_16]}>
                 {/* <ScrollView> */}
-                  <Text style={[fonts.gray300, fontFamily._400_Regular]}>
-                    {details}
-                  </Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {details}
+                </Text>
                 {/* </ScrollView> */}
               </View>
             )}

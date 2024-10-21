@@ -75,7 +75,7 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
             },
           ]}
         >
-          Always stay up to date with the latest updates and alerts
+          Enable location for best experience
         </Text>
       </View>
       <View
