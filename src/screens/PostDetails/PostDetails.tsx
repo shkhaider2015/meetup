@@ -411,7 +411,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <LocationIcon color={colors.primary3} />
-                <Text>Some Dummy Location, street 3</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]} >Some Dummy Location, street 3</Text>
               </View>
             </View>
             <View
@@ -433,7 +433,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <DateIcon color={colors.primary3} />
-                <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]} >{dayjs(date).format('YYYY-MM-DD')}</Text>
               </View>
               <View
                 style={[
@@ -444,7 +444,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <Clock color={colors.primary3} />
-                <Text>{dayjs(time).format('hh-mm-ss')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]} >{dayjs(time).format('hh-mm-ss')}</Text>
               </View>
             </View>
           </View>
