@@ -135,7 +135,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
       _clearPostState();
       setTimeout(() => {
         navigation.goBack();
-      }, 500);
+      }, 100);
     },
     onError: (error) => {
       hideLoader();
@@ -380,6 +380,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.time = post.time?.toDate().toISOString();
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
+
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
         latitude: post.location.latitude,
@@ -716,7 +717,6 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
 
       return () => {
         inputRef.current?.blur();
-        inputRef.current?.clear();
       };
     }, []),
   );

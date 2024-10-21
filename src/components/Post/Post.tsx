@@ -188,9 +188,8 @@ const Post = (props: IPost) => {
   const _sharePost = async () => {
     try {
       const result = await Share.share({
-        title: 'React Native Share',
-        message:
-          'React Native | A framework for building native apps using React https://example.com/post/123',
+        title: 'Meetup Post',
+        message: details + " \nclick on link to see post " + "\nhttps://example.com/post/123",
         url: 'https://example.com/post/123',
       });
       if (result.action === Share.sharedAction) {
@@ -213,8 +212,9 @@ const Post = (props: IPost) => {
       });
     }
   };
+  
   const _gotoPostDetails = () => {
-    if(isPending) return
+    if(isPending || likePending) return
     navigate("PostDetails", {
       postId: _id
     })
@@ -384,7 +384,7 @@ const Post = (props: IPost) => {
               onPress={_onLikeOrDislike}
               disabled={likePending}
             />
-            {user._id !== currentUser._id && (
+            {/* {user._id !== currentUser._id && ( */}
               <Button
                 Icon={
                   <ShareIcon
@@ -396,9 +396,9 @@ const Post = (props: IPost) => {
                 isCirculer={true}
                 type="SECONDARY"
                 containerStyle={[{ width: 40, height: 40 }]}
-                onPress={_startChat}
+                onPress={_sharePost}
               />
-            )}
+            {/* )} */}
           </View>
           <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
         </View>

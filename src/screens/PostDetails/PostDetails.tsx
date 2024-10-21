@@ -6,7 +6,7 @@ import {
   Heart,
   LocationIcon,
   MenuHr,
-  Share,
+  Share as ShareIcon,
   Tick,
 } from '@/assets/icon';
 import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
@@ -37,6 +37,7 @@ import LottieView from 'lottie-react-native';
 import {
   Dimensions,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -204,6 +205,34 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     likeMutation();
   };
 
+  const _sharePost = async () => {
+    try {
+      const result = await Share.share({
+        title: 'Meetup Post',
+        message: details + " \nclick on link to see post " + "\nhttps://example.com/post/123",
+        url: 'https://example.com/post/123',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+          console.log('What is this  ');
+        } else {
+          // shared
+          console.log('Shared ');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+        console.log('Dont wanna Shared ');
+      }
+    } catch (error: any) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to share post',
+        text2: error?.message || 'Something wrong happened',
+      });
+    }
+  };
+
   if (isLoading) {
     return <PostDetailsPlaceholder />;
   }
@@ -312,7 +341,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         )}
       />
       <ScrollView>
-        <View style={[backgrounds.gray00, { minHeight: screenHeight }]}>
+        <View style={[backgrounds.gray00, { height: screenHeight }]}>
           <View style={[gutters.paddingHorizontal_24]}>
             <View
               style={[
@@ -473,10 +502,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   disabled={isPending || isLoading || likePending}
                 />
                 <Button
-                  Icon={<Share color={colors.primary} width={20} height={20} />}
+                  Icon={<ShareIcon color={colors.primary} width={20} height={20} />}
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
+                  onPress={_sharePost}
                 />
               </View>
               <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
@@ -484,13 +514,13 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (
               <View
-                style={[gutters.paddingBottom_16, styles.details_container]}
+                style={[gutters.paddingBottom_16]}
               >
-                <ScrollView>
+                {/* <ScrollView> */}
                   <Text style={[fonts.gray300, fontFamily._400_Regular]}>
                     {details}
                   </Text>
-                </ScrollView>
+                {/* </ScrollView> */}
               </View>
             )}
           </View>

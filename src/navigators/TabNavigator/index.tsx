@@ -29,6 +29,8 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import { Platform } from 'react-native';
+import { Image as FastImage } from "@/components/template"
+import { convertImageURLforngRok } from '@/utils';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -115,6 +117,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
   );
 
   const navigation = useNavigation<NavigationHookProps>();
+  const { colors } = useTheme()
 
   return {
     headerTitle: '',
@@ -144,9 +147,10 @@ const exploreOptions = (): BottomTabNavigationOptions => {
         }}
         onPress={() => navigation.navigate('Profile')}
       >
-        <Image
-          source={{ uri: profile_image }}
-          style={{ width: 40, height: 40, borderRadius: 50 }}
+        <FastImage
+          imageURL={convertImageURLforngRok(profile_image)}
+          containerStyle={{ width: 40, height: 40, borderRadius: 50}}
+          fastImageProp={{ style: { width: 40, height: 40, borderRadius: 50 } }}
         />
       </TouchableOpacity>
     ),
