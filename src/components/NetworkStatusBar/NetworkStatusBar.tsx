@@ -38,7 +38,7 @@ const NetworkStatusBar: React.FC = () => {
     return (
         <View style={[gutters.padding_10,layout.itemsCenter,layout.justifyCenter,layout.absolute,layout.bottom0 ,{ backgroundColor: isInternetReachable ? 'green' : 'red' ,width:"100%"}]}>
             <Text style={[fonts.bold,fonts.gray50]}>
-                { isInternetReachable ? 'Online' : 'Network Error '}
+                { isInternetReachable ? 'Online' : 'Network Error'}
             </Text>
         </View>
     );
