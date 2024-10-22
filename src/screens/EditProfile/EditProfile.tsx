@@ -170,13 +170,12 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       <EditProfileHeader onBack={_handleBack} onUpdate={_onUpdate} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={[ layout.flex_1 ]}
       >
         <ScrollView>
           <View
             style={[
-              layout.flex_1,
               backgrounds.gray30,
-              gutters.paddingVertical_16,
               gutters.paddingHorizontal_24,
               gutters.paddingVertical_16,
               {
@@ -344,7 +343,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                   : ''}
               </Text>
             </View>
-            <View style={[gutters.marginTop_10]}>
+            <View style={[gutters.marginTop_10, gutters.paddingBottom_24]}>
               <SelectField
                 placeholder="Select interests"
                 // value={formik.values.activitesToAdd?.[0]}
