@@ -66,7 +66,7 @@ const Post = (props: IPost) => {
     time,
     image,
     _id,
-    isLikedByMe,
+    isLikedByMe
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
@@ -212,7 +212,7 @@ const Post = (props: IPost) => {
       });
     }
   };
-  
+
   const _gotoPostDetails = () => {
     if(isPending || likePending) return
     navigate("PostDetails", {

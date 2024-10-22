@@ -57,7 +57,6 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   //   };
   // }, [navigation]);
 
-
   useFocusEffect(() => {
     StatusBar.setBackgroundColor('#FE434E00');
     StatusBar.setBarStyle('light-content');
@@ -75,19 +74,30 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   };
 
   const _onClose = () => {
-    StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
-    StatusBar.setBarStyle('dark-content');
-    StatusBar.setTranslucent(false);
-
+    _changeStatusBar();
     navigation.goBack();
   };
 
-  console.log('route.params.location ', route.params.location);
-  console.log('State ', region);
+  const _changeStatusBar = () => {
+    StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setTranslucent(false);
+  };
 
   const _navigateToSearchScreen = () => {
-    console.log('Navigating to LocationSearch');
-    navigation.navigate('LocationSearch');
+    _changeStatusBar();
+    navigation.navigate('LocationSearch', {
+      onSelectLocation: (latitude, longitude) => {
+        setRegion({
+          ...getRegionForCoordinates([
+            {
+              latitude: latitude || location.latitude,
+              longitude: longitude || location.longitude,
+            },
+          ]),
+        });
+      },
+    });
   };
 
   return (
@@ -111,18 +121,22 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
           layout.z1,
           {
             width: '100%',
-            height:120,
-            marginTop: 40,
+            height: 80,
+            marginTop: 60,
           },
         ]}
       >
         <View />
         <View style={[{ width: '80%' }]}>
-          <TouchableOpacity onPress={_navigateToSearchScreen} activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={_navigateToSearchScreen}
+            activeOpacity={0.8}
+          >
             <InputField
               placeholder="Search location"
               editable={false}
               Lefticon={<Search color={colors.black} />}
+              inputHeight={50}
             />
           </TouchableOpacity>
         </View>
@@ -154,8 +168,9 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
       </View>
       <RNMapView
         style={{ ...StyleSheet.absoluteFillObject }}
-        initialRegion={region}
+        region={region}
         onRegionChange={_onRegionChange}
+      
       >
         <Marker
           coordinate={{

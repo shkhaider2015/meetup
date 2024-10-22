@@ -24,6 +24,7 @@ export interface IPostReducer {
   activity?: string;
   isLikedByMe?: boolean;
   user: IPostUser;
+  address?: string;
   createdAt: string;
   updatedAt: string;
 }

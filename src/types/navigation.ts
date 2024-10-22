@@ -60,7 +60,9 @@ export type RootStackParamList = {
   Loading: undefined;
   LocationPermission: undefined;
   Settings: undefined;
-  LocationSearch: undefined;
+  LocationSearch: {
+    onSelectLocation: (lat: number, long:number) => void;
+  };
   PostDetails: {
     postId: string;
   };

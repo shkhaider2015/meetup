@@ -20,6 +20,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
       disable = false,
       rows = 1,
       Lefticon, 
+      inputHeight = 60
     } = props;
     const { borders, backgrounds, gutters, layout, fonts } = useTheme();
     const [isActive, setIsActive] = useState<boolean>(false);
@@ -63,7 +64,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
             backgrounds.gray50,
             borders.w_1,
             borders.gray150,
-            { height: 60 },
+            { height: inputHeight },
           ]}
         >
           <Text style={[fonts.gray300, fontFamily._400_Regular]}>
@@ -86,13 +87,13 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
             borderColor: isError
               ? interpolatedErrorBorderColor
               : interpolatedBorderColor,
-            height: props.multiline ? rows * 60 : 60,
+            height: props.multiline ? rows * inputHeight : inputHeight,
           },
         ]}
       >
         {Lefticon  &&(
           <View style={[layout.justifyCenter, {
-            height:60,
+            height:'100%',
           }]}>
             {Lefticon}
           </View>
@@ -107,7 +108,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
             layout.flex_1,
             fonts.gray800,
             fontFamily._400_Regular,
-            { minHeight: 60, maxHeight: rows * 60 },
+            { minHeight: inputHeight, maxHeight: rows * inputHeight },
           ]}
           placeholderTextColor={fonts.gray200.color}
           selectionColor={fonts.gray800.color}
@@ -116,7 +117,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
         {inputType === 'PASSWORD' && (
           <TouchableOpacity
             onPress={_onPressEyeIcon}
-            style={[layout.justifyCenter, { height: 60 }]}
+            style={[layout.justifyCenter, { height: inputHeight }]}
           >
             {!secureText ? (
               <Show color={backgrounds.gray300.backgroundColor} />
