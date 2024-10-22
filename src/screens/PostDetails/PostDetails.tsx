@@ -86,6 +86,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     time,
     _id,
     isLikedByMe,
+    address,
   } = (data as IPostReducer) || {};
 
   const { isPending, mutate: deleteMutation } = useMutation({
@@ -343,12 +344,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         )}
       />
       <ScrollView>
-        <View
-          style={[
-            backgrounds.gray00,
-            { minHeight: screenHeight },
-          ]}
-        >
+        <View style={[backgrounds.gray00, { minHeight: screenHeight }]}>
           <View style={[gutters.paddingHorizontal_24]}>
             <View
               style={[
@@ -402,16 +398,17 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 backgrounds.gray30,
               ]}
             >
-              <View
-                style={[
-                  layout.row,
-                  gutters.gap_14,
-                  layout.justifyStart,
-                  layout.itemsCenter,
-                ]}
-              >
+              <View style={[layout.row, gutters.gap_14, layout.justifyStart]}>
                 <LocationIcon color={colors.primary3} />
-                <Text style={[fonts.gray300, fontFamily._400_Regular]} >Some Dummy Location, street 3</Text>
+                <Text
+                  style={[
+                    fonts.gray300,
+                    fontFamily._400_Regular,
+                    { width: '90%' },
+                  ]}
+                >
+                  {address}
+                </Text>
               </View>
             </View>
             <View
@@ -433,7 +430,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <DateIcon color={colors.primary3} />
-                <Text style={[fonts.gray300, fontFamily._400_Regular]} >{dayjs(date).format('YYYY-MM-DD')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {dayjs(date).format('YYYY-MM-DD')}
+                </Text>
               </View>
               <View
                 style={[
@@ -444,7 +443,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <Clock color={colors.primary3} />
-                <Text style={[fonts.gray300, fontFamily._400_Regular]} >{dayjs(time).format('hh-mm-ss')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {dayjs(time).format('hh-mm-ss')}
+                </Text>
               </View>
             </View>
           </View>

@@ -64,6 +64,7 @@ import {
   AddLocatioLogo,
   AddTimeLogo,
 } from '@/assets/images';
+import { google } from '@/constants/keys';
 
 const postInitialValues: PostStateType = {
   date: undefined,
@@ -71,6 +72,7 @@ const postInitialValues: PostStateType = {
   location: undefined,
   imageUri: undefined,
   activity: undefined,
+  address: undefined,
 };
 
 const Post = ({ navigation, route }: PostScreenType) => {
@@ -217,13 +219,14 @@ const Post = ({ navigation, route }: PostScreenType) => {
     navigation.navigate('PostLocation', {
       location: myLocation,
       onSelectLocation(lat, long) {
-        setPost((post) => ({
-          ...post,
-          location: {
-            latitude: lat,
-            longitude: long,
-          },
-        }));
+        // setPost((post) => ({
+        //   ...post,
+        //   location: {
+        //     latitude: lat,
+        //     longitude: long,
+        //   },
+        // }));
+        _convertLatLongToAddress(lat, long);
       },
     });
   };
@@ -360,6 +363,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     if (_.isEmpty(post.date)) errors.push('Date');
     if (_.isEmpty(post.time)) errors.push('Time');
     if (_.isEmpty(post.activity)) errors.push('Activity');
+    if (_.isEmpty(post.address)) errors.push('Address');
 
     if (!_.isEmpty(errors)) {
       let message: string = errors.join(',') + ' are required';
@@ -380,6 +384,8 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.time = post.time?.toDate().toISOString();
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
+    postData.address = post.address;
+
 
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
@@ -398,6 +404,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     if (_.isEmpty(post.date)) errors.push('Date');
     if (_.isEmpty(post.time)) errors.push('Time');
     if (_.isEmpty(post.activity)) errors.push('Activity');
+    if (_.isEmpty(post.address)) errors.push('Address');
 
     if (!_.isEmpty(errors)) {
       let message: string = errors.join(',') + ' are required';
@@ -418,6 +425,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.time = post.time?.toDate().toISOString();
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
+    postData.address = post.address;
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
         latitude: post.location.latitude,
@@ -429,6 +437,47 @@ const Post = ({ navigation, route }: PostScreenType) => {
       imageURL: post.imageURL,
     });
     showLoader();
+  };
+
+  const _convertLatLongToAddress = async (lat: number, long: number) => {
+    try {
+      showLoader();
+      const apiKey = google.API_KEY;
+      // Google Maps API URL for reverse geocoding
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.status === 'OK') {
+        const results = data.results;
+        if (results.length > 0) {
+          const address = results[0].formatted_address; // Get the formatted address
+          setPost((pS) => ({
+            ...pS,
+            location: {
+              latitude: lat,
+              longitude: long,
+            },
+            address: address,
+          }));
+        } else {
+          throw new Error('No address found');
+        }
+      } else {
+        throw new Error(data.status);
+      }
+    } catch (error) {
+      console.error(error);
+      setPost((pS) => ({
+        ...pS,
+        location: {
+          latitude: lat,
+          longitude: long,
+        },
+      }));
+    } finally {
+      hideLoader();
+    }
   };
 
   return (
@@ -582,7 +631,22 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 </TouchableOpacity>
               </ImageBackground>
             )}
-
+            {post.address && (
+              <View
+                style={[
+                  layout.row,
+                  layout.justifyStart,
+                  layout.itemsCenter,
+                  gutters.paddingVertical_10,
+                  gutters.gap_10,
+                ]}
+              >
+                <LocationIcon width={25} height={30} color={colors.gray300} />
+                <Text style={[fonts.gray300, gutters.paddingRight_24]}>
+                  {post.address}
+                </Text>
+              </View>
+            )}
             {(post.activity || post.date || post.time) && (
               <View
                 style={[

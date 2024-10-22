@@ -35,5 +35,6 @@ export type PostStateType = {
     time?: Dayjs;
     imageUri?: Asset;
     imageURL?: string;
-    activity?: IActivity
+    activity?: IActivity;
+    address?: string;
 }
