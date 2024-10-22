@@ -26,9 +26,9 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
     let isActivitiesAdded = currentUser.activities.length > 0;
     setTimeout(() => {
       if (!isActivitiesAdded) {
-        navigation.navigate('Ineterests');
+        navigation.replace('Ineterests');
       } else {
-        navigation.navigate('Tabs');
+        navigation.replace('Tabs');
       }
     }, 1000);
   };

@@ -33,11 +33,11 @@ const NotificationScreenPermission = ({
     let isActivitiesAdded = user.activities.length > 0;
     setTimeout(() => {
       if (!isLocationAllowed) {
-        navigation.navigate('LocationPermission');
+        navigation.replace('LocationPermission');
       } else if (!isActivitiesAdded) {
-        navigation.navigate('Ineterests');
+        navigation.replace('Ineterests');
       } else {
-        navigation.navigate('Tabs');
+        navigation.replace('Tabs');
       }
     }, 1000);
   };

@@ -96,11 +96,9 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
   const _checkAccountStatus = async () => {
     try {
       const isJustLoggedIn = getItem<boolean>(localKey.JUST_LOGGED_IN);
-
-      // console.log('Is Just logged in ', isJustLoggedIn, typeof isJustLoggedIn);
-
+      
       if (!isJustLoggedIn) {
-        navigation.navigate('Tabs');
+        navigation.replace('Tabs');
         return;
       } else {
         setItem(localKey.JUST_LOGGED_IN, false);
@@ -110,13 +108,13 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
       let isLocationAllowed = await checkLocationPermission();
       let isActivitiesAdded = currentUser.activities.length > 0;
       if (!isNotificationAllowed) {
-        navigation.navigate('NotificationsPermission');
+        navigation.replace('NotificationsPermission');
       } else if (!isLocationAllowed) {
-        navigation.navigate('LocationPermission');
+        navigation.replace('LocationPermission');
       } else if (!isActivitiesAdded) {
-        navigation.navigate('Ineterests');
+        navigation.replace('Ineterests');
       } else {
-        navigation.navigate('Tabs');
+        navigation.replace('Tabs');
       }
     } catch (error) {}
   };

@@ -109,7 +109,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
           ...StyleSheet.absoluteFillObject,
         }}
         initialRegion={mapState}
-        onRegionChange={_onRegionChange}
+        // onRegionChangeComplete={_onRegionChange}
         zoomControlEnabled={true}
         // loadingEnabled={true}
         // loadingIndicatorColor={colors.primary}

@@ -169,8 +169,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
       <RNMapView
         style={{ ...StyleSheet.absoluteFillObject }}
         region={region}
-        onRegionChange={_onRegionChange}
-      
+        onRegionChangeComplete={_onRegionChange}
       >
         <Marker
           coordinate={{
