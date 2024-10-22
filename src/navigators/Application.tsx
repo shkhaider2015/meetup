@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ProtectedScreens from './Protected';
 import { useEffect, useState } from 'react';
-import  NetworkStatusBar  from '@/components/NetworkStatusBar/NetworkStatusBar';
+import { NetworkStatusBar } from '@/components';
+
 
 function ApplicationNavigator() {
   const { navigationTheme } = useTheme();
