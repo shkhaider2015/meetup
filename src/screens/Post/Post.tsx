@@ -507,7 +507,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
             onPress={_onPressInput}
             onChange={_onChangeText}
           />
-          <View style={[{ flex: 2 }]}>
+          <View style={[{ flex: 3 }]}>
             {post.location && !post.imageUri && !post.imageURL && (
               <View
                 style={[
@@ -655,7 +655,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                   layout.itemsCenter,
                   backgrounds.gray150,
                   borders.rounded_4,
-                  gutters.marginTop_24,
+                  gutters.marginTop_8,
                   gutters.paddingHorizontal_10,
                   gutters.paddingVertical_10,
                 ]}

@@ -11,6 +11,7 @@ import {
   ListRenderItem,
   Dimensions,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { ChevronLeft, Search } from '@/assets/icon';
@@ -25,6 +26,7 @@ interface ISearchData {
   Address: string;
   latitude: number;
   longitude: number;
+  icon: string;
 }
 
 const LocationSearch = ({ route, navigation }: LocationSearchScreenType) => {
@@ -51,15 +53,16 @@ const LocationSearch = ({ route, navigation }: LocationSearchScreenType) => {
       if (data.status === 'OK') {
         const places = data.results;
         const searchData: ISearchData[] = places.map((place: any) => {
-          const { name, formatted_address, geometry } = place;
+          const { name, formatted_address, geometry, icon } = place;
           const searchItem: ISearchData = {
             PlaceName: name,
             Address: formatted_address,
             latitude: geometry?.location?.lat,
             longitude: geometry?.location?.lng,
+            icon: icon,
           };
-          console.log('Address:', searchItem);
-          console.log('------------------------');
+          // console.log('Icon:', icon);
+          // console.log('------------------------');
           return searchItem;
         });
         setSearchData(searchData);
@@ -85,11 +88,19 @@ const LocationSearch = ({ route, navigation }: LocationSearchScreenType) => {
   const renderItem: ListRenderItem<ISearchData> = ({ item }) => (
     <TouchableOpacity
       onPress={() => handleLocationSelect(item)}
-      style={[layout.row]}
+      style={[layout.row, gutters.gap_14, layout.itemsStart]}
       activeOpacity={0.7}
     >
-      <View style={[gutters.marginBottom_12]}>
-        <Text style={[fonts.bold, fonts.size_16]}>{item.PlaceName}</Text>
+      <View>
+        <Image
+          source={{ uri: item.icon }}
+          style={{ width: 20, height: 20, marginTop: 3 }}
+        />
+      </View>
+      <View>
+        <Text style={[fonts.bold, fonts.size_16, fonts.gray300]}>
+          {item.PlaceName}
+        </Text>
         <Text style={[fonts.gray300, fonts.size_12]}>{item.Address}</Text>
       </View>
     </TouchableOpacity>
@@ -149,7 +160,11 @@ const LocationSearch = ({ route, navigation }: LocationSearchScreenType) => {
         }
         ItemSeparatorComponent={({ item, index }) => (
           <View
-            style={[ gutters.marginVertical_10, backgrounds.gray100, { height: 1 }]}
+            style={[
+              gutters.marginVertical_10,
+              backgrounds.gray100,
+              { height: 1 },
+            ]}
           />
         )}
         style={[gutters.paddingBottom_16, gutters.marginTop_24]}

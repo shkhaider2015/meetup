@@ -55,7 +55,6 @@ const Interests = ({ navigation }: InterestsScreenType) => {
         }),
       );
       _onClose();
-      navigation.replace('Tabs');
     },
     onError: (error) => {
       Toast.show({
