@@ -2,6 +2,7 @@ import {
   Clock,
   DateIcon,
   Edit,
+  Envelop,
   Heart,
   LocationIcon,
   MenuHr,
@@ -32,6 +33,7 @@ import {
   convertImageURLforngRok,
   getIconByID,
   getRegionForCoordinates,
+  sharePost,
 } from '@/utils';
 import _ from 'lodash';
 import RNMapView, { Marker } from 'react-native-maps';
@@ -186,31 +188,8 @@ const Post = (props: IPost) => {
   };
 
   const _sharePost = async () => {
-    try {
-      const result = await Share.share({
-        title: 'Meetup Post',
-        message: details + " \nclick on link to see post " + "\nhttps://example.com/post/123",
-        url: 'https://example.com/post/123',
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-          console.log('What is this  ');
-        } else {
-          // shared
-          console.log('Shared ');
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-        console.log('Dont wanna Shared ');
-      }
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to share post',
-        text2: error?.message || 'Something wrong happened',
-      });
-    }
+    // sharePost('Minglee Post', details, `mingleeapp://post/${_id}`)
+    sharePost('Minglee Post', details, `${process.env.DEV_API_URL}post/${_id}`)
   };
 
   const _gotoPostDetails = () => {
@@ -384,7 +363,7 @@ const Post = (props: IPost) => {
               onPress={_onLikeOrDislike}
               disabled={likePending}
             />
-            {/* {user._id !== currentUser._id && ( */}
+
               <Button
                 Icon={
                   <ShareIcon
@@ -398,7 +377,20 @@ const Post = (props: IPost) => {
                 containerStyle={[{ width: 40, height: 40 }]}
                 onPress={_sharePost}
               />
-            {/* )} */}
+
+            <Button
+                Icon={
+                  <Envelop
+                    color={backgrounds.primary.backgroundColor}
+                    width={20}
+                    height={20}
+                  />
+                }
+                isCirculer={true}
+                type="SECONDARY"
+                containerStyle={[{ width: 40, height: 40 }]}
+                onPress={_startChat}
+              />
           </View>
           <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
         </View>

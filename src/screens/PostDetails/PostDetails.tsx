@@ -29,6 +29,7 @@ import {
   convertImageURLforngRok,
   getIconByID,
   getRegionForCoordinates,
+  sharePost,
 } from '@/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -207,35 +208,16 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _sharePost = async () => {
-    try {
-      const result = await Share.share({
-        title: 'Meetup Post',
-        message:
-          details +
-          ' \nclick on link to see post ' +
-          '\nhttps://example.com/post/123',
-        url: 'https://example.com/post/123',
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-          console.log('What is this  ');
-        } else {
-          // shared
-          console.log('Shared ');
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-        console.log('Dont wanna Shared ');
-      }
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to share post',
-        text2: error?.message || 'Something wrong happened',
-      });
-    }
+    sharePost('Minglee Post', details, `mingleeapp://post/${_id}`)
   };
+
+  const _goBack = () => {
+    if(navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.replace("Tabs")
+    }
+  }
 
   if (isLoading) {
     return <PostDetailsPlaceholder />;
@@ -285,7 +267,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     >
       <ChevronLeft
         style={{ marginRight: 20 }}
-        onPress={() => navigation.goBack()}
+        onPress={_goBack}
       />
       <TouchableOpacity onPress={_goToProfile}>
         <Image

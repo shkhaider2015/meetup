@@ -11,6 +11,7 @@ import { IPostReducer } from '@/types/reducer';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   RefreshControl,
@@ -29,16 +30,15 @@ const ListView = ({}: ListViewScreenType) => {
   const { layout, gutters, backgrounds, colors } = useTheme();
   const screenHeight =
     Dimensions.get('window').height -
-    (heights.bottomTabBarHeight +
-      heights.tabNavigationHeader);
+    (heights.bottomTabBarHeight + heights.tabNavigationHeader);
   const dispatch: AppDispatch = useDispatch();
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => {
-      return getAllPost({ userId: user._id});
+      return getAllPost({ userId: user._id });
     },
-    onSuccess: (payload:any) => {
-      const data: IPostReducer[] = payload?.data
+    onSuccess: (payload: any) => {
+      const data: IPostReducer[] = payload?.data;
       console.log('data : ', data?.[0]);
       dispatch(setPosts(data));
       setRefreshData(false);
@@ -74,7 +74,9 @@ const ListView = ({}: ListViewScreenType) => {
           data={posts}
           renderItem={({ item }) => <Post {...item} />}
           keyExtractor={(item, ind) => item._id || ind.toString()}
-          contentContainerStyle={[{ paddingBottom: 40, paddingTop: heights.exploreTabsHeader }]}
+          contentContainerStyle={[
+            { paddingBottom: 40, paddingTop: heights.exploreTabsHeader },
+          ]}
           refreshControl={
             <RefreshControl
               refreshing={refreshData}
@@ -82,8 +84,16 @@ const ListView = ({}: ListViewScreenType) => {
               tintColor={colors.primary}
             />
           }
-          ListEmptyComponent={<EmptyList containerStyle={[ { minHeight: screenHeight } ]} />}
-          
+          ListEmptyComponent={
+            <EmptyList containerStyle={[{ minHeight: screenHeight }]} />
+          }
+          ListHeaderComponent={
+            <View style={[ layout.justifyCenter, layout.itemsCenter ]} >
+              {isPending && (
+                <ActivityIndicator size={'large'} color={colors.primary} style={[ gutters.marginTop_16 ]} />
+              )}
+            </View>
+          }
         />
       </View>
     </SafeScreen>

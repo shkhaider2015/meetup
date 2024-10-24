@@ -82,5 +82,16 @@
 	<string>$(PRODUCT_NAME) wants to access your camera</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to access your camera</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+  		<dict>
+    		<key>CFBundleURLName</key>
+    		<string>com.mingleeapp</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+      			<string>mingleeapp</string>
+    		</array>
+  		</dict>
+	</array>
 </dict>
 </plist>

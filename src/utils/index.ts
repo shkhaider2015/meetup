@@ -1,6 +1,6 @@
 import { activityData } from '@/constants/activities';
 import store from '@/store';
-import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform, Share } from 'react-native';
 import { Asset } from 'react-native-image-picker';
 import {
   request,
@@ -10,6 +10,7 @@ import {
   requestNotifications,
 } from 'react-native-permissions';
 import messaging from '@react-native-firebase/messaging';
+import Toast from 'react-native-toast-message';
 
 export const requestLocationPermission = async () => {
   try {
@@ -202,4 +203,35 @@ export const widthInPercentage = (percentage: number) => {
 export const heightInPercentage = (percentage: number) => {
   const height = Dimensions.get('screen').height;
   return (height * percentage) / 100;
+};
+
+export const sharePost = async (title: string = "Minglee Post", description: string|undefined, redirecrtURL: string) => {
+  try {
+    const result = await Share.share({
+      title: title,
+      message:
+        description +
+        ' \nclick on link to see post ' +
+        `\n ${redirecrtURL}`,
+      url: redirecrtURL,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+        console.log('What is this  ');
+      } else {
+        // shared
+        console.log('Shared ');
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+      console.log('Dont wanna Shared ');
+    }
+  } catch (error: any) {
+    Toast.show({
+      type: 'error',
+      text1: 'Failed to share post',
+      text2: error?.message || 'Something wrong happened',
+    });
+  }
 };

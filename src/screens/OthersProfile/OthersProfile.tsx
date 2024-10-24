@@ -1,5 +1,6 @@
 import { ChevronLeft, Star } from '@/assets/icon';
 import {
+  Header,
   ProfileSectionActivities,
   ProfileSectionDescription,
   ProfileSectionHead,
@@ -41,7 +42,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   const [userPosts, setUserPosts] = useState<IPostReducer[]>([])
 
   const dispatch: AppDispatch = useDispatch();
-  const { layout, gutters, backgrounds, fonts } = useTheme();
+  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
   const { isPending, mutate } = useMutation({
     mutationFn: () => {
       return getUserDetails({
@@ -88,15 +89,35 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
 
   const _goBack = () => {
     navigation.setParams({ userId: undefined });
-    navigation.goBack();
+    if(navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.replace("Tabs")
+    }
   };
 
   const _followUser = () => {};
-  console.log("UserPosts : ", userPosts);
+
+  console.log("UserPosts : ", userId);
 
   return (
     <SafeScreen>
-      <ProfileHeader onBack={_goBack} title={userInfo?.name} />
+      <Header middleComponent={() => <View
+        style={[
+          layout.row,
+          layout.justifyCenter,
+          layout.itemsCenter,
+          gutters.gap_4,
+          {
+            flex: 4
+          }
+        ]}
+      >
+        <Text style={[fonts.gray800, fonts.size_16, fontFamily._700_Bold, gutters.marginTop_4]}>
+          {userInfo?.name}
+        </Text>
+        <Star width={20} height={20} color={colors.blue500} />
+      </View>} />
       <ScrollView>
         <View
           style={[
@@ -123,61 +144,6 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
         </View>
       </ScrollView>
     </SafeScreen>
-  );
-};
-
-const ProfileHeader = ({
-  onBack,
-  title,
-}: {
-  onBack?: () => void;
-  title?: string;
-}) => {
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
-  return (
-    <View
-      style={[
-        layout.row,
-        layout.justifyBetween,
-        layout.itemsCenter,
-        gutters.paddingHorizontal_10,
-        backgrounds.gray00,
-        { height: heights.bottomTabBarHeight },
-      ]}
-    >
-      <View
-        style={[
-          layout.row,
-          layout.justifyStart,
-          layout.itemsCenter,
-          layout.flex_1,
-        ]}
-      >
-        <TouchableOpacity
-          onPress={onBack}
-          style={[gutters.paddingHorizontal_8]}
-        >
-          <ChevronLeft width={25} height={25} />
-        </TouchableOpacity>
-      </View>
-      <View
-        style={[
-          layout.row,
-          layout.justifyCenter,
-          layout.itemsCenter,
-          gutters.gap_4,
-          {
-            flex: 4
-          }
-        ]}
-      >
-        <Text style={[fonts.gray800, fonts.size_24, fontFamily._700_Bold]}>
-          {title}
-        </Text>
-        <Star width={20} height={20} color={colors.blue500} />
-      </View>
-      <View style={[layout.flex_1]}></View>
-    </View>
   );
 };
 

@@ -55,4 +55,5 @@ export { default as ChevronRight } from "@/assets/icons/chevron_right.svg";
 export { default as Key } from '@/assets/icons/key.svg';
 export { default as CheckOutlined } from "@/assets/icons/check_outlined.svg"
 export { default as Hide } from "@/assets/icons/Eye2.svg" ;
-export { default as Show } from "@/assets/icons/Eye2Slash.svg" 
+export { default as Show } from "@/assets/icons/Eye2Slash.svg";
+export { default as Envelop } from '@/assets/icons/envelop.svg';

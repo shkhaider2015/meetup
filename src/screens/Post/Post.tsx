@@ -507,7 +507,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
             onPress={_onPressInput}
             onChange={_onChangeText}
           />
-          <View style={[{ flex: 3 }]}>
+          <View style={[{ flex: 3}]}>
             {post.location && !post.imageUri && !post.imageURL && (
               <View
                 style={[
@@ -519,7 +519,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                   layout.relative,
                   {
                     width: '100%',
-                    height: '70%',
+                    height: '60%',
                     borderRadius: 20,
                   },
                 ]}
@@ -572,7 +572,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 source={{ uri: convertImageURLforngRok(post.imageURL) }}
                 style={{
                   width: '100%',
-                  height: '70%',
+                  height: '60%',
                   position: 'relative',
                 }}
                 imageStyle={[borders.rounded_16]}
@@ -604,7 +604,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 source={{ uri: post.imageUri.uri }}
                 style={{
                   width: '100%',
-                  height: '70%',
+                  height: '60%',
                   position: 'relative',
                 }}
                 imageStyle={[borders.rounded_16]}
