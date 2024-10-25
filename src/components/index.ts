@@ -12,4 +12,5 @@ export { default as DetailText } from '@/components/DetailText/DetailText';
 export { default as EmptyList } from '@/components/EmptyList/EmptyList';
 export { default as Header } from '@/components/Header/Header';
 export { default as SettingsItem } from '@/components/SettingsItem/SettingsItem';
-export { default as PostMenu } from '@/components/PostMenu/PostMenu'
+export { default as PostMenu } from '@/components/PostMenu/PostMenu';
+export { default as MessageRequestItem } from '@/components/MessageRequestItem/MessageRequestItem';

@@ -14,6 +14,7 @@ import {
   Settings,
   PostDetails,
   LocationSearch,
+  MessageRequests,
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -28,6 +29,8 @@ import { getItem } from '@/storage';
 import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
+import MessageRequestTabNavigator from '../MessageRequestTabNavigator';
+import { Header } from '@/components';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -72,6 +75,10 @@ const ProtectedScreens = () => {
         initialParams={{ postId: undefined }}
       />
       <Stack.Screen name="LocationSearch" component={LocationSearch} />
+      <Stack.Screen name="MessageRequests" component={MessageRequestTabNavigator} options={{
+        headerShown: true,
+        header: () => <Header label='Message Requests' />
+      }} />
     </Stack.Navigator>
   );
 };

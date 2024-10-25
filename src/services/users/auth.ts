@@ -363,8 +363,7 @@ export const updateFCMToken = async (data: {
         headers: {
           Authorization: `Bearer ${authToken}`, // Add your Authorization token here
         },
-      },
-    )
+      })
       .json();
 
     return response?.payload;

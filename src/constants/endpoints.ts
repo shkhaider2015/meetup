@@ -25,6 +25,11 @@ const APIEndPoints = {
   POST: 'post',
   ALL_POST_BY_USER: 'post/user',
   LIKE_OR_DISLIKE: 'post/like',
+
+  // Chat
+  MESSAGE_REQUEST: 'user/message/request',
+  MESSAGE_REQUEST_SENDER: 'user/message/request/sender',
+  MESSAGE_REQUEST_RECEIVER: 'user/message/request/receiver'
 };
 
 export default APIEndPoints;

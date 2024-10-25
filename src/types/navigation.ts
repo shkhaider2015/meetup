@@ -66,11 +66,17 @@ export type RootStackParamList = {
   PostDetails: {
     postId: string;
   };
+  MessageRequests: undefined
 };
 
 export type ExploreTabsParamList = {
   MapView: undefined;
   ListView: undefined;
+};
+
+export type MessageRequestTabsParamList = {
+  Received: undefined;
+  Sent: undefined;
 };
 
 export type NavigationHookProps = NativeStackNavigationProp<RootStackParamList>;

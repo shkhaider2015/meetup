@@ -1,4 +1,4 @@
-import { Dummy_Joe, Dummy_Johnson2, Dummy_LaraBeu2, Dummy_Maxwell, Dummy_Meetup, DummyFarnese, DummyLaraBeu, DummyMeetupBell, DummyMercey } from "@/assets/dummyImages";
+import { Dummy_Joe, Dummy_Johnson2, Dummy_LaraBeu2, Dummy_Maxwell, Dummy_Meetup, DummyFarnese, DummyLaraBeu, DummyMeetupBell } from "@/assets/dummyImages";
 import { NotificationItem } from "@/components";
 import { SafeScreen } from "@/components/template";
 import { useTheme } from "@/theme";
@@ -111,7 +111,7 @@ const dummyData:INotificationItem[] = [
     user_name: "Mercy",
     created_at: "14:28 6 april",
     notification: "Mercy saved your activity.",
-    image: DummyMercey
+    image: DummyFarnese
   }
 ]
 

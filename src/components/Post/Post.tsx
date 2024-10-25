@@ -56,6 +56,7 @@ import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import PostMenu from '../PostMenu/PostMenu';
+import { sendMessageRequest } from '@/services/Chat';
 
 const Post = (props: IPost) => {
   const {
@@ -68,7 +69,7 @@ const Post = (props: IPost) => {
     time,
     image,
     _id,
-    isLikedByMe
+    isLikedByMe,
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
@@ -121,6 +122,30 @@ const Post = (props: IPost) => {
     },
   });
 
+  const { isPending: startChatPending, mutate: startChatMutate } = useMutation({
+    mutationFn: () => {
+      return sendMessageRequest({
+        sender: currentUser._id,
+        receiver: user._id,
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Message request send to user',
+        text2:
+          'Once end user accept your request you will be able to start chat with him',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to start chat with user',
+        text2: error.message,
+      });
+    },
+  });
+
   const Icon = getIconByID(activity || '');
 
   const _onBottomSheetOpen = () => {
@@ -168,19 +193,20 @@ const Post = (props: IPost) => {
   };
 
   const _startChat = async () => {
-    try {
-      const cometChatUser: CometChat.User = await CometChat.getUser(
-        user.cometchat.id,
-      );
-      navigate('Messages', {
-        chatWith: cometChatUser,
-      });
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error?.message || "Can't start chat with this user",
-      });
-    }
+    startChatMutate();
+    // try {
+    //   const cometChatUser: CometChat.User = await CometChat.getUser(
+    //     user.cometchat.id,
+    //   );
+    //   navigate('Messages', {
+    //     chatWith: cometChatUser,
+    //   });
+    // } catch (error: any) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: error?.message || "Can't start chat with this user",
+    //   });
+    // }
   };
 
   const _onLikeOrDislike = () => {
@@ -189,15 +215,15 @@ const Post = (props: IPost) => {
 
   const _sharePost = async () => {
     // sharePost('Minglee Post', details, `mingleeapp://post/${_id}`)
-    sharePost('Minglee Post', details, `${process.env.DEV_API_URL}post/${_id}`)
+    sharePost('Minglee Post', details, `${process.env.DEV_API_URL}post/${_id}`);
   };
 
   const _gotoPostDetails = () => {
-    if(isPending || likePending) return
-    navigate("PostDetails", {
-      postId: _id
-    })
-  }
+    if (isPending || likePending) return;
+    navigate('PostDetails', {
+      postId: _id,
+    });
+  };
 
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
@@ -364,33 +390,34 @@ const Post = (props: IPost) => {
               disabled={likePending}
             />
 
-              <Button
-                Icon={
-                  <ShareIcon
-                    color={backgrounds.primary.backgroundColor}
-                    width={20}
-                    height={20}
-                  />
-                }
-                isCirculer={true}
-                type="SECONDARY"
-                containerStyle={[{ width: 40, height: 40 }]}
-                onPress={_sharePost}
-              />
+            <Button
+              Icon={
+                <ShareIcon
+                  color={backgrounds.primary.backgroundColor}
+                  width={20}
+                  height={20}
+                />
+              }
+              isCirculer={true}
+              type="SECONDARY"
+              containerStyle={[{ width: 40, height: 40 }]}
+              onPress={_sharePost}
+            />
 
             <Button
-                Icon={
-                  <Envelop
-                    color={backgrounds.primary.backgroundColor}
-                    width={20}
-                    height={20}
-                  />
-                }
-                isCirculer={true}
-                type="SECONDARY"
-                containerStyle={[{ width: 40, height: 40 }]}
-                onPress={_startChat}
-              />
+              Icon={
+                <Envelop
+                  color={backgrounds.primary.backgroundColor}
+                  width={20}
+                  height={20}
+                />
+              }
+              isCirculer={true}
+              type="SECONDARY"
+              containerStyle={[{ width: 40, height: 40 }]}
+              onPress={_startChat}
+              disabled={startChatPending}
+            />
           </View>
           <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
         </View>

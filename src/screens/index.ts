@@ -23,3 +23,4 @@ export { default as LocationPermission } from './LocationPermission/LocationPerm
 export { default as Settings } from './Settings/Settings';
 export { default as PostDetails } from "@/screens/PostDetails/PostDetails";
 export { default as LocationSearch } from './LocationSearch/LocationSearch';
+export { default as MessageRequests } from './MessageRequests/MessageRequest';

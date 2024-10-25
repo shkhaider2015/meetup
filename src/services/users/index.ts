@@ -9,5 +9,7 @@ export {
   forgetPasswordApply,
   forgetPasswordOTP,
   changePassword,
-  updateProfile
+  updateProfile,
+  getUserDetails,
+  updateFCMToken
 } from './auth';
