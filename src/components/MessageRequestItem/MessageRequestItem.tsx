@@ -9,11 +9,24 @@ import { EMessageRequestStatus } from '@/types/reducer';
 import { updateMessageRequestStatus } from '@/services/Chat';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationHookProps } from '@/types/navigation';
 
 const MessageRequestItem = (props: IMessageRequestItem) => {
-  const { _id, message, sender, receiver, createdAt, type, onAccept, onDecline } = props;
-  const user = type === "RECEIVER" ? sender : receiver;
+  const {
+    _id,
+    message,
+    sender,
+    receiver,
+    createdAt,
+    type,
+    onAccept,
+    onDecline,
+  } = props;
+  const user = type === 'RECEIVER' ? sender : receiver;
   const { layout, gutters, backgrounds, fonts, colors, borders } = useTheme();
+  const navigation = useNavigation<NavigationHookProps>();
 
   const [isLoading, setIsLoading] = useState<EMessageRequestStatus>();
 
@@ -24,10 +37,26 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
         status,
       });
     },
-    onSuccess: (data, vaiables) => {
-      if (vaiables === EMessageRequestStatus.ACCEPTED) onAccept?.(_id);
+    onSuccess: async (data, vaiables) => {
+      if (vaiables === EMessageRequestStatus.ACCEPTED) {
+        try {
+          const cometChatUser: CometChat.User = await CometChat.getUser(
+            user.cometchat.id,
+          );
+          navigation.navigate('Messages', {
+            chatWith: cometChatUser,
+          });
+        } catch (error: any) {
+          Toast.show({
+            type: 'error',
+            text1: error?.message || "Can't start chat with this user",
+          });
+        } finally {
+          onAccept?.(_id);
+          setIsLoading(EMessageRequestStatus.PENDING);
+        }
+      }
       if (vaiables === EMessageRequestStatus.DECLINED) onDecline?.(_id);
-      setIsLoading(EMessageRequestStatus.PENDING);
     },
     onError: (error) => {
       setIsLoading(EMessageRequestStatus.PENDING);
@@ -48,6 +77,7 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
     setIsLoading(EMessageRequestStatus.DECLINED);
     mutate(EMessageRequestStatus.DECLINED);
   };
+
 
   return (
     <View
@@ -149,16 +179,16 @@ interface IMessageRequestItem {
     name: string;
     profileImage: string;
     cometchat: {
-      id: string
-    }
+      id: string;
+    };
   };
   receiver: {
     _id: string;
     name: string;
     profileImage: string;
     cometchat: {
-      id: string
-    }
+      id: string;
+    };
   };
   type: 'SENDER' | 'RECEIVER';
   onAccept?: (id: string) => void;
