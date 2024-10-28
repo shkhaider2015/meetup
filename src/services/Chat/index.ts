@@ -11,7 +11,7 @@ export const sendMessageRequest = async (reqData: { sender: string; receiver: st
       })
       .json();
 
-    return response?.payload;
+    return response;
   } catch (error: any) {
     if (error?.response) {
       const errorData = await error.response.json();
