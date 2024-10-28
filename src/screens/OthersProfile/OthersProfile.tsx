@@ -1,4 +1,4 @@
-import { ChevronLeft, Star } from '@/assets/icon';
+import { ChevronLeft, Star, Tick } from '@/assets/icon';
 import {
   Header,
   ProfileSectionActivities,
@@ -116,7 +116,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
         <Text style={[fonts.gray800, fonts.size_16, fontFamily._700_Bold, gutters.marginTop_4]}>
           {userInfo?.name}
         </Text>
-        <Star width={20} height={20} color={colors.blue500} />
+        <Tick width={15} height={15} />
       </View>} />
       <ScrollView>
         <View

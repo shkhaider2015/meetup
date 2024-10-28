@@ -11,6 +11,7 @@ import {
   Tab_Post_Default,
   Tab_Profile_Default,
   Tab_Profile_Selected,
+  Tick,
 } from '@/assets/icon';
 import { ExploreHeader, MeetupIcon } from '@/assets/images';
 import { Button } from '@/components/template';
@@ -217,7 +218,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
           justifyContent: 'center',
           alignItems: 'center',
           height: '100%',
-          columnGap: 5,
+          columnGap: 6,
         }}
       >
         <Text
@@ -225,11 +226,12 @@ const profileOptions = (): BottomTabNavigationOptions => {
             fontFamily: fontFamily._700_Bold.fontFamily,
             fontSize: 17,
             color: '#000000',
+            marginTop: 3
           }}
         >
           {userName}
         </Text>
-        <Star width={20} height={20} color={colors.blue500} />
+        <Tick width={15} height={15} />
       </View>
     ),
     // headerStyle: {
