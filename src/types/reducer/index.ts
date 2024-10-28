@@ -22,9 +22,10 @@ export interface IPostReducer {
   date?: Date;
   time?: Date;
   activity?: string;
-  isLikedByMe?: boolean;
   user: IPostUser;
   address?: string;
+  isLikedByMe?: boolean;
+  isChatStarts?: boolean;
   createdAt: string;
   updatedAt: string;
 }

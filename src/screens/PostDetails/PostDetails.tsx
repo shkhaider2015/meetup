@@ -3,6 +3,7 @@ import {
   Clock,
   Close,
   DateIcon,
+  Envelop,
   Heart,
   LocationIcon,
   MenuHr,
@@ -58,6 +59,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import PostDetailsPlaceholder from './Postdetails.placeholder';
 import { useEffect, useState } from 'react';
 import { queryClient } from '@/App';
+import { sendMessageRequest } from '@/services/Chat';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
@@ -69,6 +71,8 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { showLoader, hideLoader } = useLoader();
+
+  const [chatLoading, setChatLoading] = useState(false);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['postdetail', postId],
@@ -88,6 +92,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     _id,
     isLikedByMe,
     address,
+    isChatStarts,
   } = (data as IPostReducer) || {};
 
   const { isPending, mutate: deleteMutation } = useMutation({
@@ -145,6 +150,30 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     },
   });
 
+  const { isPending: startChatPending, mutate: startChatMutate } = useMutation({
+    mutationFn: () => {
+      return sendMessageRequest({
+        sender: currentUser._id,
+        receiver: user._id,
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Message request send to user',
+        text2:
+          'Once end user accept your request you will be able to start chat with him',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to start chat with user',
+        text2: error.message,
+      });
+    },
+  });
+
   const Icon = getIconByID(activity || '');
 
   const _goToProfile = () => {
@@ -188,18 +217,25 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _startChat = async () => {
-    try {
-      const cometChatUser: CometChat.User = await CometChat.getUser(
-        user.cometchat.id,
-      );
-      navigation.navigate('Messages', {
-        chatWith: cometChatUser,
-      });
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error?.message || "Can't start chat with this user",
-      });
+    if (!isChatStarts) {
+      startChatMutate();
+    } else {
+      try {
+        setChatLoading(true);
+        const cometChatUser: CometChat.User = await CometChat.getUser(
+          user.cometchat.id,
+        );
+        navigation.navigate('Messages', {
+          chatWith: cometChatUser,
+        });
+      } catch (error: any) {
+        Toast.show({
+          type: 'error',
+          text1: error?.message || "Can't start chat with this user",
+        });
+      } finally {
+        setChatLoading(false);
+      }
     }
   };
 
@@ -208,16 +244,16 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _sharePost = async () => {
-    sharePost('Minglee Post', details, `mingleeapp://post/${_id}`)
+    sharePost('Minglee Post', details, `mingleeapp://post/${_id}`);
   };
 
   const _goBack = () => {
-    if(navigation.canGoBack()) {
-      navigation.goBack()
+    if (navigation.canGoBack()) {
+      navigation.goBack();
     } else {
-      navigation.replace("Tabs")
+      navigation.replace('Tabs');
     }
-  }
+  };
 
   if (isLoading) {
     return <PostDetailsPlaceholder />;
@@ -265,10 +301,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         gutters.paddingHorizontal_10,
       ]}
     >
-      <ChevronLeft
-        style={{ marginRight: 20 }}
-        onPress={_goBack}
-      />
+      <ChevronLeft style={{ marginRight: 20 }} onPress={_goBack} />
       <TouchableOpacity onPress={_goToProfile}>
         <Image
           imageURL={convertImageURLforngRok(user.profileImage)}
@@ -500,6 +533,22 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   containerStyle={[{ width: 40, height: 40 }]}
                   onPress={_sharePost}
                 />
+                {currentUser._id !== user._id && (
+                  <Button
+                    Icon={
+                      <Envelop
+                        color={isChatStarts ? colors.primary : colors.gray250}
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    isCirculer={true}
+                    type="SECONDARY"
+                    containerStyle={[{ width: 40, height: 40 }]}
+                    onPress={_startChat}
+                    disabled={startChatPending || chatLoading}
+                  />
+                )}
               </View>
               <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
             </View>

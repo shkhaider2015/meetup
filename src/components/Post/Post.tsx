@@ -70,10 +70,11 @@ const Post = (props: IPost) => {
     image,
     _id,
     isLikedByMe,
+    isChatStarts,
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
-  const [favorite, setFavorite] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const { layout, gutters, fonts, backgrounds, colors, borders } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
@@ -193,20 +194,26 @@ const Post = (props: IPost) => {
   };
 
   const _startChat = async () => {
-    startChatMutate();
-    // try {
-    //   const cometChatUser: CometChat.User = await CometChat.getUser(
-    //     user.cometchat.id,
-    //   );
-    //   navigate('Messages', {
-    //     chatWith: cometChatUser,
-    //   });
-    // } catch (error: any) {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: error?.message || "Can't start chat with this user",
-    //   });
-    // }
+    if (!isChatStarts) {
+      startChatMutate();
+    } else {
+      try {
+        setChatLoading(true);
+        const cometChatUser: CometChat.User = await CometChat.getUser(
+          user.cometchat.id,
+        );
+        navigate('Messages', {
+          chatWith: cometChatUser,
+        });
+      } catch (error: any) {
+        Toast.show({
+          type: 'error',
+          text1: error?.message || "Can't start chat with this user",
+        });
+      } finally {
+        setChatLoading(false);
+      }
+    }
   };
 
   const _onLikeOrDislike = () => {
@@ -404,20 +411,22 @@ const Post = (props: IPost) => {
               onPress={_sharePost}
             />
 
-            <Button
-              Icon={
-                <Envelop
-                  color={backgrounds.primary.backgroundColor}
-                  width={20}
-                  height={20}
-                />
-              }
-              isCirculer={true}
-              type="SECONDARY"
-              containerStyle={[{ width: 40, height: 40 }]}
-              onPress={_startChat}
-              disabled={startChatPending}
-            />
+            {currentUser._id !== user._id && (
+              <Button
+                Icon={
+                  <Envelop
+                    color={isChatStarts ? colors.primary : colors.gray250}
+                    width={20}
+                    height={20}
+                  />
+                }
+                isCirculer={true}
+                type="SECONDARY"
+                containerStyle={[{ width: 40, height: 40 }]}
+                onPress={_startChat}
+                disabled={startChatPending || chatLoading}
+              />
+            )}
           </View>
           <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
         </View>
