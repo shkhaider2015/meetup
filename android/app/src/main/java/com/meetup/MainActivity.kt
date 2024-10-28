@@ -1,12 +1,11 @@
 package com.meetup
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import org.devio.rn.splashscreen.SplashScreen;
 
 class MainActivity : ReactActivity() {
 
@@ -17,13 +16,8 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "meetup"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SplashScreen.show(this);  // add this
         super.onCreate(savedInstanceState)
-
-        // Adding a delay of 2 seconds using a Handler before loading the main component
-        Handler(Looper.getMainLooper()).postDelayed({
-            // Code to execute after the delay (after 2 seconds)
-            // Here, the main component will render as usual after the delay
-        }, 10000) // 2000 milliseconds = 2 seconds
     }
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
