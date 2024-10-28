@@ -130,11 +130,12 @@ const Post = (props: IPost) => {
         receiver: user._id,
       });
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       Toast.show({
         type: 'success',
-        text1: 'Message request send to user',
+        text1: 'Message request sent successfully',
         text2:
+          data?.message ||
           'Once end user accept your request you will be able to start chat with him',
       });
     },
