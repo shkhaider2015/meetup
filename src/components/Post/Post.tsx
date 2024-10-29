@@ -271,12 +271,16 @@ const Post = (props: IPost) => {
             />
           </TouchableOpacity>
           <View style={[layout.col, gutters.marginHorizontal_12]}>
-            <TouchableOpacity onPress={_goToProfile}>
+            <TouchableOpacity
+              style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
+              onPress={_goToProfile}
+            >
               <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+              <Tick />
             </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
               <Text style={[fonts.size_12, fonts.gray200]}>3km</Text>
-              <Tick />
+              {/* <Tick /> */}
             </View>
           </View>
           {Icon && (
@@ -292,12 +296,16 @@ const Post = (props: IPost) => {
             </View>
           )}
         </View>
-        <TouchableOpacity
-          onPress={_onBottomSheetOpen}
-          style={[gutters.padding_8]}
-        >
-          <MenuHr color={colors.gray250} />
-        </TouchableOpacity>
+        <View>
+          {currentUser._id === user._id && (
+            <TouchableOpacity
+              onPress={_onBottomSheetOpen}
+              style={[gutters.padding_8]}
+            >
+              <MenuHr color={colors.gray250} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
       <TouchableOpacity
         activeOpacity={0.8}

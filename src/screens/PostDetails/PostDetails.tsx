@@ -298,7 +298,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         layout.row,
         layout.justifyStart,
         layout.itemsCenter,
-        gutters.paddingHorizontal_10,
+        gutters.paddingLeft_10,
       ]}
     >
       <ChevronLeft style={{ marginRight: 20 }} onPress={_goBack} />
@@ -316,12 +316,15 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         />
       </TouchableOpacity>
       <View style={[layout.col, gutters.marginHorizontal_12]}>
+        <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
         <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
           {user.name}
         </Text>
+        <Tick />
+        </View>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
           <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
-          <Tick />
+          {/* <Tick /> */}
         </View>
       </View>
       {Icon && (
@@ -346,15 +349,18 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         rightComponnent={() => (
           <View
             style={[
-              gutters.paddingRight_24,
+              gutters.paddingRight_12,
               layout.itemsCenter,
               layout.justifyCenter,
             ]}
           >
-            <MenuHr
+            {
+              currentUser._id === user._id && <MenuHr
               color={colors.gray300}
               onPress={() => _onBottomSheetOpen()}
             />
+            }
+            
           </View>
         )}
       />
