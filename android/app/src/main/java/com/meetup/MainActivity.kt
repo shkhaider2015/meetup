@@ -16,7 +16,7 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "meetup"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        SplashScreen.show(this);  // add this
+        SplashScreen.show(this, R.style.SplashTheme, true);  // add this
         super.onCreate(savedInstanceState)
     }
   /**

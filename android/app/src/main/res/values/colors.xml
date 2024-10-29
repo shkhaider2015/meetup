@@ -2,5 +2,5 @@
 <resources>
     <color name="splashscreen_bg">#FE434E</color>
     <color name="navigation_bar" >#FFFFFF</color>
-    <color name="statusbar_bg">#FE434E</color>
+    <color name="primary">#FE434E</color>
 </resources>
