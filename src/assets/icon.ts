@@ -57,3 +57,4 @@ export { default as CheckOutlined } from "@/assets/icons/check_outlined.svg"
 export { default as Hide } from "@/assets/icons/Eye2.svg" ;
 export { default as Show } from "@/assets/icons/Eye2Slash.svg";
 export { default as Envelop } from '@/assets/icons/envelop.svg';
+export { default as SettingsIcon } from '@/assets/icons/Setting_line_light.svg';

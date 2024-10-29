@@ -1,6 +1,7 @@
 import {
   MenuHr,
   Search,
+  SettingsIcon,
   Star,
   Tab_Chat_Default,
   Tab_Chat_Selected,
@@ -30,7 +31,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import { Platform } from 'react-native';
-import { Image as FastImage } from "@/components/template"
+import { Image as FastImage } from '@/components/template';
 import { convertImageURLforngRok } from '@/utils';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -118,7 +119,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
   );
 
   const navigation = useNavigation<NavigationHookProps>();
-  const { colors } = useTheme()
+  const { colors } = useTheme();
 
   return {
     headerTitle: '',
@@ -150,7 +151,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
       >
         <FastImage
           imageURL={convertImageURLforngRok(profile_image)}
-          containerStyle={{ width: 40, height: 40, borderRadius: 50}}
+          containerStyle={{ width: 40, height: 40, borderRadius: 50 }}
           fastImageProp={{ style: { width: 40, height: 40, borderRadius: 50 } }}
         />
       </TouchableOpacity>
@@ -195,20 +196,26 @@ const notificationOptions: BottomTabNavigationOptions = {
 const profileOptions = (): BottomTabNavigationOptions => {
   const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
-  const { colors } = useTheme();
+  const { layout } = useTheme();
   return {
     headerLeft: () => {
       return <View />;
     },
     headerRight: () => {
       return (
-        <Button
-          Icon={<MenuHr width={17} height={17} color={'#000000'} />}
-          type="SECONDARY"
-          isCirculer={true}
-          containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}
+        <TouchableOpacity
+          style={[{ width: 35, height: 35 }, layout.row, layout.justifyCenter, layout.itemsCenter ]}
           onPress={() => navigation.navigate('Settings')}
-        />
+        >
+          <SettingsIcon width={22} height={22}  />
+        </TouchableOpacity>
+        // <Button
+        //   Icon={<MenuHr width={17} height={17} color={'#000000'} />}
+        //   type="SECONDARY"
+        //   isCirculer={true}
+        //   containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}
+        //   onPress={() => navigation.navigate('Settings')}
+        // />
       );
     },
     headerTitle: (props) => (
@@ -226,7 +233,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
             fontFamily: fontFamily._700_Bold.fontFamily,
             fontSize: 17,
             color: '#000000',
-            marginTop: 3
+            marginTop: 3,
           }}
         >
           {userName}
