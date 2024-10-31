@@ -14,8 +14,6 @@ const NetworkStatusBar: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      const isInitialState = isInternetReachable === null;
-      console.log('Network state changed:', isInitialState, state.isConnected);
       if (state.isConnected) {
         if (!initialLoad && !isInternetReachable) {
           // Show success message only after reconnection following network loss
@@ -30,7 +28,6 @@ const NetworkStatusBar: React.FC = () => {
         setVisible(true);
       }
       setInitialLoad(false);
-      console.log(state.isInternetReachable ? 'Online' : 'Network Error');
     });
 
     return () => {
