@@ -5,3 +5,10 @@ export const google = {
 export const localKey = {
     JUST_LOGGED_IN : 'JUST_LOGGED_IN'
 }
+
+export const DEEP_LINK_IDS = [
+    'home',
+    'user',
+    'post',
+    'chat'
+]

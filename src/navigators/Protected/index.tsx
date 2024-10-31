@@ -14,6 +14,7 @@ import {
   Settings,
   PostDetails,
   LocationSearch,
+  MessageRequests,
 } from '@/screens';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -28,50 +29,12 @@ import { getItem } from '@/storage';
 import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
+import MessageRequestTabNavigator from '../MessageRequestTabNavigator';
+import { Header } from '@/components';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const ProtectedScreens = () => {
-  // const dispatch: AppDispatch = useDispatch();
-  // const isFirstTimeLoggedIn = false;
-  // const { mutate: loadUserMutation } = useMutation({
-  //   mutationFn: (token: string) => {
-  //     return loadUser(token);
-  //   },
-  //   onError: (error) => {
-  //     if (error?.message?.includes('expired')) {
-  //       Toast.show({
-  //         type: 'error',
-  //         text1: 'Session Expired',
-  //         text2: error?.message,
-  //       });
-
-  //       setTimeout(() => {
-  //         dispatch(clearUser());
-  //       }, 500);
-  //     }
-  //   },
-  //   onSuccess: (data: any) => {
-  //     console.log('Load User Data ', data);
-  //     const user: IUserReducer = {
-  //       ...data,
-  //       profileImage: convertImageURLforngRok(data.profileImage),
-  //       isLoggedIn: true,
-  //     };
-  //     dispatch(setUser(user));
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   const initializeUser = () => {
-  //     const user: any = getItem(USER);
-  //     if (user.token) {
-  //       loadUserMutation(user.token);
-  //     }
-  //   };
-  //   initializeUser();
-  // }, [dispatch]);
-
   return (
     <Stack.Navigator
       initialRouteName={'Loading'}
@@ -112,6 +75,10 @@ const ProtectedScreens = () => {
         initialParams={{ postId: undefined }}
       />
       <Stack.Screen name="LocationSearch" component={LocationSearch} />
+      <Stack.Screen name="MessageRequests" component={MessageRequestTabNavigator} options={{
+        headerShown: true,
+        header: () => <Header label='Message Requests' />
+      }} />
     </Stack.Navigator>
   );
 };

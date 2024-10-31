@@ -12,6 +12,7 @@ export interface IInputFieldProps extends TextInputProps {
     disable?: boolean;
     rows?: number;
     Lefticon?: React.ReactElement;
+    inputHeight?: number
 }
 
 type InputTypes = "TEXT" | "PASSWORD" | "NUMBER"

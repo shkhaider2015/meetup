@@ -3,33 +3,43 @@ import {
   Clock,
   Close,
   DateIcon,
+  Envelop,
   Heart,
   LocationIcon,
   MenuHr,
-  Share,
+  Share as ShareIcon,
   Tick,
 } from '@/assets/icon';
 import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
-import { Header } from '@/components';
+import { Header, PostMenu } from '@/components';
 import { Button, Image, SafeScreen } from '@/components/template';
-import { getPostById } from '@/services/posts/indes';
-import { RootState } from '@/store';
+import { activityData } from '@/constants/activities';
+import { useGlobalBottomSheet, useLoader } from '@/hooks';
+import {
+  getPostById,
+  deletePost as deletePostService,
+  likeOrDislikePost,
+} from '@/services/posts/indes';
+import { AppDispatch, RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
+import { PostStateType } from '@/types/screens/post';
 import {
   convertImageURLforngRok,
   getIconByID,
   getRegionForCoordinates,
+  sharePost,
 } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import LottieView from 'lottie-react-native';
 import {
   Dimensions,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -37,23 +47,132 @@ import {
 } from 'react-native';
 import RNMapView, { Marker } from 'react-native-maps';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  deletePost as deletePostAction,
+  updatePost,
+} from '@/store/slices/postSlice';
+import { CometChat } from '@cometchat/chat-sdk-react-native';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import PostDetailsPlaceholder from './Postdetails.placeholder';
+import { useEffect, useState } from 'react';
+import { queryClient } from '@/App';
+import { sendMessageRequest } from '@/services/Chat';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
 
   const currentUser = useSelector((state: RootState) => state.user);
+  const dispatch: AppDispatch = useDispatch();
   const screenHeight =
     Dimensions.get('screen').height - heights.tabNavigationHeader;
   const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
-  const { data, error, isLoading } = useQuery({
+  const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
+  const { showLoader, hideLoader } = useLoader();
+
+  const [chatLoading, setChatLoading] = useState(false);
+
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['postdetail', postId],
-    queryFn: () => getPostById(postId),
+    queryFn: () => getPostById({ id: postId, userId: currentUser._id }),
     enabled: !!postId,
   });
 
-  const { user, activity, image, location, createdAt, details, date, time } =
-    (data as IPostReducer) || {};
+  const {
+    user,
+    activity,
+    image,
+    location,
+    createdAt,
+    details,
+    date,
+    time,
+    _id,
+    isLikedByMe,
+    address,
+    isChatStarts,
+  } = (data as IPostReducer) || {};
+
+  const { isPending, mutate: deleteMutation } = useMutation({
+    mutationFn: () => {
+      return deletePostService(_id, currentUser._id);
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Your post deleted successfully',
+      });
+      hideLoader();
+      dispatch(deletePostAction({ id: _id }));
+      navigation.goBack();
+    },
+    onError: (error) => {
+      hideLoader();
+      Toast.show({
+        type: 'error',
+        text1: 'Post Deletion Failed',
+        text2: error.message,
+      });
+    },
+  });
+
+  const { isPending: likePending, mutate: likeMutation } = useMutation({
+    mutationFn: () => {
+      return likeOrDislikePost({
+        userId: currentUser._id,
+        postId: _id,
+        isLike: !isLikedByMe,
+      });
+    },
+    onSuccess: async (data) => {
+      dispatch(updatePost(data));
+      queryClient.setQueryData(
+        ['postdetail', postId],
+        (oldData: IPostReducer | undefined) => {
+          if (!oldData) return oldData;
+
+          // Return the updated post with new 'isLikedByMe' status
+          return {
+            ...oldData,
+            isLikedByMe: data?.isLikedByMe, // Toggle like status in the cached data
+          };
+        },
+      );
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: error.name,
+        text2: error.message,
+      });
+    },
+  });
+
+  const { isPending: startChatPending, mutate: startChatMutate } = useMutation({
+    mutationFn: () => {
+      return sendMessageRequest({
+        sender: currentUser._id,
+        receiver: user._id,
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Message request send to user',
+        text2:
+          'Once end user accept your request you will be able to start chat with him',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to start chat with user',
+        text2: error.message,
+      });
+    },
+  });
 
   const Icon = getIconByID(activity || '');
 
@@ -67,32 +186,77 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     });
   };
 
-  if (isLoading) {
-    return (
-      <SafeScreen>
-        <Header label="Post Details" />
-        <View
-          style={[
-            layout.justifyCenter,
-            layout.itemsCenter,
-            gutters.paddingHorizontal_24,
-            { height: screenHeight },
-          ]}
-        >
-          <View style={[layout.itemsCenter, { minHeight: 400, width: '100%' }]}>
-            <LottieView
-              source={LoadingAnimation}
-              autoPlay={true}
-              loop={true}
-              style={{
-                width: '100%',
-                height: 300,
-              }}
-            />
-          </View>
-        </View>
-      </SafeScreen>
+  const _onBottomSheetOpen = () => {
+    if (isLoading || isPending || likePending) return;
+    openBottomSheet(
+      <PostMenu
+        isCurrentUser={currentUser._id === user._id}
+        onDelete={_onDelete}
+        onEdit={_onEdit}
+        onClose={closeBottomSheet}
+      />,
+      ['25%'],
     );
+  };
+
+  const _onEdit = () => {
+    const initialValues: PostStateType = {
+      text: details,
+      imageURL: image,
+      location: location,
+      date: !_.isEmpty(date) ? dayjs(date) : undefined,
+      time: !_.isEmpty(time) ? dayjs(time) : undefined,
+      activity: activityData.find((item) => item.id === activity),
+    };
+    navigation.navigate('Post', { initialValues: initialValues, postId: _id });
+  };
+
+  const _onDelete = () => {
+    showLoader();
+    deleteMutation();
+  };
+
+  const _startChat = async () => {
+    if (!isChatStarts) {
+      startChatMutate();
+    } else {
+      try {
+        setChatLoading(true);
+        const cometChatUser: CometChat.User = await CometChat.getUser(
+          user.cometchat.id,
+        );
+        navigation.navigate('Messages', {
+          chatWith: cometChatUser,
+        });
+      } catch (error: any) {
+        Toast.show({
+          type: 'error',
+          text1: error?.message || "Can't start chat with this user",
+        });
+      } finally {
+        setChatLoading(false);
+      }
+    }
+  };
+
+  const _onLikeOrDislike = () => {
+    likeMutation();
+  };
+
+  const _sharePost = async () => {
+    sharePost('Minglee Post', details, `mingleeapp://post/${_id}`);
+  };
+
+  const _goBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.replace('Tabs');
+    }
+  };
+
+  if (isLoading) {
+    return <PostDetailsPlaceholder />;
   }
 
   if (error) {
@@ -120,7 +284,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             <Text
               style={[fonts.size_16, fontFamily._700_Bold, fonts.alignCenter]}
             >
-              Oops! something wrong happened
+              Oops! Post not found
             </Text>
           </View>
         </View>
@@ -134,13 +298,10 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         layout.row,
         layout.justifyStart,
         layout.itemsCenter,
-        gutters.paddingHorizontal_10,
+        gutters.paddingLeft_10,
       ]}
     >
-      <ChevronLeft
-        style={{ marginRight: 20 }}
-        onPress={() => navigation.goBack()}
-      />
+      <ChevronLeft style={{ marginRight: 20 }} onPress={_goBack} />
       <TouchableOpacity onPress={_goToProfile}>
         <Image
           imageURL={convertImageURLforngRok(user.profileImage)}
@@ -155,12 +316,15 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         />
       </TouchableOpacity>
       <View style={[layout.col, gutters.marginHorizontal_12]}>
+        <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
         <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
           {user.name}
         </Text>
+        <Tick />
+        </View>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
           <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
-          <Tick />
+          {/* <Tick /> */}
         </View>
       </View>
       {Icon && (
@@ -183,11 +347,20 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       <Header
         leftComponent={headerLeftSection}
         rightComponnent={() => (
-          <View style={[ gutters.paddingRight_24, layout.itemsCenter, layout.justifyCenter ]} >
-            <MenuHr
+          <View
+            style={[
+              gutters.paddingRight_12,
+              layout.itemsCenter,
+              layout.justifyCenter,
+            ]}
+          >
+            {
+              currentUser._id === user._id && <MenuHr
               color={colors.gray300}
-              onPress={() => navigation.goBack()}
+              onPress={() => _onBottomSheetOpen()}
             />
+            }
+            
           </View>
         )}
       />
@@ -246,16 +419,17 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 backgrounds.gray30,
               ]}
             >
-              <View
-                style={[
-                  layout.row,
-                  gutters.gap_14,
-                  layout.justifyStart,
-                  layout.itemsCenter,
-                ]}
-              >
+              <View style={[layout.row, gutters.gap_14, layout.justifyStart]}>
                 <LocationIcon color={colors.primary3} />
-                <Text>Some Dummy Location, street 3</Text>
+                <Text
+                  style={[
+                    fonts.gray300,
+                    fontFamily._400_Regular,
+                    { width: '90%' },
+                  ]}
+                >
+                  {address}
+                </Text>
               </View>
             </View>
             <View
@@ -277,7 +451,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <DateIcon color={colors.primary3} />
-                <Text>{dayjs(date).format('YYYY-MM-DD')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {dayjs(date).format('YYYY-MM-DD')}
+                </Text>
               </View>
               <View
                 style={[
@@ -288,7 +464,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 ]}
               >
                 <Clock color={colors.primary3} />
-                <Text>{dayjs(time).format('hh-mm-ss')}</Text>
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {dayjs(time).format('hh-mm-ss')}
+                </Text>
               </View>
             </View>
           </View>
@@ -341,7 +519,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                 <Button
                   Icon={
                     <Heart
-                      color={backgrounds.primary.backgroundColor}
+                      color={isLikedByMe ? colors.primary : colors.gray200}
                       width={23}
                       height={23}
                     />
@@ -349,32 +527,45 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
+                  onPress={_onLikeOrDislike}
+                  disabled={isPending || isLoading || likePending}
                 />
                 <Button
                   Icon={
-                    <Share
-                      color={backgrounds.primary.backgroundColor}
-                      width={20}
-                      height={20}
-                    />
+                    <ShareIcon color={colors.primary} width={20} height={20} />
                   }
                   isCirculer={true}
                   type="SECONDARY"
                   containerStyle={[{ width: 40, height: 40 }]}
+                  onPress={_sharePost}
                 />
+                {currentUser._id !== user._id && (
+                  <Button
+                    Icon={
+                      <Envelop
+                        color={isChatStarts ? colors.primary : colors.gray250}
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    isCirculer={true}
+                    type="SECONDARY"
+                    containerStyle={[{ width: 40, height: 40 }]}
+                    onPress={_startChat}
+                    disabled={startChatPending || chatLoading}
+                  />
+                )}
               </View>
               <Text style={[fonts.gray180]}>{dayjs(createdAt).fromNow()}</Text>
             </View>
             {/* Details if there are image or location */}
             {(!_.isEmpty(image) || !_.isEmpty(location)) && (
-              <View
-                style={[gutters.paddingBottom_16, styles.details_container]}
-              >
-                <ScrollView>
-                  <Text style={[fonts.gray300, fontFamily._400_Regular]}>
-                    {details}
-                  </Text>
-                </ScrollView>
+              <View style={[gutters.paddingBottom_16]}>
+                {/* <ScrollView> */}
+                <Text style={[fonts.gray300, fontFamily._400_Regular]}>
+                  {details}
+                </Text>
+                {/* </ScrollView> */}
               </View>
             )}
           </View>

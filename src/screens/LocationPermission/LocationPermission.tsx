@@ -7,31 +7,58 @@ import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { Button } from '@/components/template';
 import {
+  getRegionForCoordinates,
   requestLocationPermission,
   requestNotificationPermissionCross,
 } from '@/utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
-import { RootState } from '@/store';
+import { AppDispatch, RootState } from '@/store';
+import { useLoader } from '@/hooks';
+import { Region } from 'react-native-maps';
+import { setLocation } from '@/store/slices/locationSlice';
 
 const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
   const { layout, gutters, fonts } = useTheme();
+  const { showLoader, hideLoader } = useLoader();
+  const dispatch: AppDispatch = useDispatch();
+
   const currentUser = useSelector((state: RootState) => state.user);
+  const userLocation = useSelector((state: RootState) => state.location);
 
   const getLocationPermission = async () => {
-    Platform.OS === 'android'
-      ? await requestLocationPermission()
-      : await Geolocation.requestAuthorization('whenInUse');
-
-    let isActivitiesAdded = currentUser.activities.length > 0;
-    setTimeout(() => {
-      if (!isActivitiesAdded) {
-        navigation.navigate('Ineterests');
-      } else {
-        navigation.navigate('Tabs');
-      }
-    }, 1000);
+    showLoader();
+    await requestLocationPermission();
+    Geolocation.getCurrentPosition(
+      (position) => {
+        console.log(position);
+        const tempLocation: Region = {
+          ...getRegionForCoordinates([
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          ]),
+        };
+        dispatch(setLocation(tempLocation));
+        let isActivitiesAdded = currentUser.activities.length > 0;
+        setTimeout(() => {
+          if (!isActivitiesAdded) {
+            navigation.replace('Ineterests');
+          } else {
+            navigation.replace('Tabs');
+          }
+          hideLoader();
+        }, 1000);
+      },
+      (error) => {
+        console.log(error.code, error.message);
+        hideLoader();
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
   };
+  
 
   return (
     <View>
@@ -75,14 +102,14 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
             },
           ]}
         >
-          Always stay up to date with the latest updates and alerts
+          Enable location for best experience
         </Text>
       </View>
       <View
         style={[layout.itemsCenter, layout.justifyCenter, { minHeight: '30%' }]}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
+        {/* <TouchableOpacity
+          onPress={_onSkip}
           style={[gutters.paddingBottom_12]}
         >
           <Text
@@ -90,7 +117,7 @@ const LocationPermissionScreen = ({ navigation }: LocationsScreenType) => {
           >
             SKIP
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Button
           label="ENABLE LOCATION"
           containerStyle={[{ width: '80%', height: '20%' }]}

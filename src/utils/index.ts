@@ -1,6 +1,6 @@
 import { activityData } from '@/constants/activities';
 import store from '@/store';
-import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
+import { Alert, Dimensions, Linking, PermissionsAndroid, Platform, Share } from 'react-native';
 import { Asset } from 'react-native-image-picker';
 import {
   request,
@@ -9,9 +9,10 @@ import {
   check,
   requestNotifications,
 } from 'react-native-permissions';
-import messaging from '@react-native-firebase/messaging';
+import Toast from 'react-native-toast-message';
+import Geolocation from 'react-native-geolocation-service';
 
-export const requestLocationPermission = async () => {
+export const requestLocationPermission1 = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -65,6 +66,47 @@ export const requestLocationPermissionCross = async () => {
     return true;
   } else if (status === RESULTS.BLOCKED) {
     console.log('Location permission blocked');
+    return false;
+  }
+};
+
+export const requestLocationPermission = async (): Promise<boolean> => {
+  try {
+    const granted =
+      Platform.OS === 'android'
+        ? await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Geolocation Permission',
+              message: 'LOcation permission is necessary to use Minglee',
+              buttonPositive: 'OK',
+            },
+          )
+        : await Geolocation.requestAuthorization('whenInUse');
+
+    if (granted === 'granted') {
+      console.log('You can use Geolocation');
+      return true;
+    } else if (granted === 'never_ask_again') {
+      Alert.alert(
+        'Permission Required',
+        'Location permission is necessary to use Minglee. Please enable it from settings.',
+        [
+          { text: undefined, style: undefined },
+          {
+            text: 'Open Settings',
+            onPress: () => Linking.openSettings(),
+          },
+        ]
+      );
+      return false
+    } else {
+      console.log('You cannot use Geolocation', granted);
+      return false;
+    }
+  } catch (err) {
+    console.log('error ', err);
+
     return false;
   }
 };
@@ -202,4 +244,37 @@ export const widthInPercentage = (percentage: number) => {
 export const heightInPercentage = (percentage: number) => {
   const height = Dimensions.get('screen').height;
   return (height * percentage) / 100;
+};
+
+export const sharePost = async (
+  title: string = 'Minglee Post',
+  description: string | undefined,
+  redirecrtURL: string,
+) => {
+  try {
+    const result = await Share.share({
+      title: title,
+      message:
+        description + ' \nclick on link to see post ' + `\n ${redirecrtURL}`,
+      url: redirecrtURL,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+        console.log('What is this  ');
+      } else {
+        // shared
+        console.log('Shared ');
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+      console.log('Dont wanna Shared ');
+    }
+  } catch (error: any) {
+    Toast.show({
+      type: 'error',
+      text1: 'Failed to share post',
+      text2: error?.message || 'Something wrong happened',
+    });
+  }
 };

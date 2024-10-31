@@ -55,7 +55,6 @@ const Interests = ({ navigation }: InterestsScreenType) => {
         }),
       );
       _onClose();
-      navigation.navigate('Tabs');
     },
     onError: (error) => {
       Toast.show({
@@ -132,7 +131,7 @@ const Interests = ({ navigation }: InterestsScreenType) => {
 
   const _onSkip = () => {
     _onClose();
-    navigation.navigate('Tabs');
+    navigation.replace('Tabs');
   };
 
   useLayoutEffect(() => {

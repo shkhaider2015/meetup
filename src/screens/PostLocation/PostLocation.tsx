@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getRegionForCoordinates } from '@/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import Geolocation from 'react-native-geolocation-service';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { location: locationParam } = route.params;
@@ -39,24 +40,28 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
     ]),
   });
 
-  // useLayoutEffect(() => {
-  //   // Hide the tab bar
-  //   navigation.getParent()?.setOptions({
-  //     tabBarStyle: { display: "none" },
-  //   });
+  const [userCurrentLocation, setUserCurrentLocation] = useState<Region>();;
+
+  // useEffect(() => {
+  //   Geolocation.watchPosition(
+  //     (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     },
+  //     {
+  //       enableHighAccuracy: true,
+  //       distanceFilter: 10,
+  //       interval: 5000,
+  //       fastestInterval: 2000,
+  //     },
+  //   );
 
   //   return () => {
-  //     navigation.getParent()?.setOptions({
-  //       tabBarStyle: {
-  //         display: "flex",
-  //         backgroundColor: backgrounds.gray00.backgroundColor,
-  //         height: heights.bottomTabBarHeight,
-  //         paddingBottom: 0,
-  //       },
-  //     });
+  //     Geolocation.stopObserving();
   //   };
-  // }, [navigation]);
-
+  // }, []);
 
   useFocusEffect(() => {
     StatusBar.setBackgroundColor('#FE434E00');
@@ -75,19 +80,30 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   };
 
   const _onClose = () => {
-    StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
-    StatusBar.setBarStyle('dark-content');
-    StatusBar.setTranslucent(false);
-
+    _changeStatusBar();
     navigation.goBack();
   };
 
-  console.log('route.params.location ', route.params.location);
-  console.log('State ', region);
+  const _changeStatusBar = () => {
+    StatusBar.setBackgroundColor(backgrounds.gray00.backgroundColor);
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setTranslucent(false);
+  };
 
   const _navigateToSearchScreen = () => {
-    console.log('Navigating to LocationSearch');
-    navigation.navigate('LocationSearch');
+    _changeStatusBar();
+    navigation.navigate('LocationSearch', {
+      onSelectLocation: (latitude, longitude) => {
+        setRegion({
+          ...getRegionForCoordinates([
+            {
+              latitude: latitude || location.latitude,
+              longitude: longitude || location.longitude,
+            },
+          ]),
+        });
+      },
+    });
   };
 
   return (
@@ -111,18 +127,22 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
           layout.z1,
           {
             width: '100%',
-            height:120,
-            marginTop: 40,
+            height: 80,
+            marginTop: 60,
           },
         ]}
       >
         <View />
         <View style={[{ width: '80%' }]}>
-          <TouchableOpacity onPress={_navigateToSearchScreen} activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={_navigateToSearchScreen}
+            activeOpacity={0.8}
+          >
             <InputField
               placeholder="Search location"
               editable={false}
               Lefticon={<Search color={colors.black} />}
+              inputHeight={50}
             />
           </TouchableOpacity>
         </View>
@@ -154,8 +174,12 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
       </View>
       <RNMapView
         style={{ ...StyleSheet.absoluteFillObject }}
-        initialRegion={region}
-        onRegionChange={_onRegionChange}
+        region={region}
+        showsMyLocationButton={true}
+        showsUserLocation={true}
+        followsUserLocation={true}
+        onRegionChangeComplete={_onRegionChange}
+        mapPadding={{ top: 130, right: 20, left: 20, bottom: 110 }}
       >
         <Marker
           coordinate={{

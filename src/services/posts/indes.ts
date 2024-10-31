@@ -44,9 +44,11 @@ export const createPost = async (data: IPostForm) => {
 
 export const getAllPost = async (queryParams: { userId: string }) => {
   try {
-    const response: any = await instance.get(END_POINTS.POST, {
-      searchParams: queryParams
-    }).json();
+    const response: any = await instance
+      .get(END_POINTS.POST, {
+        searchParams: queryParams,
+      })
+      .json();
 
     return response?.payload;
   } catch (error: any) {
@@ -80,9 +82,15 @@ export const getAllPostByUser = async (userId: string) => {
   }
 };
 
-export const getPostById = async (id: string) => {
+export const getPostById = async (data: { id: string; userId: string }) => {
   try {
-    const response: any = await instance.get(`${END_POINTS.POST}/${id}`).json();
+    const response: any = await instance
+      .get(`${END_POINTS.POST}/${data.id}`, {
+        searchParams: {
+          userId: data.userId,
+        },
+      })
+      .json();
 
     return response?.payload;
   } catch (error: any) {
@@ -176,15 +184,17 @@ export const likeOrDislikePost = async (data: {
   isLike: boolean;
 }) => {
   try {
-    console.log("Data in service ", data);
-    const response:any = await instance.post(END_POINTS.LIKE_OR_DISLIKE, {
-      json: data
-    }).json();
+    console.log('Data in service ', data);
+    const response: any = await instance
+      .post(END_POINTS.LIKE_OR_DISLIKE, {
+        json: data,
+      })
+      .json();
 
-    if(!response?.payload) {
-      throw(response)
+    if (!response?.payload) {
+      throw response;
     }
-    
+
     return await response?.payload;
   } catch (error: any) {
     if (error?.response) {

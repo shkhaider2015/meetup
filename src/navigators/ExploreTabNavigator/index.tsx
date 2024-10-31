@@ -30,7 +30,8 @@ function ExploreTabs() {
             borderRadius: 20,
             position: 'absolute'
         },
-    })} initialRouteName="ListView" >
+        swipeEnabled: false
+    })} initialRouteName="MapView" >
       <Tab.Screen name="MapView" component={MapView} />
       <Tab.Screen name="ListView" component={ListView} />
     </Tab.Navigator>

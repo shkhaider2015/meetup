@@ -1,4 +1,4 @@
-import { Key, Signout } from '@/assets/icon';
+import { Envelop, Key, Signout } from '@/assets/icon';
 import { Header, SettingsItem } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { POST, USER } from '@/constants';
@@ -62,6 +62,11 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
             label="Change Password"
             Icon={() => <Key width={20} height={20} color={colors.gray00} />}
             onPress={() => navigation.navigate('ChangePassword')}
+          />
+          <SettingsItem
+            label="Message Requests"
+            Icon={() => <Envelop width={20} height={20} color={colors.gray00} />}
+            onPress={() => navigation.navigate("MessageRequests")}
           />
           <SettingsItem
             label="Logout"

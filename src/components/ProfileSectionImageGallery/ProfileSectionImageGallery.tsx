@@ -20,15 +20,14 @@ import {
   View,
 } from 'react-native';
 import { Image as CustomImage } from '@/components/template';
-import {  useState } from 'react';
+import { useState } from 'react';
 import LottieView from 'lottie-react-native';
 import { EmptyAnimation, LoadingAnimation } from '@/assets/images';
 import { fontFamily } from '@/theme/_config';
 import UserModal from '../Modals/User';
 import { IPost } from '@/types/post';
 
-const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
-
+const ProfileSectionImageGallery = (props: IProfileSectionImageGallery) => {
   const navigation: NavigationHookProps = useNavigation();
   const { layout, gutters, backgrounds, fonts, borders } = useTheme();
   const images: ImageURISource[] = [
@@ -41,7 +40,6 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   ];
   const [selectedPost, setSelectedPost] = useState<IPost | null>();
 
-
   // const _onImagePress = (id: number) => {
   //   navigation.navigate('Carousel', { images, selectedIndex: id });
   // };
@@ -50,14 +48,18 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   const postLength = imagePost.length;
 
   const _showDetails = (posting: IPost) => {
-    setSelectedPost(posting); 
+    setSelectedPost(posting);
   };
   const onClose = () => {
     setSelectedPost(null);
-  }
-  
+  };
+  const _goToPostDetails = (postId: string) => {
+    navigation.navigate('PostDetails', {
+      postId: postId,
+    });
+  };
 
-  if (postLength === 0 && !props.isLoading ) {
+  if (postLength === 0 && !props.isLoading) {
     return (
       <View
         style={[
@@ -65,8 +67,8 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           layout.itemsCenter,
           layout.justifyCenter,
           {
-            minHeight: '35%'
-          }
+            minHeight: '35%',
+          },
         ]}
       >
         <LottieView
@@ -96,7 +98,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         ]}
       >
         {imagePost.map((post) => (
-          <TouchableOpacity onPress={()=>_showDetails(post)}>
+          <TouchableOpacity onPress={() => _goToPostDetails(post._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(post.image || '')}
               containerStyle={{
@@ -109,13 +111,13 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           </TouchableOpacity>
         ))}
         {selectedPost && (
-      <UserModal
-       open={!_.isEmpty(selectedPost)}
-       onClose={onClose}
-       data={selectedPost}
-     />)}
+          <UserModal
+            open={!_.isEmpty(selectedPost)}
+            onClose={onClose}
+            data={selectedPost}
+          />
+        )}
       </View>
-   
     );
   }
 
@@ -129,7 +131,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           layout.itemsCenter,
         ]}
       >
-        <TouchableOpacity  onPress={()=>_showDetails(imagePost[0])}>
+        <TouchableOpacity onPress={() => _goToPostDetails(imagePost[0]._id)}>
           <CustomImage
             imageURL={convertImageURLforngRok(imagePost[0].image || '')}
             containerStyle={{
@@ -141,7 +143,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           />
         </TouchableOpacity>
         <View style={[gutters.gap_6]}>
-          <TouchableOpacity  onPress={()=>_showDetails(imagePost[1])}>
+          <TouchableOpacity onPress={() => _goToPostDetails(imagePost[1]._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(imagePost[1].image || '')}
               containerStyle={{
@@ -152,7 +154,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
               fastImageProp={{ style: { borderRadius: 5 } }}
             />
           </TouchableOpacity>
-          <TouchableOpacity  onPress={()=>_showDetails(imagePost[2])}>
+          <TouchableOpacity onPress={() => _goToPostDetails(imagePost[2]._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(imagePost[2].image || '')}
               containerStyle={{
@@ -165,11 +167,12 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           </TouchableOpacity>
         </View>
         {selectedPost && (
-      <UserModal
-       open={!_.isEmpty(selectedPost)}
-       onClose={onClose}
-       data={selectedPost}
-     />)}
+          <UserModal
+            open={!_.isEmpty(selectedPost)}
+            onClose={onClose}
+            data={selectedPost}
+          />
+        )}
       </View>
     );
   }
@@ -177,7 +180,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
   return (
     <View style={[gutters.paddingVertical_16]}>
       <View style={[layout.row, layout.justifyBetween]}>
-        <TouchableOpacity  onPress={()=>_showDetails(imagePost[0])}>
+        <TouchableOpacity onPress={() => _goToPostDetails(imagePost[0]._id)}>
           <CustomImage
             imageURL={convertImageURLforngRok(imagePost[0].image || '')}
             containerStyle={{
@@ -189,7 +192,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
           />
         </TouchableOpacity>
         <View style={[gutters.gap_6]}>
-          <TouchableOpacity  onPress={()=>_showDetails(imagePost[1])}>
+          <TouchableOpacity onPress={() => _goToPostDetails(imagePost[1]._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(imagePost[1].image || '')}
               containerStyle={{
@@ -200,7 +203,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
               fastImageProp={{ style: { borderRadius: 5 } }}
             />
           </TouchableOpacity>
-          <TouchableOpacity  onPress={()=>_showDetails(imagePost[2])} >
+          <TouchableOpacity onPress={() => _goToPostDetails(imagePost[2]._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(imagePost[2].image || '')}
               containerStyle={{
@@ -223,7 +226,7 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         ]}
       >
         {imagePost.slice(3).map((post) => (
-          <TouchableOpacity  onPress={()=>_showDetails(post)}>
+          <TouchableOpacity onPress={() => _goToPostDetails(post._id)}>
             <CustomImage
               imageURL={convertImageURLforngRok(post.image || '')}
               containerStyle={{
@@ -237,11 +240,12 @@ const ProfileSectionImageGallery = (props: IProfileSectionImageGallery ) => {
         ))}
       </View>
       {selectedPost && (
-      <UserModal
-       open={!_.isEmpty(selectedPost)}
-       onClose={onClose}
-       data={selectedPost}
-     />)}
+        <UserModal
+          open={!_.isEmpty(selectedPost)}
+          onClose={onClose}
+          data={selectedPost}
+        />
+      )}
     </View>
   );
 };

@@ -49,4 +49,5 @@ export interface IPostForm {
   date?: string;
   time?: string;
   activity?: string;
+  address?: string
 }
