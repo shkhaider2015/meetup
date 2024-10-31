@@ -2,10 +2,11 @@ import {
   Clock,
   DateIcon,
   Edit,
+  Envelop,
   Heart,
   LocationIcon,
   MenuHr,
-  Share,
+  Share as ShareIcon,
   Tick,
   Trash,
 } from '@/assets/icon';
@@ -18,6 +19,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Share,
 } from 'react-native';
 import { Button, Image as ImageComp } from '../template';
 import { fontFamily } from '@/theme/_config';
@@ -31,6 +33,7 @@ import {
   convertImageURLforngRok,
   getIconByID,
   getRegionForCoordinates,
+  sharePost,
 } from '@/utils';
 import _ from 'lodash';
 import RNMapView, { Marker } from 'react-native-maps';
@@ -52,6 +55,8 @@ import {
 import { PostStateType } from '@/types/screens/post';
 import { activityData } from '@/constants/activities';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import PostMenu from '../PostMenu/PostMenu';
+import { sendMessageRequest } from '@/services/Chat';
 
 const Post = (props: IPost) => {
   const {
@@ -65,10 +70,11 @@ const Post = (props: IPost) => {
     image,
     _id,
     isLikedByMe,
+    isChatStarts,
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
   const [showDetails, setShowDetails] = useState(false);
-  const [favorite, setFavorite] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const { layout, gutters, fonts, backgrounds, colors, borders } = useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
@@ -117,12 +123,37 @@ const Post = (props: IPost) => {
     },
   });
 
+  const { isPending: startChatPending, mutate: startChatMutate } = useMutation({
+    mutationFn: () => {
+      return sendMessageRequest({
+        sender: currentUser._id,
+        receiver: user._id,
+      });
+    },
+    onSuccess: (data: any) => {
+      Toast.show({
+        type: 'success',
+        text1: 'Message request sent successfully',
+        text2:
+          data?.message ||
+          'Once end user accept your request you will be able to start chat with him',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to start chat with user',
+        text2: error.message,
+      });
+    },
+  });
+
   const Icon = getIconByID(activity || '');
 
   const _onBottomSheetOpen = () => {
     if (isPending) return;
     openBottomSheet(
-      <UserPostMenu
+      <PostMenu
         isCurrentUser={currentUser._id === user._id}
         onDelete={_onDelete}
         onEdit={_onEdit}
@@ -164,23 +195,42 @@ const Post = (props: IPost) => {
   };
 
   const _startChat = async () => {
-    try {
-      const cometChatUser: CometChat.User = await CometChat.getUser(
-        user.cometchat.id,
-      );
-      navigate('Messages', {
-        chatWith: cometChatUser,
-      });
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error?.message || "Can't start chat with this user",
-      });
+    if (!isChatStarts) {
+      startChatMutate();
+    } else {
+      try {
+        setChatLoading(true);
+        const cometChatUser: CometChat.User = await CometChat.getUser(
+          user.cometchat.id,
+        );
+        navigate('Messages', {
+          chatWith: cometChatUser,
+        });
+      } catch (error: any) {
+        Toast.show({
+          type: 'error',
+          text1: error?.message || "Can't start chat with this user",
+        });
+      } finally {
+        setChatLoading(false);
+      }
     }
   };
 
   const _onLikeOrDislike = () => {
     likeMutation();
+  };
+
+  const _sharePost = async () => {
+    // sharePost('Minglee Post', details, `mingleeapp://post/${_id}`)
+    sharePost('Minglee Post', details, `${process.env.DEV_API_URL}post/${_id}`);
+  };
+
+  const _gotoPostDetails = () => {
+    if (isPending || likePending) return;
+    navigate('PostDetails', {
+      postId: _id,
+    });
   };
 
   return (
@@ -221,12 +271,16 @@ const Post = (props: IPost) => {
             />
           </TouchableOpacity>
           <View style={[layout.col, gutters.marginHorizontal_12]}>
-            <TouchableOpacity onPress={_goToProfile}>
+            <TouchableOpacity
+              style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
+              onPress={_goToProfile}
+            >
               <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+              <Tick />
             </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
               <Text style={[fonts.size_12, fonts.gray200]}>3km</Text>
-              <Tick />
+              {/* <Tick /> */}
             </View>
           </View>
           {Icon && (
@@ -242,17 +296,21 @@ const Post = (props: IPost) => {
             </View>
           )}
         </View>
-        <TouchableOpacity
-          onPress={_onBottomSheetOpen}
-          style={[gutters.padding_8]}
-        >
-          <MenuHr color={colors.gray250} />
-        </TouchableOpacity>
+        <View>
+          {currentUser._id === user._id && (
+            <TouchableOpacity
+              onPress={_onBottomSheetOpen}
+              style={[gutters.padding_8]}
+            >
+              <MenuHr color={colors.gray250} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.mainCotainer}
-        onPress={_showDetails}
+        onPress={_gotoPostDetails}
       >
         {/* Content */}
         {!_.isEmpty(image) && (
@@ -302,13 +360,13 @@ const Post = (props: IPost) => {
           <DetailText
             text={details}
             maxLength={200}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         ) : (
           <DetailText
             text={details}
             maxLength={50}
-            onPressHighlighText={_showDetails}
+            onPressHighlighText={_gotoPostDetails}
           />
         )}
       </View>
@@ -347,11 +405,26 @@ const Post = (props: IPost) => {
               onPress={_onLikeOrDislike}
               disabled={likePending}
             />
-            {user._id !== currentUser._id && (
+
+            <Button
+              Icon={
+                <ShareIcon
+                  color={backgrounds.primary.backgroundColor}
+                  width={20}
+                  height={20}
+                />
+              }
+              isCirculer={true}
+              type="SECONDARY"
+              containerStyle={[{ width: 40, height: 40 }]}
+              onPress={_sharePost}
+            />
+
+            {currentUser._id !== user._id && (
               <Button
                 Icon={
-                  <Share
-                    color={backgrounds.primary.backgroundColor}
+                  <Envelop
+                    color={isChatStarts ? colors.primary : colors.gray250}
                     width={20}
                     height={20}
                   />
@@ -360,6 +433,7 @@ const Post = (props: IPost) => {
                 type="SECONDARY"
                 containerStyle={[{ width: 40, height: 40 }]}
                 onPress={_startChat}
+                disabled={startChatPending || chatLoading}
               />
             )}
           </View>

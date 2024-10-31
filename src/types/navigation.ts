@@ -57,12 +57,26 @@ export type RootStackParamList = {
     userId?: string;
   };
   ChangePassword: undefined;
-  LocationSearch: undefined;
+  Loading: undefined;
+  LocationPermission: undefined;
+  Settings: undefined;
+  LocationSearch: {
+    onSelectLocation: (lat: number, long:number) => void;
+  };
+  PostDetails: {
+    postId: string;
+  };
+  MessageRequests: undefined
 };
 
 export type ExploreTabsParamList = {
   MapView: undefined;
   ListView: undefined;
+};
+
+export type MessageRequestTabsParamList = {
+  Received: undefined;
+  Sent: undefined;
 };
 
 export type NavigationHookProps = NativeStackNavigationProp<RootStackParamList>;

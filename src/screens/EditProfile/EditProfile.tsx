@@ -92,7 +92,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       bio: user.bio,
       activitiesToAdd: [],
       activitiesToDelete: [],
-      profession: user.profession
+      profession: user.profession,
     },
     validationSchema: editProfileSchema,
     onSubmit: (values) => {
@@ -140,14 +140,13 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
     const fileSize = result.assets?.[0].fileSize || 0;
     const fileSizeInMB = (fileSize / (1024 * 1024)).toFixed(2);
 
-    if(Number(fileSizeInMB) >= 5) {
+    if (Number(fileSizeInMB) >= 5) {
       Toast.show({
-        type: "info",
-        text1: "Image size must be less than 5 MB"
-      })
-      return
+        type: 'info',
+        text1: 'Image size must be less than 5 MB',
+      });
+      return;
     }
-    
 
     formik.setFieldValue('profileImage', result.assets?.[0]);
   };
@@ -170,13 +169,12 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       <EditProfileHeader onBack={_handleBack} onUpdate={_onUpdate} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={[layout.flex_1]}
       >
         <ScrollView>
           <View
             style={[
-              layout.flex_1,
               backgrounds.gray30,
-              gutters.paddingVertical_16,
               gutters.paddingHorizontal_24,
               gutters.paddingVertical_16,
               {
@@ -289,6 +287,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                 Profession
               </Text>
               <InputField
+                ref={professionRef}
                 placeholder="Profession"
                 onChangeText={formik.handleChange('profession')}
                 onBlur={formik.handleBlur('profession')}
@@ -299,7 +298,9 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                 autoCapitalize="none"
                 blurOnSubmit={false}
                 isError={
-                  formik.touched.profession && formik.errors.profession ? true : false
+                  formik.touched.profession && formik.errors.profession
+                    ? true
+                    : false
                 }
               />
               <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
@@ -344,7 +345,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                   : ''}
               </Text>
             </View>
-            <View style={[gutters.marginTop_10]}>
+            <View style={[gutters.marginTop_10, gutters.paddingBottom_24]}>
               <SelectField
                 placeholder="Select interests"
                 // value={formik.values.activitesToAdd?.[0]}

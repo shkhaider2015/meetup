@@ -14,15 +14,6 @@ const Loader: React.FC<LoaderProps> = ({ isVisible }) => {
   return (
     <View style={styles.overlay}>
       {/* <ActivityIndicator size="large" color={colors.primary} /> */}
-      <View
-        style={{
-          width: 150,
-          height: 150,
-          backgroundColor: colors.gray800,
-          borderRadius: 200,
-        }}
-      ></View>
-
       <LottieView
         autoPlay={true}
         loop={true}

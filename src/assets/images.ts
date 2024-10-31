@@ -1,4 +1,4 @@
-export { default as ExploreHeader } from "./images/explore_header-logo.png";
+export { default as ExploreHeader } from "./images/explore-head-logo.png";
 export { default as Lara_Beu } from "./images/dummy/dummy_lara_beu.png";
 export { default as MeetupIcon } from "./images/meetup_icon.png";
 export { default as MarkerLayout } from "./images/marker_layout.svg";
@@ -7,3 +7,9 @@ export { default as ProfileImagePlaceholder } from './images/Profile_image_place
 export { default as EmptyAnimation } from './animation/empty.json';
 export { default as LoadingAnimation } from './animation/loader.json';
 export { default as NotificationAnimation } from './animation/notificatio.json';
+export { default as LocationAnimation } from './animation/location.json';
+export { default as AddImageLogo } from './images/picture.png';
+export { default as AddLocatioLogo } from './images/map.png';
+export { default as AddActivityLogo } from './images/puzzle-pieces.png';
+export { default as AddDateLogo } from './images/schedule.png';
+export { default as AddTimeLogo } from './images/clock.png';

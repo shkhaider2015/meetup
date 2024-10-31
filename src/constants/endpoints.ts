@@ -19,11 +19,17 @@ const APIEndPoints = {
   CHANGE_PASSWORD: 'user/change-password',
   UPDATE_PROFILE: 'user/update-profile',
   USER: 'USER',
+  UPDATE_FCM_TOKEN: 'user/update/fcm-token',
 
   // Posts
   POST: 'post',
   ALL_POST_BY_USER: 'post/user',
-  LIKE_OR_DISLIKE: 'post/like'
+  LIKE_OR_DISLIKE: 'post/like',
+
+  // Chat
+  MESSAGE_REQUEST: 'user/message/request',
+  MESSAGE_REQUEST_SENDER: 'user/message/request/sender',
+  MESSAGE_REQUEST_RECEIVER: 'user/message/request/receiver'
 };
 
 export default APIEndPoints;

@@ -21,7 +21,7 @@ import {
 import {
   convertImageURLforngRok,
   getRegionForCoordinates,
-  requestLocationPermissionCross,
+  requestLocationPermission,
 } from '@/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -57,6 +57,14 @@ import {
   updatePosts as updatePostsReducer,
 } from '@/store/slices/postSlice';
 import { useFocusEffect } from '@react-navigation/native';
+import {
+  AddActivityLogo,
+  AddDateLogo,
+  AddImageLogo,
+  AddLocatioLogo,
+  AddTimeLogo,
+} from '@/assets/images';
+import { google } from '@/constants/keys';
 
 const postInitialValues: PostStateType = {
   date: undefined,
@@ -64,6 +72,7 @@ const postInitialValues: PostStateType = {
   location: undefined,
   imageUri: undefined,
   activity: undefined,
+  address: undefined,
 };
 
 const Post = ({ navigation, route }: PostScreenType) => {
@@ -73,6 +82,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
   const screenHeight = height - heights.bottomTabBarHeight;
 
   const user = useSelector((state: RootState) => state.user);
+  const userLocation = useSelector((state: RootState) => state.location);
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
@@ -127,7 +137,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
       _clearPostState();
       setTimeout(() => {
         navigation.goBack();
-      }, 500);
+      }, 100);
     },
     onError: (error) => {
       hideLoader();
@@ -209,13 +219,14 @@ const Post = ({ navigation, route }: PostScreenType) => {
     navigation.navigate('PostLocation', {
       location: myLocation,
       onSelectLocation(lat, long) {
-        setPost((post) => ({
-          ...post,
-          location: {
-            latitude: lat,
-            longitude: long,
-          },
-        }));
+        // setPost((post) => ({
+        //   ...post,
+        //   location: {
+        //     latitude: lat,
+        //     longitude: long,
+        //   },
+        // }));
+        _convertLatLongToAddress(lat, long);
       },
     });
   };
@@ -226,57 +237,36 @@ const Post = ({ navigation, route }: PostScreenType) => {
   };
 
   const getLocation = async () => {
-    showLoader();
-    if (Platform.OS === 'ios') {
-      const iosResult = await Geolocation.requestAuthorization('whenInUse');
-      if (iosResult === 'granted') {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position);
-            _onGoToLocation(position.coords);
-            // setLocation(position);
-          },
-          (error) => {
-            // See error code charts below.
-            console.log(error.code, error.message);
-            _onGoToLocation(undefined);
-            // setLocation(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
-      } else {
-        hideLoader();
-      }
-      console.log('IosResult : ', iosResult);
+    const { latitude, longitude } = userLocation;
+
+    if (latitude !== 0 && longitude !== 0) {
+      _onGoToLocation({
+        latitude,
+        longitude,
+      });
       return;
     }
-    const result = requestLocationPermissionCross();
-    result
-      .then((res) => {
-        console.log('res is:', res);
-        if (res) {
-          Geolocation.getCurrentPosition(
-            (position) => {
-              console.log(position);
-              _onGoToLocation(position.coords);
-              // setLocation(position);
-            },
-            (error) => {
-              // See error code charts below.
-              console.log(error.code, error.message);
-              _onGoToLocation(undefined);
-              // setLocation(false);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-          );
-        } else {
+
+    showLoader();
+    const result = await requestLocationPermission();
+    if (result) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          _onGoToLocation(position.coords);
+          setLocation(position);
+          hideLoader();
+        },
+        (error) => {
+          // See error code charts below.
+          console.log(error.code, error.message);
           _onGoToLocation(undefined);
-        }
-      })
-      .catch((err) => {
-        _onGoToLocation(undefined);
-      });
-    console.log(location);
+          setLocation(false);
+          hideLoader();
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
+    }
   };
 
   const _onConfirmDate = (type: 'TIME' | 'DATE', val: Dayjs) => {
@@ -342,6 +332,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     if (_.isEmpty(post.date)) errors.push('Date');
     if (_.isEmpty(post.time)) errors.push('Time');
     if (_.isEmpty(post.activity)) errors.push('Activity');
+    if (_.isEmpty(post.address)) errors.push('Address');
 
     if (!_.isEmpty(errors)) {
       let message: string = errors.join(',') + ' are required';
@@ -362,6 +353,8 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.time = post.time?.toDate().toISOString();
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
+    postData.address = post.address;
+
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
         latitude: post.location.latitude,
@@ -379,6 +372,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     if (_.isEmpty(post.date)) errors.push('Date');
     if (_.isEmpty(post.time)) errors.push('Time');
     if (_.isEmpty(post.activity)) errors.push('Activity');
+    if (_.isEmpty(post.address)) errors.push('Address');
 
     if (!_.isEmpty(errors)) {
       let message: string = errors.join(',') + ' are required';
@@ -399,6 +393,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.time = post.time?.toDate().toISOString();
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
+    postData.address = post.address;
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
         latitude: post.location.latitude,
@@ -410,6 +405,47 @@ const Post = ({ navigation, route }: PostScreenType) => {
       imageURL: post.imageURL,
     });
     showLoader();
+  };
+
+  const _convertLatLongToAddress = async (lat: number, long: number) => {
+    try {
+      showLoader();
+      const apiKey = google.API_KEY;
+      // Google Maps API URL for reverse geocoding
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.status === 'OK') {
+        const results = data.results;
+        if (results.length > 0) {
+          const address = results[0].formatted_address; // Get the formatted address
+          setPost((pS) => ({
+            ...pS,
+            location: {
+              latitude: lat,
+              longitude: long,
+            },
+            address: address,
+          }));
+        } else {
+          throw new Error('No address found');
+        }
+      } else {
+        throw new Error(data.status);
+      }
+    } catch (error) {
+      console.error(error);
+      setPost((pS) => ({
+        ...pS,
+        location: {
+          latitude: lat,
+          longitude: long,
+        },
+      }));
+    } finally {
+      hideLoader();
+    }
   };
 
   return (
@@ -439,7 +475,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
             onPress={_onPressInput}
             onChange={_onChangeText}
           />
-          <View style={[{ flex: 2 }]}>
+          <View style={[{ flex: 3 }]}>
             {post.location && !post.imageUri && !post.imageURL && (
               <View
                 style={[
@@ -451,7 +487,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                   layout.relative,
                   {
                     width: '100%',
-                    height: '70%',
+                    height: '60%',
                     borderRadius: 20,
                   },
                 ]}
@@ -504,7 +540,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 source={{ uri: convertImageURLforngRok(post.imageURL) }}
                 style={{
                   width: '100%',
-                  height: '70%',
+                  height: '60%',
                   position: 'relative',
                 }}
                 imageStyle={[borders.rounded_16]}
@@ -536,7 +572,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 source={{ uri: post.imageUri.uri }}
                 style={{
                   width: '100%',
-                  height: '70%',
+                  height: '60%',
                   position: 'relative',
                 }}
                 imageStyle={[borders.rounded_16]}
@@ -563,7 +599,22 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 </TouchableOpacity>
               </ImageBackground>
             )}
-
+            {post.address && (
+              <View
+                style={[
+                  layout.row,
+                  layout.justifyStart,
+                  layout.itemsCenter,
+                  gutters.paddingVertical_10,
+                  gutters.gap_10,
+                ]}
+              >
+                <LocationIcon width={25} height={30} color={colors.gray300} />
+                <Text style={[fonts.gray300, gutters.paddingRight_24]}>
+                  {post.address}
+                </Text>
+              </View>
+            )}
             {(post.activity || post.date || post.time) && (
               <View
                 style={[
@@ -572,7 +623,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
                   layout.itemsCenter,
                   backgrounds.gray150,
                   borders.rounded_4,
-                  gutters.marginTop_24,
+                  gutters.marginTop_8,
                   gutters.paddingHorizontal_10,
                   gutters.paddingVertical_10,
                 ]}
@@ -686,11 +737,21 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
   const isKeyboardVisible = useKeyboardVisible();
   const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => {
-    return () => {
-      inputRef.current?.clear();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     inputRef.current?.clear();
+  //   };
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      inputRef.current?.focus();
+
+      return () => {
+        inputRef.current?.blur();
+      };
+    }, []),
+  );
 
   const _onPress = () => {
     onPress?.();
@@ -719,12 +780,14 @@ const PostInput = ({ onPress, onChange, text }: PostInputProps) => {
         ref={inputRef}
         style={[fonts.gray800, fonts.size_14]}
         placeholder="Enter your thoughts...."
+        placeholderTextColor={colors.gray200}
         multiline={true}
-        selectionColor={colors.gray800}
+        selectionColor={colors.gray200}
         value={text}
         scrollEnabled={true}
         autoFocus={true}
         onChangeText={onChange}
+        keyboardType="default"
       />
     </TouchableOpacity>
     // </KeyboardAvoidingView>
@@ -780,19 +843,24 @@ const PostMenu = (props: PostInputMenu) => {
       ]}
     >
       <TouchableOpacity onPress={() => _onPressIcon('IMAGE')}>
-        <ImageIcon width={30} height={30} color={colors.gray800} />
+        {/* <ImageIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddImageLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('LOCATION')}>
-        <LocationIcon width={30} height={30} color={colors.gray800} />
+        {/* <LocationIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddLocatioLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('ACTIVITY')}>
-        <Activity width={30} height={30} color={colors.gray800} />
+        {/* <Activity width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddActivityLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('DATE')}>
-        <DateIcon width={30} height={30} color={colors.gray800} />
+        {/* <DateIcon width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddDateLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => _onPressIcon('TIME')}>
-        <Clock width={30} height={30} color={colors.gray800} />
+        {/* <Clock width={30} height={30} color={colors.gray800} /> */}
+        <Image source={AddTimeLogo} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
     </View>
   );

@@ -1,13 +1,13 @@
 import { ChevronLeft } from '@/assets/icon';
+import { Header } from '@/components';
 import { Button, InputField, SafeScreen } from '@/components/template';
 import { changePassword } from '@/services/users';
 import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { IChangePassword } from '@/types/forms';
-import { NavigationHookProps, RootStackParamList } from '@/types/navigation';
+import { RootStackParamList } from '@/types/navigation';
 import { ChangePasswordSchema } from '@/types/schemas/user';
-import { useNavigation } from '@react-navigation/native';
 import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useRef } from 'react';
@@ -18,7 +18,6 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
@@ -76,7 +75,8 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
 
   return (
     <SafeScreen>
-      <ChangePasswordHeader />
+      {/* <ChangePasswordHeader /> */}
+      <Header label='Change Password' />
       <KeyboardAvoidingView>
         <ScrollView >
           <View style={[ { minHeight: screenHeight} ]} >
@@ -193,37 +193,6 @@ const ChangePassword = ({ navigation }: ChangePasswordScreenType) => {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeScreen>
-  );
-};
-
-const ChangePasswordHeader = () => {
-  const navigation = useNavigation<NavigationHookProps>();
-  const { layout, gutters, backgrounds, borders, fonts } = useTheme();
-
-  return (
-    <View
-      style={[
-        backgrounds.gray00,
-        layout.row,
-        layout.justifyBetween,
-        layout.itemsCenter,
-        gutters.paddingHorizontal_16,
-        borders.wBottom_1,
-        borders.gray150,
-        { height: heights.tabNavigationHeader },
-      ]}
-    >
-      <TouchableOpacity
-        style={[gutters.paddingHorizontal_8, gutters.paddingVertical_8]}
-        onPress={() => navigation.goBack()}
-      >
-        <ChevronLeft />
-      </TouchableOpacity>
-      <Text style={[{ fontSize: 20 }, fontFamily._600_SemiBold, fonts.gray800]}>
-        Change Password
-      </Text>
-      <View style={[gutters.paddingHorizontal_16]} />
-    </View>
   );
 };
 

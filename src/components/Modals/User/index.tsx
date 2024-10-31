@@ -8,7 +8,7 @@ import {
   Share,
   Tick,
 } from '@/assets/icon';
-import { Button } from '@/components/template';
+import { Button, Image as FastImage } from '@/components/template';
 import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
@@ -46,7 +46,7 @@ const UserModal = (props: UserModalProps) => {
   const { data, open, onClose } = props;
   const { user, activity, image, location, createdAt, details, date, time } =
     data;
-  
+
   const currentUser = useSelector((state: RootState) => state.user);
 
   const { layout, gutters, fonts, colors, backgrounds, borders } = useTheme();
@@ -64,7 +64,7 @@ const UserModal = (props: UserModalProps) => {
   };
 
   const _goToProfile = () => {
-    _handleClose()
+    _handleClose();
     if (user._id == currentUser._id) {
       navigate('Profile');
       return;
@@ -110,16 +110,20 @@ const UserModal = (props: UserModalProps) => {
             {/* Header */}
             <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
               <TouchableOpacity onPress={_goToProfile}>
-              <Image
-                source={{
-                  uri: convertImageURLforngRok(user.profileImage || ''),
-                }}
-                style={styles.profile_image}
-              />
-
+                <Image
+                  source={{
+                    uri: convertImageURLforngRok(user.profileImage || ''),
+                  }}
+                  style={styles.profile_image}
+                />
               </TouchableOpacity>
               <View style={[layout.col, gutters.marginHorizontal_12]}>
-                <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+                <Text
+                  onPress={_goToProfile}
+                  style={[fonts.size_16, fonts.gray800]}
+                >
+                  {user.name}
+                </Text>
                 <View
                   style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
                 >
@@ -145,11 +149,9 @@ const UserModal = (props: UserModalProps) => {
           <View style={styles.mainCotainer}>
             {/* Content */}
             {!_.isEmpty(image) && (
-              <Image
-                source={{ uri: convertImageURLforngRok(image || '') }}
-                style={styles.location}
-              />
+              <FastImage imageURL={image} containerStyle={styles.location} />
             )}
+
             {!_.isEmpty(location) && _.isEmpty(image) && (
               <RNMapView
                 provider="google"
@@ -195,6 +197,7 @@ const UserModal = (props: UserModalProps) => {
               ]}
             >
               <LocationIcon color={colors.primary} />
+              {/* The location will be  */}
               <Text>Some Dummy Location, street 3</Text>
             </View>
           </View>
