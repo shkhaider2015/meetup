@@ -5,6 +5,8 @@ import AuthNavigator from './AuthNavigator';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ProtectedScreens from './Protected';
+import { useEffect, useState } from 'react';
+import { NetworkStatusBar } from '@/components';
 import { RootStackParamList } from '@/types/navigation';
 import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
@@ -107,6 +109,7 @@ function ApplicationNavigator() {
       <NavigationContainer linking={linking} theme={navigationTheme}>
         { user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator /> }
       </NavigationContainer>
+      <NetworkStatusBar />
     </SafeAreaProvider>
   );
 }
