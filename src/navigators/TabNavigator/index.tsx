@@ -25,19 +25,33 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { FC } from 'react';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
+import { FC, useCallback } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import { Platform } from 'react-native';
 import { Image as FastImage } from '@/components/template';
 import { convertImageURLforngRok } from '@/utils';
+import { Header } from '@/components';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function TabsNavigator() {
   const { backgrounds } = useTheme();
+  const { replace } = useNavigation<NavigationHookProps>();
+  const userLocation = useSelector((state: RootState) => state.location);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (userLocation.latitude === 0 && userLocation.longitude === 0)
+        replace('LocationPermission');
+    }, [userLocation]),
+  );
 
   return (
     <Tab.Navigator
@@ -117,80 +131,62 @@ const exploreOptions = (): BottomTabNavigationOptions => {
   const profile_image = useSelector(
     (state: RootState) => state.user.profileImage,
   );
-
   const navigation = useNavigation<NavigationHookProps>();
-  const { colors } = useTheme();
 
   return {
-    headerTitle: '',
-    headerLeftContainerStyle: {
-      paddingLeft: 10,
-    },
-    headerRightContainerStyle: {
-      paddingRight: 20,
-      alignContent: 'center',
-      marginTop: 8,
-    },
-    headerLeft: () => (
-      <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
-    ),
-    headerRight: () => (
-      <TouchableOpacity
-        style={{
-          borderRadius: 50,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}
-        onPress={() => navigation.navigate('Profile')}
-      >
-        <FastImage
-          imageURL={convertImageURLforngRok(profile_image)}
-          containerStyle={{ width: 40, height: 40, borderRadius: 50 }}
-          fastImageProp={{ style: { width: 40, height: 40, borderRadius: 50 } }}
-        />
-      </TouchableOpacity>
+    header: () => (
+      <Header
+        leftComponent={() => (
+          <View>
+            <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
+          </View>
+        )}
+        rightComponnent={() => (
+          <TouchableOpacity
+            style={{
+              borderRadius: 50,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <FastImage
+              imageURL={convertImageURLforngRok(profile_image)}
+              containerStyle={{ width: 40, height: 40, borderRadius: 50 }}
+              fastImageProp={{
+                style: { width: 40, height: 40, borderRadius: 50 },
+              }}
+            />
+          </TouchableOpacity>
+        )}
+      />
     ),
   };
 };
 
 const notificationOptions: BottomTabNavigationOptions = {
-  headerTitle: 'Notifications',
-  headerTitleAlign: 'center',
-  // headerStyle: {
-  // backgroundColor: "white",
-  // height: heights.tabNavigationHeader,
-  // },
-  headerLeftContainerStyle: {
-    paddingLeft: 20,
-  },
-  headerRightContainerStyle: {
-    paddingRight: 20,
-  },
-  headerTitleStyle: {
-    fontFamily: fontFamily._500_Medium.fontFamily,
-    fontSize: 16,
-  },
-  headerLeft: () => (
-    <Image source={MeetupIcon} style={{ width: 40, height: 35 }} />
-  ),
-  headerRight: () => {
-    return (
-      <View>
+  header: () => (
+    <Header
+      leftComponent={() => (
+        <Image source={MeetupIcon} style={{ width: 40, height: 35 }} />
+      )}
+      label="Notifications"
+      rightComponnent={() => (
         <Button
           Icon={<Search width={17} height={17} />}
           type="SECONDARY"
           isCirculer
           containerStyle={[{ width: 35, height: 35 }]}
         />
-      </View>
-    );
-  },
+      )}
+    />
+  ),
 };
 
 const profileOptions = (): BottomTabNavigationOptions => {
@@ -198,60 +194,48 @@ const profileOptions = (): BottomTabNavigationOptions => {
   const userName = useSelector((state: RootState) => state.user.name);
   const { layout } = useTheme();
   return {
-    headerLeft: () => {
-      return <View />;
-    },
-    headerRight: () => {
-      return (
-        <TouchableOpacity
-          style={[{ width: 35, height: 35 }, layout.row, layout.justifyCenter, layout.itemsCenter ]}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <SettingsIcon width={22} height={22}  />
-        </TouchableOpacity>
-        // <Button
-        //   Icon={<MenuHr width={17} height={17} color={'#000000'} />}
-        //   type="SECONDARY"
-        //   isCirculer={true}
-        //   containerStyle={[{ width: 35, height: 35, borderColor: '#000000' }]}
-        //   onPress={() => navigation.navigate('Settings')}
-        // />
-      );
-    },
-    headerTitle: (props) => (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          columnGap: 6,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: fontFamily._700_Bold.fontFamily,
-            fontSize: 17,
-            color: '#000000',
-            marginTop: 3,
-          }}
-        >
-          {userName}
-        </Text>
-        <Tick width={15} height={15} />
-      </View>
+    header: () => (
+      <Header
+        leftComponent={() => <View style={{ flex: 1 }} />}
+        middleComponent={() => (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              columnGap: 6,
+              flex: 1,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: fontFamily._700_Bold.fontFamily,
+                fontSize: 17,
+                color: '#000000',
+                marginTop: 3,
+              }}
+            >
+              {userName}
+            </Text>
+            <Tick width={15} height={15} />
+          </View>
+        )}
+        rightComponnent={() => (
+          <TouchableOpacity
+            style={[
+              { width: 35, height: 35, flex: 1 },
+              layout.row,
+              layout.justifyEnd,
+              layout.itemsCenter,
+            ]}
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <SettingsIcon width={22} height={22} />
+          </TouchableOpacity>
+        )}
+      />
     ),
-    // headerStyle: {
-    // backgroundColor: "white",
-    // height: heights.tabNavigationHeader,
-    // },
-    headerLeftContainerStyle: {
-      paddingLeft: 20,
-    },
-    headerRightContainerStyle: {
-      paddingRight: 20,
-    },
-    headerTitleAlign: 'center',
   };
 };
 

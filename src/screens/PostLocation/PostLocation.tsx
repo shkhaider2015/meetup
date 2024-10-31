@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getRegionForCoordinates } from '@/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import Geolocation from 'react-native-geolocation-service';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { location: locationParam } = route.params;
@@ -39,23 +40,28 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
     ]),
   });
 
-  // useLayoutEffect(() => {
-  //   // Hide the tab bar
-  //   navigation.getParent()?.setOptions({
-  //     tabBarStyle: { display: "none" },
-  //   });
+  const [userCurrentLocation, setUserCurrentLocation] = useState<Region>();;
+
+  // useEffect(() => {
+  //   Geolocation.watchPosition(
+  //     (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     },
+  //     {
+  //       enableHighAccuracy: true,
+  //       distanceFilter: 10,
+  //       interval: 5000,
+  //       fastestInterval: 2000,
+  //     },
+  //   );
 
   //   return () => {
-  //     navigation.getParent()?.setOptions({
-  //       tabBarStyle: {
-  //         display: "flex",
-  //         backgroundColor: backgrounds.gray00.backgroundColor,
-  //         height: heights.bottomTabBarHeight,
-  //         paddingBottom: 0,
-  //       },
-  //     });
+  //     Geolocation.stopObserving();
   //   };
-  // }, [navigation]);
+  // }, []);
 
   useFocusEffect(() => {
     StatusBar.setBackgroundColor('#FE434E00');
@@ -169,7 +175,11 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
       <RNMapView
         style={{ ...StyleSheet.absoluteFillObject }}
         region={region}
+        showsMyLocationButton={true}
+        showsUserLocation={true}
+        followsUserLocation={true}
         onRegionChangeComplete={_onRegionChange}
+        mapPadding={{ top: 130, right: 20, left: 20, bottom: 110 }}
       >
         <Marker
           coordinate={{

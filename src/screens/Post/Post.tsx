@@ -21,7 +21,7 @@ import {
 import {
   convertImageURLforngRok,
   getRegionForCoordinates,
-  requestLocationPermissionCross,
+  requestLocationPermission,
 } from '@/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -248,56 +248,25 @@ const Post = ({ navigation, route }: PostScreenType) => {
     }
 
     showLoader();
-    if (Platform.OS === 'ios') {
-      const iosResult = await Geolocation.requestAuthorization('whenInUse');
-      if (iosResult === 'granted') {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position);
-            _onGoToLocation(position.coords);
-            // setLocation(position);
-          },
-          (error) => {
-            // See error code charts below.
-            console.log(error.code, error.message);
-            _onGoToLocation(undefined);
-            // setLocation(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
-      } else {
-        hideLoader();
-      }
-      console.log('IosResult : ', iosResult);
-      return;
-    }
-    const result = requestLocationPermissionCross();
-    result
-      .then((res) => {
-        console.log('res is:', res);
-        if (res) {
-          Geolocation.getCurrentPosition(
-            (position) => {
-              console.log(position);
-              _onGoToLocation(position.coords);
-              // setLocation(position);
-            },
-            (error) => {
-              // See error code charts below.
-              console.log(error.code, error.message);
-              _onGoToLocation(undefined);
-              // setLocation(false);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-          );
-        } else {
+    const result = await requestLocationPermission();
+    if (result) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          _onGoToLocation(position.coords);
+          setLocation(position);
+          hideLoader();
+        },
+        (error) => {
+          // See error code charts below.
+          console.log(error.code, error.message);
           _onGoToLocation(undefined);
-        }
-      })
-      .catch((err) => {
-        _onGoToLocation(undefined);
-      });
-    console.log(location);
+          setLocation(false);
+          hideLoader();
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
+    }
   };
 
   const _onConfirmDate = (type: 'TIME' | 'DATE', val: Dayjs) => {
@@ -385,7 +354,6 @@ const Post = ({ navigation, route }: PostScreenType) => {
     postData.activity = post.activity?.id;
     postData.image = post.imageUri;
     postData.address = post.address;
-
 
     if (post.location?.latitude && post.location.longitude) {
       postData.location = {
@@ -507,7 +475,7 @@ const Post = ({ navigation, route }: PostScreenType) => {
             onPress={_onPressInput}
             onChange={_onChangeText}
           />
-          <View style={[{ flex: 3}]}>
+          <View style={[{ flex: 3 }]}>
             {post.location && !post.imageUri && !post.imageURL && (
               <View
                 style={[

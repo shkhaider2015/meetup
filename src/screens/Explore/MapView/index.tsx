@@ -17,8 +17,7 @@ import { useTheme } from '@/theme';
 const MapView = ({ navigation }: MapViewScreenType) => {
   const screenHeight =
     Dimensions.get('window').height -
-    (heights.bottomTabBarHeight +
-      heights.tabNavigationHeader);
+    (heights.bottomTabBarHeight + heights.tabNavigationHeader);
 
   const location = useSelector((state: RootState) => state.location);
   const [mapState, setMapState] = useState<Region>(location);
@@ -29,11 +28,12 @@ const MapView = ({ navigation }: MapViewScreenType) => {
   const { showLoader, hideLoader } = useLoader();
   const dispatch: AppDispatch = useDispatch();
 
-  useLayoutEffect(() => {
-    if (location.latitude === 0 && location.longitude === 0) {
-      getLocation();
-    }
-  }, [location]);
+  //* No Need of this
+  // useLayoutEffect(() => {
+  //   if (location.latitude === 0 && location.longitude === 0) {
+  //     getLocation();
+  //   }
+  // }, [location]);
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));
@@ -55,51 +55,30 @@ const MapView = ({ navigation }: MapViewScreenType) => {
 
   const getLocation = async () => {
     showLoader();
-    if (Platform.OS === 'ios') {
-      const iosResult = await Geolocation.requestAuthorization('whenInUse');
-      if (iosResult === 'granted') {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position);
-            _setLocation(position.coords);
-            // setLocation(position);
-          },
-          (error) => {
-            // See error code charts below.
-            console.log(error.code, error.message);
-
-            // setLocation(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
-      } else {
-      }
-      console.log('IosResult : ', iosResult);
-      _hideLoader();
-      return;
-    }
     const result = await requestLocationPermission();
+
     if (result) {
       Geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
           _setLocation(position.coords);
+          _hideLoader();
         },
         (error) => {
           // See error code charts below.
           console.log(error.code, error.message);
+          _hideLoader();
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
-      _hideLoader();
     }
   };
 
   const _hideLoader = () => {
     setTimeout(() => {
-      hideLoader()
-    }, 1000)
-  }
+      hideLoader();
+    }, 1000);
+  };
 
   const CustomMapView = useCallback(
     () => (
@@ -108,7 +87,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
-        initialRegion={mapState}
+        initialRegion={location}
         // onRegionChangeComplete={_onRegionChange}
         zoomControlEnabled={true}
         // loadingEnabled={true}
@@ -136,7 +115,6 @@ const MapView = ({ navigation }: MapViewScreenType) => {
     </SafeScreen>
   );
 };
-
 
 type MapViewScreenType = NativeStackScreenProps<
   ExploreTabsParamList,
