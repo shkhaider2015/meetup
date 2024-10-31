@@ -1,59 +1,40 @@
-import { EmptyList, Header, MessageRequestItem } from '@/components';
-import { Button, Image, SafeScreen } from '@/components/template';
-import {
-  getMessageRequestReceiver,
-  getMessageRequestSender,
-} from '@/services/Chat';
+import { EmptyList, MessageRequestItem } from '@/components';
+import { SafeScreen } from '@/components/template';
+import { getMessageRequestSender } from '@/services/Chat';
 import { RootState } from '@/store';
 import { useTheme } from '@/theme';
-import { fontFamily, heights } from '@/theme/_config';
-import {
-  MessageRequestTabsParamList,
-  RootStackParamList,
-} from '@/types/navigation';
-import {
-  IMessageRequest,
-} from '@/types/reducer';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { heights } from '@/theme/_config';
+import { RootStackParamList } from '@/types/navigation';
+import { IMessageRequest } from '@/types/reducer';
+import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
+  View,
   Dimensions,
   FlatList,
   RefreshControl,
-  ScrollView,
-  Text,
-  View,
+  ActivityIndicator,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 
-const MessageRequests = ({ route, navigation }: MessageRequestsScreenType) => {
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
+const RequestsScreen = ({ navigation }: RequestsScreenType) => {
+  const { layout, gutters, colors } = useTheme();
   const screenHeight =
-    Dimensions.get('screen').height - (heights.tabNavigationHeader + 60);
+    Dimensions.get('screen').height - heights.tabNavigationHeader;
   const currentUser = useSelector((state: RootState) => state.user);
 
   const [refreshData, setRefreshData] = useState(false);
-  const [receiverData, setReceiverData] = useState<IMessageRequest[]>([]);
-  const [senderData, setSenderData] = useState<IMessageRequest[]>([]);
-  const [itemIdLoading, setItemIdLoading] = useState<string>();
+  const [data, setData] = useState<IMessageRequest[]>([]);
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: () => {
-      if (route.name === 'Received') {
-        return getMessageRequestReceiver(currentUser._id);
-      } else {
-        return getMessageRequestSender(currentUser._id);
-      }
+      return getMessageRequestSender(currentUser._id);
     },
     onSuccess: (data: IMessageRequest[]) => {
-        if(route.name === "Received") {
-            setReceiverData(data);
-        } else {
-            setSenderData(data)
-        }
+      setData(data);
       setRefreshData(false);
     },
     onError: () => {
@@ -73,19 +54,10 @@ const MessageRequests = ({ route, navigation }: MessageRequestsScreenType) => {
   };
 
   const onAccept = (id: string) => {
-    if(route.name === "Received") {
-        setReceiverData((pS) => pS.filter((item) => item._id !== id));
-    } else {
-        setSenderData((pS) => pS.filter((item) => item._id !== id));
-    }
-    
+    setData((pS) => pS.filter((item) => item._id !== id));
   };
   const onDecline = (id: string) => {
-    if(route.name === "Received") {
-        setReceiverData((pS) => pS.filter((item) => item._id !== id));
-    } else {
-        setSenderData((pS) => pS.filter((item) => item._id !== id));
-    }
+    setData((pS) => pS.filter((item) => item._id !== id));
   };
 
   return (
@@ -100,13 +72,13 @@ const MessageRequests = ({ route, navigation }: MessageRequestsScreenType) => {
       >
         {/* <Header label="Message Request" /> */}
         <FlatList
-          data={ route.name === "Received" ? receiverData : senderData}
+          data={data}
           renderItem={({ item }) => (
             <MessageRequestItem
               {...item}
               onAccept={onAccept}
               onDecline={onDecline}
-              type={route.name === "Received" ? "RECEIVER" : "SENDER"}
+              type={'RECEIVER'}
             />
           )}
           keyExtractor={(item) => item.toString()}
@@ -128,7 +100,7 @@ const MessageRequests = ({ route, navigation }: MessageRequestsScreenType) => {
           }
           ListEmptyComponent={
             <EmptyList
-              containerStyle={[{ minHeight: screenHeight }]}
+              containerStyle={[{ minHeight: screenHeight - screenHeight / 3 }]}
               text="No request found"
             />
           }
@@ -144,15 +116,16 @@ const MessageRequests = ({ route, navigation }: MessageRequestsScreenType) => {
             </View>
           }
           style={[gutters.marginVertical_16, { minHeight: '60%' }]}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </SafeScreen>
   );
 };
 
-type MessageRequestsScreenType = NativeStackScreenProps<
-  MessageRequestTabsParamList,
-  'Received' | 'Sent'
+type RequestsScreenType = NativeStackScreenProps<
+  RootStackParamList,
+  'Requests'
 >;
 
-export default MessageRequests;
+export default RequestsScreen;
