@@ -78,7 +78,6 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
     mutate(EMessageRequestStatus.DECLINED);
   };
 
-
   return (
     <View
       style={[
@@ -127,7 +126,10 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
                 { width: '100%' },
               ]}
             >
-              {message}
+              {/* {message} */}
+              {type === 'RECEIVER'
+                ? `${user.name} wants to chat with you.`
+                : `Your chat request has been sent`}
             </Text>
           </View>
         </View>

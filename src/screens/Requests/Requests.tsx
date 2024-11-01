@@ -1,6 +1,6 @@
 import { EmptyList, MessageRequestItem } from '@/components';
 import { SafeScreen } from '@/components/template';
-import { getMessageRequestSender } from '@/services/Chat';
+import { getAllRequests } from '@/services/Chat';
 import { RootState } from '@/store';
 import { useTheme } from '@/theme';
 import { heights } from '@/theme/_config';
@@ -31,7 +31,7 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: () => {
-      return getMessageRequestSender(currentUser._id);
+      return getAllRequests(currentUser._id);
     },
     onSuccess: (data: IMessageRequest[]) => {
       setData(data);
@@ -78,7 +78,7 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
               {...item}
               onAccept={onAccept}
               onDecline={onDecline}
-              type={'RECEIVER'}
+              type={item.sender._id === currentUser._id ? "SENDER" : "RECEIVER"}
             />
           )}
           keyExtractor={(item) => item.toString()}
