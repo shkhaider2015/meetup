@@ -10,19 +10,14 @@ import { NativeStackScreenProps } from "react-native-screens/lib/typescript/nati
 
 const Notifications = ({}: NotificationsScreenType) => {
   const { layout, gutters, backgrounds, fonts } = useTheme();
-  const screenHeight =
-    Dimensions.get("window").height -
-    (heights.bottomTabBarHeight + heights.tabNavigationHeader);
 
   return (
     <SafeScreen>
       <View
         style={[
-          // gutters.paddingHorizontal_24,
-          // gutters.paddingVertical_12,
           backgrounds.gray30,
           {
-            height: screenHeight,
+            minHeight: '100%',
           },
         ]}
       >
@@ -35,6 +30,7 @@ const Notifications = ({}: NotificationsScreenType) => {
             paddingVertical: 34,
             paddingHorizontal: 24
           }}
+          showsVerticalScrollIndicator={false}
         />
         {/* <NotificationItem /> */}
       </View>

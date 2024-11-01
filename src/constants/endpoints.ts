@@ -29,7 +29,8 @@ const APIEndPoints = {
   // Chat
   MESSAGE_REQUEST: 'user/message/request',
   MESSAGE_REQUEST_SENDER: 'user/message/request/sender',
-  MESSAGE_REQUEST_RECEIVER: 'user/message/request/receiver'
+  MESSAGE_REQUEST_RECEIVER: 'user/message/request/receiver',
+  ALL_REQUESTS: 'user/requests'
 };
 
 export default APIEndPoints;

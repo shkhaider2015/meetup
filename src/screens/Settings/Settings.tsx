@@ -63,11 +63,11 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
             Icon={() => <Key width={20} height={20} color={colors.gray00} />}
             onPress={() => navigation.navigate('ChangePassword')}
           />
-          <SettingsItem
+          {/* <SettingsItem
             label="Message Requests"
             Icon={() => <Envelop width={20} height={20} color={colors.gray00} />}
             onPress={() => navigation.navigate("MessageRequests")}
-          />
+          /> */}
           <SettingsItem
             label="Logout"
             Icon={() => (

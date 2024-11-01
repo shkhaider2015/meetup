@@ -80,3 +80,20 @@ export const getMessageRequestReceiver = async (userId: string) => {
     }
   }
 };
+
+export const getAllRequests = async (userId: string) => {
+  try {
+    const response: any = await instance
+      .get(`${END_POINTS.ALL_REQUESTS}/${userId}`)
+      .json();
+      
+    return response?.payload;
+  } catch (error: any) {
+    if (error?.response) {
+      const errorData = await error.response.json();
+      throw new Error(errorData.message || 'Something went wrong');
+    } else {
+      throw new Error('An unknown error occurred');
+    }
+  }
+}

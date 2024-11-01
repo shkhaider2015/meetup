@@ -38,6 +38,7 @@ import { Platform } from 'react-native';
 import { Image as FastImage } from '@/components/template';
 import { convertImageURLforngRok } from '@/utils';
 import { Header } from '@/components';
+import NotificationTabNavigator from '../NotificationTabNavigator/NotificationTabNavigator';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -90,7 +91,7 @@ function TabsNavigator() {
       />
       <Tab.Screen
         name="Notifications"
-        component={Notifications}
+        component={NotificationTabNavigator}
         options={notificationOptions}
       />
       <Tab.Screen name="Profile" component={Profile} options={profileOptions} />
