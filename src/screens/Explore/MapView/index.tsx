@@ -92,6 +92,10 @@ const MapView = ({ navigation }: MapViewScreenType) => {
         zoomControlEnabled={true}
         // loadingEnabled={true}
         // loadingIndicatorColor={colors.primary}
+        showsMyLocationButton={true}
+        showsUserLocation={true}
+        followsUserLocation={true}
+        mapPadding={{ top: 130, right: 20, left: 20, bottom: 110 }}
       >
         {posts.map((post) => (
           <CustomMarker key={post._id} {...post} />
@@ -110,7 +114,26 @@ const MapView = ({ navigation }: MapViewScreenType) => {
           },
         ]}
       >
-        <CustomMapView />
+        {/* <CustomMapView /> */}
+        <RNMapView
+          provider="google"
+          style={{
+            ...StyleSheet.absoluteFillObject,
+          }}
+          initialRegion={location}
+          // onRegionChangeComplete={_onRegionChange}
+          zoomControlEnabled={true}
+          // loadingEnabled={true}
+          // loadingIndicatorColor={colors.primary}
+          showsMyLocationButton={true}
+          showsUserLocation={true}
+          followsUserLocation={true}
+          mapPadding={{ top: 60, right: 15, left: 20, bottom: 10 }}
+        >
+          {posts.map((post) => (
+            <CustomMarker key={post._id} {...post} />
+          ))}
+        </RNMapView>
       </View>
     </SafeScreen>
   );
