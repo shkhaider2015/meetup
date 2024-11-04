@@ -178,6 +178,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
         showsMyLocationButton={true}
         showsUserLocation={true}
         followsUserLocation={true}
+        zoomControlEnabled={true}
         onRegionChangeComplete={_onRegionChange}
         mapPadding={{ top: 130, right: 20, left: 20, bottom: 110 }}
       >
