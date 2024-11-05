@@ -139,7 +139,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
       <Header
         leftComponent={() => (
           <View>
-            <Image source={ExploreHeader} style={{ width: 200, height: 60 }} />
+            <Image source={ExploreHeader} style={{ width: 200, height: 50 }} />
           </View>
         )}
         rightComponnent={() => (
@@ -159,9 +159,9 @@ const exploreOptions = (): BottomTabNavigationOptions => {
           >
             <FastImage
               imageURL={convertImageURLforngRok(profile_image)}
-              containerStyle={{ width: 40, height: 40, borderRadius: 50 }}
+              containerStyle={{ width: 35, height: 35, borderRadius: 50 }}
               fastImageProp={{
-                style: { width: 40, height: 40, borderRadius: 50 },
+                style: { width: 35, height: 35, borderRadius: 50 },
               }}
             />
           </TouchableOpacity>
