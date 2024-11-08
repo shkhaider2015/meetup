@@ -197,6 +197,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
   return {
     header: () => (
       <Header
+        isBottomBorder={false}
         leftComponent={() => <View style={{ flex: 1 }} />}
         middleComponent={() => (
           <View
