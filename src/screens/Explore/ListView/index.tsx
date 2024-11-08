@@ -2,30 +2,32 @@ import { EmptyList, Post } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { getAllPost } from '@/services/posts/indes';
 import { AppDispatch, RootState } from '@/store';
-import { setPosts } from '@/store/slices/postSlice';
+import { loadMorePosts, setPosts } from '@/store/slices/postSlice';
 import { useTheme } from '@/theme';
 import { heights } from '@/theme/_config';
 import { ExploreTabsParamList } from '@/types/navigation';
-import { IPost } from '@/types/post';
 import { IPostReducer } from '@/types/reducer';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
   RefreshControl,
-  ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { useDispatch, useSelector } from 'react-redux';
 
+const limit = 10;
+
 const ListView = ({}: ListViewScreenType) => {
   const posts = useSelector((state: RootState) => state.posts);
   const user = useSelector((state: RootState) => state.user);
   const [refreshData, setRefreshData] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
   const { layout, gutters, backgrounds, colors } = useTheme();
   const screenHeight =
@@ -34,30 +36,40 @@ const ListView = ({}: ListViewScreenType) => {
   const dispatch: AppDispatch = useDispatch();
 
   const { isPending, mutate } = useMutation({
-    mutationFn: () => {
-      return getAllPost({ userId: user._id });
+    mutationFn: (data: { page: number }) => {
+      return getAllPost({ userId: user._id, page: data.page, limit });
     },
     onSuccess: (payload: any) => {
       const data: IPostReducer[] = payload?.data;
-      console.log('data : ', data?.[0]);
-      dispatch(setPosts(data));
-      setRefreshData(false);
+      const page: number = payload?.page || 1;
+      const hasMore: boolean = payload?.hasMore;
+
+      setPage(page);
+      setHasMore(hasMore);
+      if (loadMore) {
+        dispatch(loadMorePosts(data));
+        setLoadMore(false);
+      } else {
+        dispatch(setPosts(data));
+        setRefreshData(false);
+      }
     },
     onError: (error) => {
       console.log('Error : ', error);
       setRefreshData(false);
+      setLoadMore(false);
     },
   });
 
-  // useEffect(() => {
-  //   if(user._id) {
-  //     mutate();
-  //   }
-  // }, [dispatch, user]);
-
   const _onRefresh = () => {
     setRefreshData(true);
-    mutate();
+    mutate({ page: 1 });
+  };
+
+  const _fetchMoreData = () => {
+    if (!hasMore) return;
+    mutate({ page: page + 1 });
+    setLoadMore(true);
   };
 
   return (
@@ -88,9 +100,26 @@ const ListView = ({}: ListViewScreenType) => {
             <EmptyList containerStyle={[{ minHeight: screenHeight }]} />
           }
           ListHeaderComponent={
-            <View style={[ layout.justifyCenter, layout.itemsCenter ]} >
+            <View style={[layout.justifyCenter, layout.itemsCenter]}>
               {isPending && (
-                <ActivityIndicator size={'large'} color={colors.primary} style={[ gutters.marginTop_16 ]} />
+                <ActivityIndicator
+                  size={'large'}
+                  color={colors.primary}
+                  style={[gutters.marginTop_16]}
+                />
+              )}
+            </View>
+          }
+          onEndReachedThreshold={0.03}
+          onEndReached={_fetchMoreData}
+          ListFooterComponent={
+            <View style={[layout.justifyCenter, layout.itemsCenter]}>
+              {loadMore && (
+                <ActivityIndicator
+                  size={'large'}
+                  color={colors.primary}
+                  style={[gutters.marginBottom_16]}
+                />
               )}
             </View>
           }

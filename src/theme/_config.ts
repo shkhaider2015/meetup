@@ -114,9 +114,9 @@ export const fontFamily = {
 } as const;
 
 export const heights = {
-  tabNavigationHeader: Platform.OS === 'android' ? 70 : 110,
+  tabNavigationHeader: Platform.OS === 'android' ? 60 : 110,
   bottomTabBarHeight: Platform.OS === 'android' ? 80 : 110,
-  exploreTabsHeader: 60,
+  exploreTabsHeader: 50,
 };
 
 export const config = {

@@ -42,7 +42,7 @@ export const createPost = async (data: IPostForm) => {
   }
 };
 
-export const getAllPost = async (queryParams: { userId: string }) => {
+export const getAllPost = async (queryParams: { userId: string, page: number; limit:number }) => {
   try {
     const response: any = await instance
       .get(END_POINTS.POST, {

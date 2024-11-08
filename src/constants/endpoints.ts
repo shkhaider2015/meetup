@@ -27,10 +27,10 @@ const APIEndPoints = {
   LIKE_OR_DISLIKE: 'post/like',
 
   // Chat
-  MESSAGE_REQUEST: 'user/message/request',
-  MESSAGE_REQUEST_SENDER: 'user/message/request/sender',
-  MESSAGE_REQUEST_RECEIVER: 'user/message/request/receiver',
-  ALL_REQUESTS: 'user/requests'
+  MESSAGE_REQUEST: 'requests/message',
+  MESSAGE_REQUEST_SENDER: 'requests/message/sender',
+  MESSAGE_REQUEST_RECEIVER: 'requests/message/receiver',
+  ALL_REQUESTS: 'requests'
 };
 
 export default APIEndPoints;

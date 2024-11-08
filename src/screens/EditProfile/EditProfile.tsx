@@ -162,7 +162,6 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
     formik.handleSubmit();
   };
 
-  console.log();
 
   return (
     <SafeScreen>

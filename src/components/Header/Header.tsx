@@ -10,6 +10,7 @@ const Header = (props: IHeaderProp) => {
   const navigation = useNavigation<NavigationHookProps>();
   const { layout, gutters, backgrounds, borders, fonts } = useTheme();
   const {
+    isBottomBorder=true,
     label,
     leftComponent = () => (
       <TouchableOpacity
@@ -35,8 +36,8 @@ const Header = (props: IHeaderProp) => {
         layout.justifyBetween,
         layout.itemsCenter,
         gutters.paddingHorizontal_16,
-        borders.wBottom_1,
-        borders.gray150,
+        isBottomBorder ? borders.wBottom_1 : undefined,
+        isBottomBorder ? borders.gray150 : undefined,
         { height: heights.tabNavigationHeader },
       ]}
     >
@@ -49,6 +50,7 @@ const Header = (props: IHeaderProp) => {
 
 interface IHeaderProp {
   label?: string;
+  isBottomBorder?: boolean;
   leftComponent?: () => ReactNode;
   middleComponent?: () => ReactNode;
   rightComponnent?: () => ReactNode;

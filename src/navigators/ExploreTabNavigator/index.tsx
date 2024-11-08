@@ -1,6 +1,7 @@
 import { GridView, MapView as MapViewIcon } from '@/assets/icon';
 import { ListView, MapView } from '@/screens';
 import { useTheme } from '@/theme';
+import { heights } from '@/theme/_config';
 import { ExploreTabsParamList } from '@/types/navigation';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { RouteProp } from '@react-navigation/native';
@@ -17,17 +18,17 @@ function ExploreTabs() {
         tabBarIcon: ({focused}) => tabBarIconOption(route, focused),
         tabBarLabel: "",
         tabBarIndicatorStyle: {
-            height: 60,
-            borderRadius: 20,
+            height: heights.exploreTabsHeader,
+            borderRadius: 10,
             backgroundColor: '#FE434E'
         },
         tabBarStyle: {
             width: 200,
             alignSelf: 'center',
             backgroundColor: colors.gray00,
-            height: 60,
-            marginVertical: 10,
-            borderRadius: 20,
+            height: heights.exploreTabsHeader,
+            marginTop: 15,
+            borderRadius: 10,
             position: 'absolute'
         },
         swipeEnabled: false
@@ -56,7 +57,7 @@ const tabBarIconOption = (
             break;
     }
 
-    return <Icon width={30} height={30} color={focused ? '#FFFFFF' : '#FE434E'  } />;
+    return <Icon width={25} height={25} color={focused ? '#FFFFFF' : '#FE434E'  } />;
   };
   
 export default ExploreTabs

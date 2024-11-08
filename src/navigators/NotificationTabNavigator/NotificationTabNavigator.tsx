@@ -20,15 +20,17 @@ function NotificationTabNavigator() {
         tabBarIcon: ({ focused }) => tabBarIconOption(route, focused),
         tabBarLabel: '',
         tabBarIndicatorStyle: {
-          height: 60,
+          height: 50,
           backgroundColor: '#FE434E',
         },
         tabBarStyle: {
           backgroundColor: colors.gray00,
-          height: 60,
+          height: 50,
+          paddingVertical: 0
         },
         tabBarIconStyle: {
           width: '100%',
+          marginTop: -6
         },
       })}
       initialRouteName="Notifications"
@@ -59,14 +61,14 @@ const tabBarIconOption = (
 
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
-      <Icon width={20} height={20} color={focused ? '#ffffff' : '#bebebe'} />
+      <Icon width={18} height={18} color={focused ? '#ffffff' : '#bebebe'} />
       <Text
         style={[
           {
             color: focused ? '#ffffff' : '#bebebe',
-            fontSize: 14,
+            fontSize: 12,
             fontFamily: fontFamily._600_SemiBold.fontFamily,
-            marginTop: 3,
+            marginTop: 2,
           },
         ]}
       >

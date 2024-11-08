@@ -6,7 +6,9 @@ import {
   ProfileSectionHead,
   ProfileSectionImageGallery,
 } from '@/components';
+import { EChatStatus } from '@/components/ProfileSectionHead/ProfileSectionHead';
 import { SafeScreen } from '@/components/template';
+import { sendMessageRequest } from '@/services/Chat';
 import { getAllPostByUser } from '@/services/posts/indes';
 import { logout } from '@/services/users';
 import { getUserDetails } from '@/services/users/auth';
@@ -31,15 +33,17 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
+import OtherProfilePlaceholder from './OtherProfile.Placeholder';
 
 const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
 
 const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
   const { userId } = route.params;
+  const { height, width } = Dimensions.get('window');
 
   const currentUser = useSelector((state: RootState) => state.user);
   const [userInfo, setUserInfo] = useState<IUserInfo>();
-  const [userPosts, setUserPosts] = useState<IPostReducer[]>([])
+  const [userPosts, setUserPosts] = useState<IPostReducer[]>([]);
 
   const dispatch: AppDispatch = useDispatch();
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
@@ -51,8 +55,8 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
       });
     },
     onSuccess: (data, variables, context) => {
-      console.log("Data : ", data);
-      
+      console.log('Data : ', data);
+
       setUserInfo(data);
     },
     onError: (error) => {
@@ -62,13 +66,13 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
       });
     },
   });
-  const { isPending:postsPending, mutate:postsMutation } = useMutation({
+  const { isPending: postsPending, mutate: postsMutation } = useMutation({
     mutationFn: () => {
-      return getAllPostByUser(userId|| "");
+      return getAllPostByUser(userId || '');
     },
     onSuccess: (data, variables, context) => {
-      console.log("Post success Data : ", data);
-      
+      console.log('Post success Data : ', data);
+
       setUserPosts(data?.data);
     },
     onError: (error) => {
@@ -78,46 +82,59 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
       });
     },
   });
-  const { height, width } = Dimensions.get('window');
 
-  useFocusEffect(useCallback(() => {
-    if(userId && currentUser) {
-      mutate();
-      postsMutation()
-    }
-  }, [userId, currentUser]));
+  useFocusEffect(
+    useCallback(() => {
+      if (userId && currentUser) {
+        mutate();
+        postsMutation();
+      }
+    }, [userId, currentUser]),
+  );
 
   const _goBack = () => {
     navigation.setParams({ userId: undefined });
-    if(navigation.canGoBack()) {
-      navigation.goBack()
+    if (navigation.canGoBack()) {
+      navigation.goBack();
     } else {
-      navigation.replace("Tabs")
+      navigation.replace('Tabs');
     }
   };
 
   const _followUser = () => {};
 
-  console.log("UserPosts : ", userId);
+  if (isPending || postsPending) return <OtherProfilePlaceholder />;
 
   return (
     <SafeScreen>
-      <Header middleComponent={() => <View
-        style={[
-          layout.row,
-          layout.justifyCenter,
-          layout.itemsCenter,
-          gutters.gap_4,
-          {
-            flex: 4
-          }
-        ]}
-      >
-        <Text style={[fonts.gray800, fonts.size_16, fontFamily._700_Bold, gutters.marginTop_4]}>
-          {userInfo?.name}
-        </Text>
-        <Tick width={15} height={15} />
-      </View>} />
+      <Header
+        isBottomBorder={false}
+        middleComponent={() => (
+          <View
+            style={[
+              layout.row,
+              layout.justifyCenter,
+              layout.itemsCenter,
+              gutters.gap_4,
+              {
+                flex: 4,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                fonts.gray800,
+                fonts.size_16,
+                fontFamily._700_Bold,
+                gutters.marginTop_4,
+              ]}
+            >
+              {userInfo?.name}
+            </Text>
+            <Tick width={15} height={15} />
+          </View>
+        )}
+      />
       <ScrollView>
         <View
           style={[
@@ -133,6 +150,9 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             isCurrentUser={false}
             onPressButton={_followUser}
             profileImage={convertImageURLforngRok(userInfo?.profileImage || '')}
+            userId={userId}
+            usersChatId={userInfo?.cometchat.id}
+            chatStatusProp={userInfo?.chatStatus as EChatStatus}
           />
           <ProfileSectionDescription
             name={userInfo?.name}
@@ -140,7 +160,10 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             description={userInfo?.bio}
           />
           <ProfileSectionActivities activities={userInfo?.activities} />
-          <ProfileSectionImageGallery posts={userPosts} isLoading={postsPending} />
+          <ProfileSectionImageGallery
+            posts={userPosts}
+            isLoading={postsPending}
+          />
         </View>
       </ScrollView>
     </SafeScreen>
@@ -157,6 +180,7 @@ interface IUserInfo {
   };
   bio: string;
   activities: string[];
+  chatStatus: EChatStatus;
 }
 
 type OtherProfileScreenType = NativeStackScreenProps<
