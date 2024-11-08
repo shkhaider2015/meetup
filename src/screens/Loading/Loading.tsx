@@ -67,7 +67,9 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
   const { mutate: postMutation } = useMutation({
     mutationFn: () => {
       return getAllPost({
-        userId: currentUser._id
+        userId: currentUser._id,
+        page: 1,
+        limit: 10
       })
     },
     onSuccess: async (payload: any) => {
