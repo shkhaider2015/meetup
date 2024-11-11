@@ -109,7 +109,7 @@ function ApplicationNavigator() {
       <NavigationContainer linking={linking} theme={navigationTheme}>
         { user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator /> }
       </NavigationContainer>
-      <NetworkStatusBar />
+      {/* <NetworkStatusBar /> */}
     </SafeAreaProvider>
   );
 }

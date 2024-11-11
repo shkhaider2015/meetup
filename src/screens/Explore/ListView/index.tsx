@@ -4,7 +4,7 @@ import { getAllPost } from '@/services/posts/indes';
 import { AppDispatch, RootState } from '@/store';
 import { loadMorePosts, setPosts } from '@/store/slices/postSlice';
 import { useTheme } from '@/theme';
-import { heights } from '@/theme/_config';
+import { fontFamily, heights } from '@/theme/_config';
 import { ExploreTabsParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import {
   Dimensions,
   FlatList,
   RefreshControl,
+  Text,
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
@@ -29,7 +30,7 @@ const ListView = ({}: ListViewScreenType) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
-  const { layout, gutters, backgrounds, colors } = useTheme();
+  const { layout, gutters, backgrounds, colors, fonts } = useTheme();
   const screenHeight =
     Dimensions.get('window').height -
     (heights.bottomTabBarHeight + heights.tabNavigationHeader);
@@ -72,6 +73,8 @@ const ListView = ({}: ListViewScreenType) => {
     setLoadMore(true);
   };
 
+  console.log('Hasmore ', hasMore);
+
   return (
     <SafeScreen>
       <View
@@ -85,7 +88,7 @@ const ListView = ({}: ListViewScreenType) => {
         <FlatList
           data={posts}
           renderItem={({ item }) => <Post {...item} />}
-          keyExtractor={(item, ind) => item._id || ind.toString()}
+          keyExtractor={(item, ind) => item._id + ind.toString()}
           contentContainerStyle={[
             { paddingBottom: 40, paddingTop: heights.exploreTabsHeader },
           ]}
@@ -112,17 +115,36 @@ const ListView = ({}: ListViewScreenType) => {
           }
           onEndReachedThreshold={0.03}
           onEndReached={_fetchMoreData}
-          ListFooterComponent={
-            <View style={[layout.justifyCenter, layout.itemsCenter]}>
-              {loadMore && (
-                <ActivityIndicator
-                  size={'large'}
-                  color={colors.primary}
-                  style={[gutters.marginBottom_16]}
-                />
-              )}
-            </View>
-          }
+          ListFooterComponent={() => {
+            if (loadMore)
+              return (
+                <View style={[layout.justifyCenter, layout.itemsCenter]}>
+                  {loadMore && (
+                    <ActivityIndicator
+                      size={'large'}
+                      color={colors.primary}
+                      style={[gutters.marginBottom_16, gutters.marginTop_12]}
+                    />
+                  )}
+                </View>
+              );
+
+            if (!loadMore && !hasMore)
+              return (
+                <View style={[layout.justifyCenter, layout.itemsCenter]}>
+                  <Text
+                    style={[
+                      fontFamily._600_SemiBold,
+                      fonts.gray200,
+                      fonts.size_14,
+                      gutters.marginVertical_12,
+                    ]}
+                  >
+                    You are all set
+                  </Text>
+                </View>
+              );
+          }}
         />
       </View>
     </SafeScreen>
