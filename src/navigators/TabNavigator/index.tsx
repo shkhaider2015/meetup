@@ -163,6 +163,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
               fastImageProp={{
                 style: { width: 35, height: 35, borderRadius: 50 },
               }}
+              isCached={true}
             />
           </TouchableOpacity>
         )}

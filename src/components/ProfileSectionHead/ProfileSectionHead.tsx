@@ -129,6 +129,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
             borderRadius: 300,
           }}
           fastImageProp={{ style: { borderRadius: 300 } }}
+          isCached={true}
         />
       </View>
       {/* Details Column */}
