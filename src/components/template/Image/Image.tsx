@@ -13,7 +13,7 @@ import ShimmerPlaceholder, {
 } from 'react-native-shimmer-placeholder';
 
 const Image = (props: IImageProps) => {
-  const { shimmerStyle, containerStyle, fastImageProp, imageURL } = props;
+  const { shimmerStyle, containerStyle, fastImageProp, imageURL, isCached=false } = props;
   const [isImageLoaded, setImageLoaded] = useState(false);
 
   // console.log("URL ", imageURL);
@@ -35,6 +35,7 @@ const Image = (props: IImageProps) => {
         source={{
           uri: imageURL,
           priority: FastImage.priority.normal,
+          cache: isCached ? FastImage.cacheControl.web : undefined
         }}
         onLoad={() => {
             setImageLoaded(true)
@@ -69,6 +70,7 @@ interface IImageProps {
   shimmerStyle?: StyleProp<ViewStyle>;
   fastImageProp?: FastImageProps;
   containerStyle?: StyleProp<ViewStyle>;
+  isCached?: boolean;
 }
 
 export default Image;

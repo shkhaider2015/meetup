@@ -265,9 +265,11 @@ const Post = (props: IPost) => {
         {/* Header */}
         <View style={[layout.row, layout.justifyStart, layout.itemsCenter]}>
           <TouchableOpacity onPress={_goToProfile}>
-            <Image
-              source={{ uri: convertImageURLforngRok(user.profileImage) }}
-              style={styles.profile_image}
+            <ImageComp
+              imageURL={convertImageURLforngRok(user.profileImage)}
+              containerStyle={styles.profile_image}
+              fastImageProp={{ style: { borderRadius: 40 } }}
+              isCached={false}
             />
           </TouchableOpacity>
           <View style={[layout.col, gutters.marginHorizontal_12]}>

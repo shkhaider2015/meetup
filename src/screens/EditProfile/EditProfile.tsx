@@ -3,6 +3,7 @@ import { ProfileImagePlaceholder } from '@/assets/images';
 import { ActivityPicker } from '@/components';
 import {
   Button,
+  Image,
   InputField,
   SafeScreen,
   SelectField,
@@ -25,7 +26,7 @@ import _ from 'lodash';
 import { useRef, useState } from 'react';
 import {
   Dimensions,
-  Image,
+  Image as RNImage,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -135,6 +136,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
         type: 'error',
         text1: 'Something wromng happen',
       });
+      return;
     }
 
     const fileSize = result.assets?.[0].fileSize || 0;
@@ -148,7 +150,9 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       return;
     }
 
-    formik.setFieldValue('profileImage', result.assets?.[0]);
+    const imageFile = result.assets?.[0];
+
+    if (imageFile) formik.setFieldValue('profileImage', result.assets?.[0]);
   };
 
   const _onUpdate = () => {
@@ -161,7 +165,6 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
     }
     formik.handleSubmit();
   };
-
 
   return (
     <SafeScreen>
@@ -192,14 +195,19 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               ]}
             >
               {!_.isEmpty(formik.values.profileImage) ? (
-                <Image
+                <RNImage
                   source={{ uri: formik.values.profileImage?.uri }}
                   style={styles.profileImage}
                 />
               ) : user.profileImage ? (
-                <Image src={user.profileImage} style={styles.profileImage} />
-              ) : (
                 <Image
+                  imageURL={user.profileImage}
+                  containerStyle={styles.profileImage}
+                  fastImageProp={{ style: { borderRadius: 120 } }}
+                  isCached={true}
+                />
+              ) : (
+                <RNImage
                   source={ProfileImagePlaceholder}
                   style={styles.profileImage}
                 />

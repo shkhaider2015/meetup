@@ -66,7 +66,7 @@ function TabsNavigator() {
         tabBarLabelStyle: {
           fontSize: 12,
           fontFamily: fontFamily._400_Regular.fontFamily,
-          paddingBottom: Platform.OS === 'android' ? 10 : 35,
+          paddingBottom: Platform.OS === 'android' ? 3 : 35,
         },
         tabBarLabelPosition: 'below-icon',
         tabBarActiveTintColor: backgrounds.primary.backgroundColor,
@@ -74,8 +74,6 @@ function TabsNavigator() {
         headerStyle: {
           backgroundColor: 'white',
           height: heights.tabNavigationHeader,
-          // borderWidth: 1,
-          // borderColor: 'red'
         },
       })}
     >
@@ -163,6 +161,7 @@ const exploreOptions = (): BottomTabNavigationOptions => {
               fastImageProp={{
                 style: { width: 35, height: 35, borderRadius: 50 },
               }}
+              isCached={true}
             />
           </TouchableOpacity>
         )}
