@@ -29,7 +29,7 @@ const ActivityPicker = (props: ActivityPickerProps) => {
     ),
   );
 
-  const { borders, fonts, colors, gutters, layout } = useTheme();
+  const { borders, backgrounds, fonts, colors, gutters, layout } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const ActivityPicker = (props: ActivityPickerProps) => {
         enableHandlePanningGesture={true}
         enableContentPanningGesture={false}
       >
-        <View style={[{ height: '100%' }]}>
+        <View style={[{ height: '100%' }, backgrounds.gray00]}>
           <Text
             style={[
               fonts.alignCenter,

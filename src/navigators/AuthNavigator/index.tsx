@@ -22,7 +22,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function AuthNavigator() {
   const navigation = useNavigation();
-  const { variant, gutters, backgrounds, layout } = useTheme();
+  const { variant, gutters, backgrounds, layout, colors } = useTheme();
 
   const _goBack = () => {
     navigation.goBack();
@@ -30,7 +30,7 @@ function AuthNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: true, headerStyle: {
-      backgroundColor: 'white',
+      backgroundColor: variant === "dark" ?  colors.purple50 : '#FFFFFF',
       height: heights.tabNavigationHeader,
     },}} key={variant} initialRouteName="Login">
       <Stack.Screen
@@ -50,7 +50,7 @@ function AuthNavigator() {
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
               <Button
-                Icon={<ChevronLeft />}
+                Icon={<ChevronLeft color={colors.gray800} />}
                 isCirculer={true}
                 type="SECONDARY"
                 onPress={_goBack}
@@ -69,7 +69,7 @@ function AuthNavigator() {
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
               <Button
-                Icon={<ChevronLeft />}
+                Icon={<ChevronLeft color={colors.gray800} />}
                 isCirculer={true}
                 type="SECONDARY"
                 onPress={_goBack}
@@ -89,7 +89,7 @@ function AuthNavigator() {
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
               <Button
-                Icon={<ChevronLeft />}
+                Icon={<ChevronLeft color={colors.gray800} />}
                 isCirculer={true}
                 type="SECONDARY"
                 onPress={_goBack}
@@ -109,7 +109,7 @@ function AuthNavigator() {
               style={[gutters.paddingHorizontal_24, gutters.paddingVertical_12]}
             >
               <Button
-                Icon={<ChevronLeft />}
+                Icon={<ChevronLeft color={colors.gray800} />}
                 isCirculer={true}
                 type="SECONDARY"
                 onPress={_goBack}

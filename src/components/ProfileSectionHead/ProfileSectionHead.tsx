@@ -156,6 +156,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
             <Persons
               width={widthInPercentage(8)}
               height={widthInPercentage(8)}
+              color={colors.gray800}
             />
             <View style={[layout.col]}>
               <Text
@@ -188,6 +189,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
             <Persons
               width={widthInPercentage(8)}
               height={widthInPercentage(8)}
+              color={colors.gray800}
             />
             <View style={[layout.col]}>
               <Text

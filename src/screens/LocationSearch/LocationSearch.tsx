@@ -120,7 +120,7 @@ const LocationSearch = ({ route, navigation }: LocationSearchScreenType) => {
           style={[layout.justifyCenter, layout.itemsCenter, { width: '10%' }]}
         >
           <ChevronLeft
-            color={colors.black}
+            color={colors.gray800}
             onPress={() => navigation.goBack()}
           />
         </View>

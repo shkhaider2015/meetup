@@ -301,7 +301,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         gutters.paddingLeft_10,
       ]}
     >
-      <ChevronLeft style={{ marginRight: 20 }} onPress={_goBack} />
+      <ChevronLeft color={colors.gray800} style={{ marginRight: 20 }} onPress={_goBack} />
       <TouchableOpacity onPress={_goToProfile}>
         <Image
           imageURL={convertImageURLforngRok(user.profileImage)}

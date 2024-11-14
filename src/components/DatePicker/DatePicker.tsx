@@ -27,7 +27,7 @@ const DatePicker = (props: DatePickerProps) => {
   });
   const [snapPoints] = useState<string[]>(type === "TIME" ? ["40%"] : ["65%"]);
 
-  const { backgrounds, fonts, colors, gutters, layout } = useTheme();
+  const { backgrounds, fonts, colors, gutters, layout, variant } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
@@ -118,13 +118,13 @@ const DatePicker = (props: DatePickerProps) => {
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
           borderBottomWidth: 1,
-          borderBottomColor: backgrounds.gray100.backgroundColor,
+          borderBottomColor: colors.gray100,
         }}
         onDismiss={() => _onCancel()}
         enableHandlePanningGesture={true}
         enableContentPanningGesture={false}
       >
-        <View style={{ height: "100%" }}>
+        <View style={[{ height: "100%" }, backgrounds.gray00]}>
           <Text
             style={[
               fonts.size_16,
@@ -144,27 +144,58 @@ const DatePicker = (props: DatePickerProps) => {
               onChangeHour={_onChangeHours}
               onChangeMinute={_onChangeMinutes}
               onChangePeriod={_onChangePeriod}
+              scrollHourStyle={{
+                backgroundColor: colors.gray00
+              }}
               time={new Date()}
               containerStyle={{
                 paddingHorizontal: 40,
+                backgroundColor: colors.gray00
+              }}
+              scrollPeriodStyle={{
+                backgroundColor: 'red'
               }}
               hourTextStyle={{
                 color: colors.gray200,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               minuteTextStyle={{
                 color: colors.gray200,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               periodTextStyle={{
                 color: colors.gray200,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               activeHourTextStyle={{
                 color: colors.primary,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               activeMinuteTextStyle={{
                 color: colors.primary,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               activePeriodTextStyle={{
                 color: colors.primary,
+                backgroundColor: colors.gray00,
+                width: '100%',
+                height: '100%',
+                textAlign: 'center'
               }}
               itemHeight={50}
               wrapperHeight={150}
@@ -185,7 +216,7 @@ const DatePicker = (props: DatePickerProps) => {
               selectedItemColor={colors.primary}
               headerContainerStyle={{ ...gutters.paddingVertical_10 }}
               weekDaysContainerStyle={{
-                backgroundColor: "#e9eef5",
+                backgroundColor: variant === "dark" ? colors.gray100 : "#e9eef5",
                 paddingTop: 15,
                 paddingBottom: 15,
               }}

@@ -36,18 +36,18 @@ const colorsDark = {
   primary04: '#FE434E1A',
   red500: '#C13333',
   gray800: '#E0E0E0',
-  gray500: '#4A4B4E', // Forget Password color
-  gray400: '#969696',
+  gray500: '#BABABA', // Forget Password color
+  gray400: '#4D4D4D',
   gray300: '#6A707C', // password eye icon
   gray250: '#8391A1', // Or text
   gray200: '#BABABA',
   gray180: '#ABABAC',
-  gray_150: '#DEDEDE', // input border
+  gray150: '#DEDEDE', // input border
   gray100: '#000000',
   gray70: '#E8ECF4', // or lines
   gray50: '#EFEFEF',
-  gray30: '#FAFAFA',
-  gray00: '#000000',
+  gray30: '#252732', // // Input Background
+  gray00: '#1B1A23',
   blue500: '#671DF2',
   purple500: '#A6A4F0',
   purple100: '#252732',

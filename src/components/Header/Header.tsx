@@ -8,7 +8,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 const Header = (props: IHeaderProp) => {
   const navigation = useNavigation<NavigationHookProps>();
-  const { layout, gutters, backgrounds, borders, fonts } = useTheme();
+  const { layout, gutters, backgrounds, borders, fonts, colors } = useTheme();
   const {
     isBottomBorder=true,
     label,
@@ -17,7 +17,7 @@ const Header = (props: IHeaderProp) => {
         style={[gutters.paddingHorizontal_8, gutters.paddingVertical_8]}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft />
+        <ChevronLeft color={colors.gray800} />
       </TouchableOpacity>
     ),
     middleComponent = () => (

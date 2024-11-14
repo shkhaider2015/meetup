@@ -6,13 +6,17 @@ import {
   Tab_Chat_Default,
   Tab_Chat_Selected,
   Tab_Explore_Default,
+  Tab_Explore_Light,
   Tab_Explore_Selected,
   Tab_Notifications_Default,
   Tab_Notifications_Selected,
   Tab_Post_Default,
+  Tab_Profile_Light,
   Tab_Profile_Default,
   Tab_Profile_Selected,
   Tick,
+  Tab_Notification_Light,
+  Tab_Chat_Light,
 } from '@/assets/icon';
 import { ExploreHeader, MeetupIcon } from '@/assets/images';
 import { Button } from '@/components/template';
@@ -39,11 +43,12 @@ import { Image as FastImage } from '@/components/template';
 import { convertImageURLforngRok } from '@/utils';
 import { Header } from '@/components';
 import NotificationTabNavigator from '../NotificationTabNavigator/NotificationTabNavigator';
+import { Variant } from '@/types/theme/config';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function TabsNavigator() {
-  const { backgrounds } = useTheme();
+  const { backgrounds, variant, colors } = useTheme();
   const { replace } = useNavigation<NavigationHookProps>();
   const userLocation = useSelector((state: RootState) => state.location);
 
@@ -57,19 +62,20 @@ function TabsNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused),
+        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused, variant),
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
           paddingBottom: 0,
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontFamily: fontFamily._400_Regular.fontFamily,
-          paddingBottom: Platform.OS === 'android' ? 3 : 35,
-        },
+        tabBarShowLabel: false,
+        // tabBarLabelStyle: {
+        //   fontSize: 12,
+        //   fontFamily: fontFamily._400_Regular.fontFamily,
+        //   paddingBottom: Platform.OS === 'android' ? 3 : 35,
+        // },
         tabBarLabelPosition: 'below-icon',
-        tabBarActiveTintColor: backgrounds.primary.backgroundColor,
+        tabBarActiveTintColor: colors.primary,
         tabBarHideOnKeyboard: true,
         headerStyle: {
           backgroundColor: 'white',
@@ -100,30 +106,76 @@ function TabsNavigator() {
 const tabBarIconOption = (
   route: RouteProp<RootStackParamList, keyof RootStackParamList>,
   focused: boolean,
+  variant: Variant,
 ) => {
   let Icon: FC<SvgProps>;
 
   switch (route.name) {
     case 'Explore':
-      Icon = focused ? Tab_Explore_Selected : Tab_Explore_Default;
+      Icon = focused
+        ? Tab_Explore_Selected
+        : variant === 'dark'
+          ? Tab_Explore_Light
+          : Tab_Explore_Default;
       break;
     case 'Chat':
-      Icon = focused ? Tab_Chat_Selected : Tab_Chat_Default;
+      Icon = focused
+        ? Tab_Chat_Selected
+        : variant === 'dark'
+          ? Tab_Chat_Light
+          : Tab_Chat_Default;
       break;
     case 'Post':
       Icon = Tab_Post_Default;
       break;
     case 'Notifications':
-      Icon = focused ? Tab_Notifications_Selected : Tab_Notifications_Default;
+      Icon = focused
+        ? Tab_Notifications_Selected
+        : variant === 'dark'
+          ? Tab_Notification_Light
+          : Tab_Notifications_Default;
       break;
     case 'Profile':
-      Icon = focused ? Tab_Profile_Selected : Tab_Profile_Default;
+      Icon = focused
+        ? Tab_Profile_Selected
+        : variant === 'dark'
+          ? Tab_Profile_Light
+          : Tab_Profile_Default;
       break;
     default:
-      Icon = focused ? Tab_Explore_Selected : Tab_Explore_Default;
+      Icon = focused
+        ? Tab_Explore_Selected
+        : variant === 'dark'
+          ? Tab_Explore_Light
+          : Tab_Explore_Default;
       break;
   }
-  return <Icon />;
+  // return <Icon />;
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+      }}
+    >
+      <View style={{
+        height:  heights.bottomTabBarHeight - 30,
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+      }} >
+      <Icon />
+      </View>
+      <Text
+        style={{
+          color: focused ? '#fd5b66' : variant === 'dark' ? '#ffffff' : '#000000',
+          fontSize: 12,
+          fontFamily: fontFamily._400_Regular.fontFamily,
+          marginTop: 5
+        }}
+      >
+        {route.name}
+      </Text>
+    </View>
+  );
 };
 
 const exploreOptions = (): BottomTabNavigationOptions => {
@@ -192,7 +244,7 @@ const notificationOptions: BottomTabNavigationOptions = {
 const profileOptions = (): BottomTabNavigationOptions => {
   const navigation = useNavigation<NavigationHookProps>();
   const userName = useSelector((state: RootState) => state.user.name);
-  const { layout } = useTheme();
+  const { layout, colors } = useTheme();
   return {
     header: () => (
       <Header
@@ -213,7 +265,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
               style={{
                 fontFamily: fontFamily._700_Bold.fontFamily,
                 fontSize: 17,
-                color: '#000000',
+                color: colors.gray800,
                 marginTop: 3,
               }}
             >
@@ -232,7 +284,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
             ]}
             onPress={() => navigation.navigate('Settings')}
           >
-            <SettingsIcon width={22} height={22} />
+            <SettingsIcon width={22} height={22} color={colors.gray800} />
           </TouchableOpacity>
         )}
       />

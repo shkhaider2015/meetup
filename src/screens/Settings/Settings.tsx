@@ -16,7 +16,7 @@ import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
 
 const SettingsScreen = ({ navigation }: SettingsScreenType) => {
-  const { gutters, colors } = useTheme();
+  const { gutters, colors, changeTheme, variant } = useTheme();
   const screenHeight = Dimensions.get('screen').height;
 
   const { showLoader, hideLoader } = useLoader();
@@ -47,6 +47,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
     mutate();
   };
 
+  const _toggleTheme = () => {
+    changeTheme(variant === 'dark' ? 'default' : 'dark');
+  };
+
   return (
     <SafeScreen>
       <Header label="Settings" />
@@ -60,8 +64,9 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
         >
           <SettingsItem
             label="Change Password"
-            Icon={() => <Key width={20} height={20} color={colors.gray00} />}
-            onPress={() => navigation.navigate('ChangePassword')}
+            Icon={() => <Key width={20} height={20} color={'#FFFFFF'} />}
+            // onPress={() => navigation.navigate('ChangePassword')}
+            onPress={() => _toggleTheme()}
           />
           {/* <SettingsItem
             label="Message Requests"
@@ -71,7 +76,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
           <SettingsItem
             label="Logout"
             Icon={() => (
-              <Signout width={20} height={20} color={colors.gray00} />
+              <Signout width={20} height={20} color={'#FFFFFF'} />
             )}
             onPress={() => _logout()}
           />

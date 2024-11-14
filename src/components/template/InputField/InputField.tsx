@@ -22,7 +22,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
       Lefticon, 
       inputHeight = 60
     } = props;
-    const { borders, backgrounds, gutters, layout, fonts } = useTheme();
+    const { borders, backgrounds, gutters, layout, fonts, variant } = useTheme();
     const [isActive, setIsActive] = useState<boolean>(false);
     const [secureText, setSecureText] = useState<boolean>(
       inputType === 'PASSWORD',
@@ -42,7 +42,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
     // Interpolate the border color value
     const interpolatedBorderColor = borderColor.interpolate({
       inputRange: [0, 1],
-      outputRange: [borders.gray150.borderColor, borders.gray400.borderColor], 
+      outputRange: variant === "dark" ? [borders.gray400.borderColor, borders.gray150.borderColor ] : [borders.gray150.borderColor, borders.gray400.borderColor], 
     });
 
     // Interpolate the error border color value
@@ -61,9 +61,9 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
             layout.itemsStart,
             gutters.paddingHorizontal_12,
             borders.rounded_32,
-            backgrounds.gray50,
+            variant === "dark" ? backgrounds.gray30 : backgrounds.gray50,
             borders.w_1,
-            borders.gray150,
+            variant === "dark" ? borders.gray300 : borders.gray150,
             { height: inputHeight },
           ]}
         >
