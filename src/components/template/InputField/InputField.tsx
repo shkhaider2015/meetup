@@ -63,7 +63,7 @@ const InputField = forwardRef<TextInput, IInputFieldProps>(
             borders.rounded_32,
             variant === "dark" ? backgrounds.gray30 : backgrounds.gray50,
             borders.w_1,
-            variant === "dark" ? borders.gray300 : borders.gray150,
+            borders.gray150,
             { height: inputHeight },
           ]}
         >

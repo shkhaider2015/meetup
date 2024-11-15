@@ -42,9 +42,9 @@ const colorsDark = {
   gray250: '#8391A1', // Or text
   gray200: '#BABABA',
   gray180: '#ABABAC',
-  gray150: '#DEDEDE', // input border
+  gray150: '#252732', // input border
   gray100: '#000000',
-  gray70: '#E8ECF4', // or lines
+  gray70: '#44427D', // or lines
   gray50: '#EFEFEF',
   gray30: '#252732', // // Input Background
   gray00: '#1B1A23',
