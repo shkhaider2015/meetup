@@ -1,6 +1,6 @@
 import { Envelop, Key, Signout } from '@/assets/icon';
 import { Header, SettingsItem } from '@/components';
-import { SafeScreen } from '@/components/template';
+import { Button, SafeScreen } from '@/components/template';
 import { POST, USER } from '@/constants';
 import { useLoader } from '@/hooks';
 import { logout } from '@/services/users';
@@ -65,8 +65,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
           <SettingsItem
             label="Change Password"
             Icon={() => <Key width={20} height={20} color={'#FFFFFF'} />}
-            // onPress={() => navigation.navigate('ChangePassword')}
-            onPress={() => _toggleTheme()}
+            onPress={() => navigation.navigate('ChangePassword')}
           />
           {/* <SettingsItem
             label="Message Requests"
@@ -80,6 +79,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
             )}
             onPress={() => _logout()}
           />
+
+          <Button label='Toggle Theme'  onPress={() => _toggleTheme()} containerStyle={[ gutters.marginTop_24 ]}/>
         </View>
       </ScrollView>
     </SafeScreen>
