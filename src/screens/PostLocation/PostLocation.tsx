@@ -22,10 +22,11 @@ import { getRegionForCoordinates } from '@/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import Geolocation from 'react-native-geolocation-service';
+import { darkModeMapStyles } from '@/utils/GoogleMap/style';
 
 const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
   const { location: locationParam } = route.params;
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
+  const { layout, gutters, backgrounds, variant, colors } = useTheme();
 
   const { height } = Dimensions.get('screen');
   const screenHeight = Platform.OS === 'android' ? height + 0 : height;
@@ -181,6 +182,7 @@ const PostLocation = ({ navigation, route }: PostLocationScreenType) => {
         zoomControlEnabled={true}
         onRegionChangeComplete={_onRegionChange}
         mapPadding={{ top: 130, right: 20, left: 20, bottom: 110 }}
+        customMapStyle={variant === "dark" ? darkModeMapStyles : undefined }
       >
         <Marker
           coordinate={{

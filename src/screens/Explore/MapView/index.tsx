@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation } from '@/store/slices/locationSlice';
 import { useTheme } from '@/theme';
+import { darkModeMapStyles } from '@/utils/GoogleMap/style';
 
 const MapView = ({ navigation }: MapViewScreenType) => {
   const screenHeight =
@@ -24,7 +25,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
 
   const posts = useSelector((state: RootState) => state.posts);
 
-  const { colors } = useTheme();
+  const { variant } = useTheme();
   const { showLoader, hideLoader } = useLoader();
   const dispatch: AppDispatch = useDispatch();
 
@@ -129,6 +130,7 @@ const MapView = ({ navigation }: MapViewScreenType) => {
           showsUserLocation={true}
           followsUserLocation={true}
           mapPadding={{ top: 60, right: 15, left: 20, bottom: 10 }}
+          customMapStyle={variant === "dark" ? darkModeMapStyles : undefined}
         >
           {posts.map((post) => (
             <CustomMarker key={post._id} {...post} />
