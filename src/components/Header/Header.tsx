@@ -37,8 +37,10 @@ const Header = (props: IHeaderProp) => {
         layout.itemsCenter,
         gutters.paddingHorizontal_16,
         isBottomBorder ? borders.wBottom_1 : undefined,
-        isBottomBorder ? borders.gray150 : undefined,
-        { height: heights.tabNavigationHeader },
+        // isBottomBorder ? borders.gray150 : undefined,
+        { height: heights.tabNavigationHeader,
+          borderColor: isBottomBorder ? colors.gray150 : undefined
+         },
       ]}
     >
       {leftComponent()}

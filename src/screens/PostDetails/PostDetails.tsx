@@ -60,6 +60,7 @@ import PostDetailsPlaceholder from './Postdetails.placeholder';
 import { useEffect, useState } from 'react';
 import { queryClient } from '@/App';
 import { sendMessageRequest } from '@/services/Chat';
+import { darkModeMapStyles } from '@/utils/GoogleMap/style';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
@@ -68,7 +69,8 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const dispatch: AppDispatch = useDispatch();
   const screenHeight =
     Dimensions.get('screen').height - heights.tabNavigationHeader;
-  const { layout, gutters, colors, borders, fonts, backgrounds } = useTheme();
+  const { layout, gutters, colors, borders, fonts, backgrounds, variant } =
+    useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { showLoader, hideLoader } = useLoader();
 
@@ -301,7 +303,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
         gutters.paddingLeft_10,
       ]}
     >
-      <ChevronLeft color={colors.gray800} style={{ marginRight: 20 }} onPress={_goBack} />
+      <ChevronLeft
+        color={colors.gray800}
+        style={{ marginRight: 20 }}
+        onPress={_goBack}
+      />
       <TouchableOpacity onPress={_goToProfile}>
         <Image
           imageURL={convertImageURLforngRok(user.profileImage)}
@@ -317,10 +323,10 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       </TouchableOpacity>
       <View style={[layout.col, gutters.marginHorizontal_12]}>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-        <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
-          {user.name}
-        </Text>
-        <Tick />
+          <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
+            {user.name}
+          </Text>
+          <Tick />
         </View>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
           <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
@@ -354,13 +360,12 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
               layout.justifyCenter,
             ]}
           >
-            {
-              currentUser._id === user._id && <MenuHr
-              color={colors.gray300}
-              onPress={() => _onBottomSheetOpen()}
-            />
-            }
-            
+            {currentUser._id === user._id && (
+              <MenuHr
+                color={colors.gray300}
+                onPress={() => _onBottomSheetOpen()}
+              />
+            )}
           </View>
         )}
       />
@@ -398,6 +403,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                       },
                     ]),
                   }}
+                  customMapStyle={
+                    variant === 'dark' ? darkModeMapStyles : undefined
+                  }
                 >
                   <Marker
                     coordinate={{
@@ -412,6 +420,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
               style={[
                 gutters.marginVertical_12,
                 gutters.paddingVertical_10,
+                gutters.paddingHorizontal_6,
                 layout.row,
                 layout.justifyStart,
                 layout.itemsCenter,
@@ -435,6 +444,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
             <View
               style={[
                 gutters.paddingVertical_10,
+                gutters.paddingHorizontal_6,
                 layout.row,
                 layout.justifyStart,
                 layout.itemsCenter,

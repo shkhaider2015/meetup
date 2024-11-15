@@ -65,6 +65,7 @@ import {
   AddTimeLogo,
 } from '@/assets/images';
 import { google } from '@/constants/keys';
+import { darkModeMapStyles } from '@/utils/GoogleMap/style';
 
 const postInitialValues: PostStateType = {
   date: undefined,
@@ -77,7 +78,8 @@ const postInitialValues: PostStateType = {
 
 const Post = ({ navigation, route }: PostScreenType) => {
   const { initialValues, postId } = route.params;
-  const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
+  const { layout, gutters, backgrounds, fonts, borders, colors, variant } =
+    useTheme();
   const { height, width } = Dimensions.get('window');
   const screenHeight = height - heights.bottomTabBarHeight;
 
@@ -525,6 +527,9 @@ const Post = ({ navigation, route }: PostScreenType) => {
                       },
                     ]),
                   }}
+                  customMapStyle={
+                    variant === 'dark' ? darkModeMapStyles : undefined
+                  }
                 >
                   <Marker
                     coordinate={{

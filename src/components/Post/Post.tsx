@@ -57,6 +57,7 @@ import { activityData } from '@/constants/activities';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import PostMenu from '../PostMenu/PostMenu';
 import { sendMessageRequest } from '@/services/Chat';
+import { darkModeMapStyles } from '@/utils/GoogleMap/style';
 
 const Post = (props: IPost) => {
   const {
@@ -76,7 +77,8 @@ const Post = (props: IPost) => {
   const [showDetails, setShowDetails] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
 
-  const { layout, gutters, fonts, backgrounds, colors, borders } = useTheme();
+  const { layout, gutters, fonts, backgrounds, colors, borders, variant } =
+    useTheme();
   const { openBottomSheet, closeBottomSheet } = useGlobalBottomSheet();
   const { navigate } = useNavigation<NavigationHookProps>();
   const dispatch: AppDispatch = useDispatch();
@@ -346,6 +348,7 @@ const Post = (props: IPost) => {
             zoomEnabled={false}
             rotateEnabled={false}
             pitchEnabled={false}
+            customMapStyle={variant === 'dark' ? darkModeMapStyles : undefined}
           >
             <Marker
               coordinate={{
