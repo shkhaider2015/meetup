@@ -13,7 +13,7 @@ import storage from './storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { GlobalBottomSheetProvider, LoaderProvider } from './components/Global';
 import Toast from 'react-native-toast-message';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import {
   CometChatUIKit,
   UIKitSettings,
@@ -22,6 +22,7 @@ import { CometChat } from '@cometchat/chat-sdk-react-native';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import SplashScreen from 'react-native-splash-screen';
+import PushNotification from 'react-native-push-notification';
 
 export const queryClient = new QueryClient();
 
@@ -39,7 +40,7 @@ function App() {
 
   useEffect(() => {
     const initialize = async () => {
-      await delay(); // Wait for 10 seconds
+      await delay(); // Wait for 3 seconds
       getPermissions();
     };
 
@@ -47,15 +48,16 @@ function App() {
   }, []);
 
   const delay = (): Promise<void> => {
-    return new Promise((resolve) => setTimeout(() => {
-      init()
-      SplashScreen.hide();
-      return resolve()
-    }, 3000));
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        init();
+        SplashScreen.hide();
+        return resolve();
+      }, 3000),
+    );
   };
 
   const init = () => {
-    
     let uikitSettings: UIKitSettings = {
       appId: process.env.COMETCHAT_APP_ID || '',
       authKey: process.env.COMETCHAT_AUTH_KEY || '',
@@ -70,6 +72,28 @@ function App() {
       .catch((error) => {
         console.log('Initialization failed with exception:', error);
       });
+
+    PushNotification.createChannel(
+      {
+        channelId: 'default', // Same as the one used in localNotification
+        channelName: 'Default Channel',
+        importance: 4, // High importance
+        soundName: 'default',
+      },
+      (created) => {
+        // console.log(`Channel created: ${created}`);
+        PushNotification.configure({
+          onNotification: async function (notification) {
+            // console.log('Foreground Notification:', notification);
+            const redirectPath = notification.data?.redirectPath;
+            const isValidURL = await Linking.canOpenURL(redirectPath)
+            if(isValidURL) {
+              Linking.openURL(redirectPath)
+            }
+          },
+        });
+      },
+    );
   };
 
   return (
