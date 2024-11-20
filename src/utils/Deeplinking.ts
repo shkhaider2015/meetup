@@ -6,30 +6,19 @@ import messaging from '@react-native-firebase/messaging';
 
 function buildDeepLinkFromNotificationData(
   data: NotificationData | undefined,
-): string | null {
+): string | undefined {
   const redirectPath = data?.redirectPath;
-  if (!redirectPath || !DEEP_LINK_IDS.includes(redirectPath)) {
-    console.warn('Unverified redirectPath', redirectPath);
-    return null;
-  }
+//   if (!redirectPath || !DEEP_LINK_IDS.includes(redirectPath)) {
+//     console.warn('Unverified redirectPath', redirectPath);
+//     return null;
+//   }
 
-  if (redirectPath === 'home') {
-    return 'mingleeapp://home';
-  }
-
-  if (redirectPath === 'settings') {
-    return 'mingleeapp://settings';
-  }
-
-  if (redirectPath === 'post') {
-    const postId = data?.id;
-    if (typeof postId === 'string') {
-      return `mingleeapp://post/${postId}`;
-    }
+  if(redirectPath?.includes('chat')) {
+    const chatUserId = redirectPath
   }
 
   console.warn('Missing postId');
-  return null;
+  return redirectPath;
 }
 
 export const linking: LinkingOptions<RootStackParamList> = {
@@ -40,6 +29,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
       Tabs: {
         screens: {
           Explore: 'explore',
+          Chat: 'chat/:chatWithId'
         },
       },
       PostDetails: 'post/:postId',

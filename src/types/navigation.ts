@@ -21,7 +21,9 @@ export type RootStackParamList = {
   };
   Ineterests: undefined;
   Explore: undefined;
-  Chat: undefined;
+  Chat: {
+    chatWithId?: string
+  };
   Messages: {
     chatWith?: CometChat.User;
   };
