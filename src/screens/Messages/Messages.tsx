@@ -20,7 +20,7 @@ import { fontFamily } from '@/theme/_config';
 
 const Messages = ({ navigation, route }: ChatScreenType) => {
   const { chatWith } = route.params;
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
+  const { layout, gutters, backgrounds, fonts, colors, variant } = useTheme();
 
   let myTheme: CometChatTheme = new CometChatTheme({});
   myTheme.palette.setPrimary({
@@ -29,12 +29,14 @@ const Messages = ({ navigation, route }: ChatScreenType) => {
   });
   myTheme.palette.setSecondary({
     light: '#FFFFFF',
-    dark: '#000000'
+    dark: '#FFFFFF'
   });
   myTheme.palette.setAccent({
     light: '#000000',
     dark: '#FFFFFF'
   });
+  myTheme.palette.setMode(variant === "dark" ? "dark" : "light")
+
   const _onBack = () => {
     console.log('OPress ');
     navigation.goBack();

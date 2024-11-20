@@ -18,7 +18,7 @@ import { fontFamily } from '@/theme/_config';
 
 const Chat = ({ navigation, route }: ChatScreenType) => {
   // const { chatWith } = route.params;
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
+  const { layout, gutters, backgrounds, fonts, colors, variant } = useTheme();
   const screenHeight = Dimensions.get('window').height;
   const user = useSelector((state: RootState) => state.user);
 
@@ -35,6 +35,7 @@ const Chat = ({ navigation, route }: ChatScreenType) => {
     light: '#000000',
     dark: '#FFFFFF'
   })
+  myTheme.palette.setMode(variant === "dark" ? "dark" : "light")
   // myTheme.typography.setFontFamily([
   //   fontFamily._400_Regular.fontFamily,
   //   fontFamily._500_Medium.fontFamily,
