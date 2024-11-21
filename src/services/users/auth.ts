@@ -40,6 +40,8 @@ export const login = async (data: IUserLoginForm) => {
       authToken: response?.payload?.token
     });
 
+    await CometChat.registerTokenForPushNotification(deviceToken)
+
     return response?.payload;
   } catch (error: any) {
     if (error instanceof yup.ValidationError) {

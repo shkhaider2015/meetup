@@ -14,19 +14,7 @@ import {
   Settings,
   PostDetails,
   LocationSearch,
-  MessageRequests,
 } from '@/screens';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store';
-import { useMutation } from '@tanstack/react-query';
-import { loadUser } from '@/services/users';
-import Toast from 'react-native-toast-message';
-import { useEffect } from 'react';
-import { clearUser, setUser } from '@/store/slices/userSlice';
-import { IUserReducer } from '@/types/reducer';
-import { convertImageURLforngRok } from '@/utils';
-import { getItem } from '@/storage';
-import { USER } from '@/constants';
 import Messages from '@/screens/Messages/Messages';
 import NotificationScreenPermission from '@/screens/NotificationsPermission/NotificationsPermission';
 import MessageRequestTabNavigator from '../MessageRequestTabNavigator';

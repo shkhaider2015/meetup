@@ -3,33 +3,24 @@ import { RootStackParamList } from '@/types/navigation';
 import { LinkingOptions } from '@react-navigation/native';
 import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import _ from 'lodash';
+import { isValidJSON } from '.';
 
 function buildDeepLinkFromNotificationData(
   data: NotificationData | undefined,
-): string | null {
+): string | undefined {
   const redirectPath = data?.redirectPath;
-  if (!redirectPath || !DEEP_LINK_IDS.includes(redirectPath)) {
-    console.warn('Unverified redirectPath', redirectPath);
-    return null;
-  }
+//   if (!redirectPath || !DEEP_LINK_IDS.includes(redirectPath)) {
+//     console.warn('Unverified redirectPath', redirectPath);
+//     return null;
+//   }
 
-  if (redirectPath === 'home') {
-    return 'mingleeapp://home';
-  }
-
-  if (redirectPath === 'settings') {
-    return 'mingleeapp://settings';
-  }
-
-  if (redirectPath === 'post') {
-    const postId = data?.id;
-    if (typeof postId === 'string') {
-      return `mingleeapp://post/${postId}`;
-    }
+  if(redirectPath?.includes('chat')) {
+    const chatUserId = redirectPath
   }
 
   console.warn('Missing postId');
-  return null;
+  return redirectPath;
 }
 
 export const linking: LinkingOptions<RootStackParamList> = {
@@ -40,6 +31,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
       Tabs: {
         screens: {
           Explore: 'explore',
+          Chat: 'chat/:chatWithId'
         },
       },
       PostDetails: 'post/:postId',
@@ -55,15 +47,26 @@ export const linking: LinkingOptions<RootStackParamList> = {
       return url;
     }
 
-    const message = await messaging().getInitialNotification();
-    // console.log('==================================');
-    // console.log('==================================');
-    // console.log('==================================');
-    // console.log('Message : ', message);
-    // console.log('Message Data ', message?.data);
+    let message = await messaging().getInitialNotification();
+    
+    console.log('==================================');
+    console.log('==================================');
+    console.log('==================================');
+    console.log('Message : ', message);
+    console.log('Message Data ', message?.data);
     // const deeplinkURL = buildDeepLinkFromNotificationData(
     //   message?.data as NotificationData,
     // );
+
+      if(typeof message?.data?.message === "string") {
+        if(isValidJSON(message?.data?.message)) {
+          const userData = JSON.parse(_.cloneDeep(message?.data?.message));
+          const chatDeeplink = `mingleeapp://chat/${userData.sender}`;
+          return chatDeeplink
+        }
+      }
+
+
     const deeplinkURL = message?.data?.redirectPath;
     if (typeof deeplinkURL === 'string') {
       return deeplinkURL;
@@ -83,7 +86,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
     // Handle background notification
     const unsubscribe = messaging().onNotificationOpenedApp((remoteMessage) => {
       // console.log('******************************************************');
-      // console.log('On Message ', remoteMessage);
+      console.log('On Message ', remoteMessage);
+      console.log("OnMessage :: ", remoteMessage.data?.message)
 
       // const url = buildDeepLinkFromNotificationData(
       //   remoteMessage.data as NotificationData,
