@@ -3,6 +3,8 @@ import { RootStackParamList } from '@/types/navigation';
 import { LinkingOptions } from '@react-navigation/native';
 import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import _ from 'lodash';
+import { isValidJSON } from '.';
 
 function buildDeepLinkFromNotificationData(
   data: NotificationData | undefined,
@@ -45,15 +47,26 @@ export const linking: LinkingOptions<RootStackParamList> = {
       return url;
     }
 
-    const message = await messaging().getInitialNotification();
-    // console.log('==================================');
-    // console.log('==================================');
-    // console.log('==================================');
-    // console.log('Message : ', message);
-    // console.log('Message Data ', message?.data);
+    let message = await messaging().getInitialNotification();
+    
+    console.log('==================================');
+    console.log('==================================');
+    console.log('==================================');
+    console.log('Message : ', message);
+    console.log('Message Data ', message?.data);
     // const deeplinkURL = buildDeepLinkFromNotificationData(
     //   message?.data as NotificationData,
     // );
+
+      if(typeof message?.data?.message === "string") {
+        if(isValidJSON(message?.data?.message)) {
+          const userData = JSON.parse(_.cloneDeep(message?.data?.message));
+          const chatDeeplink = `mingleeapp://chat/${userData.sender}`;
+          return chatDeeplink
+        }
+      }
+
+
     const deeplinkURL = message?.data?.redirectPath;
     if (typeof deeplinkURL === 'string') {
       return deeplinkURL;
@@ -73,7 +86,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
     // Handle background notification
     const unsubscribe = messaging().onNotificationOpenedApp((remoteMessage) => {
       // console.log('******************************************************');
-      // console.log('On Message ', remoteMessage);
+      console.log('On Message ', remoteMessage);
+      console.log("OnMessage :: ", remoteMessage.data?.message)
 
       // const url = buildDeepLinkFromNotificationData(
       //   remoteMessage.data as NotificationData,

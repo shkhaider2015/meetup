@@ -12,21 +12,21 @@ import { CometChat } from '@cometchat/chat-sdk-react-native';
 import _ from 'lodash';
 
 const Chat = ({ navigation, route }: ChatScreenType) => {
-  const { chatWithId } = route.params;
+  // const { chatWithId="" } = route.params;
 
-  useEffect(() => {
-    const _getUser = async () => {
-      const chatWithUser: CometChat.User = await CometChat.getUser(chatWithId);
-      if (chatWithUser instanceof CometChat.User) {
-        navigation.navigate('Messages', {
-          chatWith: chatWithUser,
-        });
-      }
-    };
-    if (!_.isEmpty(chatWithId)) {
-      _getUser();
-    }
-  }, [chatWithId]);
+  // useEffect(() => {
+  //   const _getUser = async () => {
+  //     const chatWithUser: CometChat.User = await CometChat.getUser(chatWithId);
+  //     if (chatWithUser instanceof CometChat.User) {
+  //       navigation.navigate('Messages', {
+  //         chatWith: chatWithUser,
+  //       });
+  //     }
+  //   };
+  //   if (!_.isEmpty(chatWithId)) {
+  //     _getUser();
+  //   }
+  // }, [chatWithId]);
 
   let myTheme: CometChatTheme = new CometChatTheme({});
   myTheme.palette.setPrimary({
