@@ -23,6 +23,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
+import { updateChatBadge } from './store/slices/badgeSlice';
 
 export const queryClient = new QueryClient();
 

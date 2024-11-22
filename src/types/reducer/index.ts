@@ -73,3 +73,9 @@ export enum EMessageRequestStatus {
   DECLINED = 'DECLINED',
   PENDING = 'PENDING',
 }
+
+export interface IBadge {
+  Chat: number;
+  Notifications: number;
+  Requests: number;
+}
