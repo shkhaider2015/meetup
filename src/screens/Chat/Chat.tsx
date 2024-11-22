@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { SafeScreen } from '@/components/template';
 import { RootStackParamList } from '@/types/navigation';
 import { View } from 'react-native';
@@ -10,6 +10,10 @@ import {
 } from '@cometchat/chat-uikit-react-native';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
 import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
+import { useFocusEffect } from '@react-navigation/native';
+import { clearChatBadge } from '@/store/slices/badgeSlice';
 
 const Chat = ({ navigation, route }: ChatScreenType) => {
   // const { chatWithId="" } = route.params;
@@ -27,6 +31,17 @@ const Chat = ({ navigation, route }: ChatScreenType) => {
   //     _getUser();
   //   }
   // }, [chatWithId]);
+
+  const badges = useSelector((state: RootState) => state.badge);
+  const dispatch: AppDispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (badges.Chat > 0) {
+        dispatch(clearChatBadge());
+      }
+    }, [badges]),
+  );
 
   let myTheme: CometChatTheme = new CometChatTheme({});
   myTheme.palette.setPrimary({
