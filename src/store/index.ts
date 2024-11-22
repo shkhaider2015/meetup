@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { locationReducer, postReducer, userReducer } from './slices';
+import {
+  locationReducer,
+  postReducer,
+  userReducer,
+  badgeReducer,
+} from './slices';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     posts: postReducer,
     location: locationReducer,
+    badge: badgeReducer,
   },
 });
 

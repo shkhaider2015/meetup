@@ -1,26 +1,47 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { SafeScreen } from '@/components/template';
-import { useTheme } from '@/theme';
 import { RootStackParamList } from '@/types/navigation';
-import { Dimensions, ScrollView, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import LimitTimePicker from 'react-native-limit-timepicker';
 import {
   CometChatContextProvider,
   CometChatConversations,
   CometChatTheme,
 } from '@cometchat/chat-uikit-react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
 import { CometChat } from '@cometchat/chat-sdk-react-native';
+import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import { useFocusEffect } from '@react-navigation/native';
-import { fontFamily } from '@/theme/_config';
+import { clearChatBadge } from '@/store/slices/badgeSlice';
 
 const Chat = ({ navigation, route }: ChatScreenType) => {
-  // const { chatWith } = route.params;
-  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
-  const screenHeight = Dimensions.get('window').height;
-  const user = useSelector((state: RootState) => state.user);
+  // const { chatWithId="" } = route.params;
+
+  // useEffect(() => {
+  //   const _getUser = async () => {
+  //     const chatWithUser: CometChat.User = await CometChat.getUser(chatWithId);
+  //     if (chatWithUser instanceof CometChat.User) {
+  //       navigation.navigate('Messages', {
+  //         chatWith: chatWithUser,
+  //       });
+  //     }
+  //   };
+  //   if (!_.isEmpty(chatWithId)) {
+  //     _getUser();
+  //   }
+  // }, [chatWithId]);
+
+  const badges = useSelector((state: RootState) => state.badge);
+  const dispatch: AppDispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (badges.Chat > 0) {
+        dispatch(clearChatBadge());
+      }
+    }, [badges]),
+  );
 
   let myTheme: CometChatTheme = new CometChatTheme({});
   myTheme.palette.setPrimary({
@@ -29,18 +50,13 @@ const Chat = ({ navigation, route }: ChatScreenType) => {
   });
   myTheme.palette.setSecondary({
     light: '#000000',
-    dark: '#FFFFFF'
-  })
+    dark: '#FFFFFF',
+  });
   myTheme.palette.setAccent({
     light: '#000000',
-    dark: '#FFFFFF'
-  })
-  // myTheme.typography.setFontFamily([
-  //   fontFamily._400_Regular.fontFamily,
-  //   fontFamily._500_Medium.fontFamily,
-  //   fontFamily._600_SemiBold.fontFamily,
-  //   fontFamily._700_Bold.fontFamily,
-  // ]);
+    dark: '#FFFFFF',
+  });
+  myTheme.typography.setFontFamily(['Poppins']);
 
   const _onItemPress = (item: CometChat.Conversation) => {
     const chatWith = item.getConversationWith();
@@ -54,9 +70,11 @@ const Chat = ({ navigation, route }: ChatScreenType) => {
   return (
     <SafeScreen>
       <View style={{ height: '100%', width: '100%' }}>
-        {/* <CometChatConversationsWithMessages user={chatWith}  /> */}
         <CometChatContextProvider theme={myTheme}>
-          <CometChatConversations onItemPress={_onItemPress} hideSubmitIcon={true}/>
+          <CometChatConversations
+            onItemPress={_onItemPress}
+            hideSubmitIcon={true}
+          />
         </CometChatContextProvider>
       </View>
     </SafeScreen>

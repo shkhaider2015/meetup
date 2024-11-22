@@ -1,13 +1,16 @@
-import { useSelector } from 'react-redux'; // Add the import
+import { useDispatch, useSelector } from 'react-redux'; // Add the import
 import { EmptyList, NotificationItem } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { getNotifications } from '@/services/notifications';
+import { AppDispatch, RootState } from '@/store';
+import {
+  clearNotificationsBadge,
+} from '@/store/slices/badgeSlice';
 import { useTheme } from '@/theme';
-import { heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { INotificationItem } from '@/types/notificationItem';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -17,11 +20,12 @@ import {
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
-import { RootState } from '@/store';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Notifications = ({}: NotificationsScreenType) => {
   const userId = useSelector((state: RootState) => state.user._id);
-
+  const badges = useSelector((state: RootState) => state.badge);
+  const dispatch: AppDispatch = useDispatch();
   const [notificationData, setNotificationData] = useState<INotificationItem[]>(
     [],
   );
@@ -49,6 +53,14 @@ const Notifications = ({}: NotificationsScreenType) => {
       mutate();
     }
   }, [userId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (badges.Notifications > 0) {
+        dispatch(clearNotificationsBadge());
+      }
+    }, [badges]),
+  );
 
   const _onRefresh = () => {
     setRefreshData(true);
