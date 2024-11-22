@@ -34,9 +34,9 @@ const NotificationItem = (props: INotificationItem) => {
 
     return date.format('HH:mm DD MMM YYYY'); 
   };
+  
   const onPressItem = () => {
     Linking.openURL(redirectPath)
-    
   }
 
   return (
