@@ -30,7 +30,8 @@ const APIEndPoints = {
   MESSAGE_REQUEST: 'requests/message',
   MESSAGE_REQUEST_SENDER: 'requests/message/sender',
   MESSAGE_REQUEST_RECEIVER: 'requests/message/receiver',
-  ALL_REQUESTS: 'requests'
+  ALL_REQUESTS: 'requests',
+  NOTIFICATION:'notifications/user',
 };
 
 export default APIEndPoints;
