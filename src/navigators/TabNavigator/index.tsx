@@ -44,6 +44,7 @@ import { convertImageURLforngRok } from '@/utils';
 import { Header } from '@/components';
 import NotificationTabNavigator from '../NotificationTabNavigator/NotificationTabNavigator';
 import { Variant } from '@/types/theme/config';
+import { IBadge } from '@/types/reducer';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -51,6 +52,7 @@ function TabsNavigator() {
   const { backgrounds, variant, colors } = useTheme();
   const { replace } = useNavigation<NavigationHookProps>();
   const userLocation = useSelector((state: RootState) => state.location);
+  const badges = useSelector((state: RootState) => state.badge);
 
   useFocusEffect(
     useCallback(() => {
@@ -62,7 +64,7 @@ function TabsNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused, variant),
+        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused, variant, badges),
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
@@ -107,6 +109,7 @@ const tabBarIconOption = (
   route: RouteProp<RootStackParamList, keyof RootStackParamList>,
   focused: boolean,
   variant: Variant,
+  badges: IBadge,
 ) => {
   let Icon: FC<SvgProps>;
 
@@ -155,8 +158,25 @@ const tabBarIconOption = (
     <View
       style={{
         alignItems: 'center',
+        position: 'relative'
       }}
     >
+      {((route.name === 'Chat' && badges.Chat > 0) ||
+        (route.name === 'Notifications' && badges.Notifications > 0)) && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            marginRight: -5,
+            marginTop: -5,
+            width: 8,
+            height: 8,
+            borderRadius: 15,
+            backgroundColor: '#fe333d',
+          }}
+        />
+      )}
       <View style={{
         height:  heights.bottomTabBarHeight - 30,
         justifyContent: 'flex-end',

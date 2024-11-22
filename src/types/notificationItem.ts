@@ -1,9 +1,16 @@
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType } from 'react-native';
 
 export interface INotificationItem {
-    id?: string;
-    image?: ImageSourcePropType;
-    user_name?: string;
-    notification?: string;
-    created_at?: string;
+  _id: string;
+  title: string;
+  message: string;
+  isRead: boolean;
+  redirectPath: string;
+  type: string;
+  createdAt: string;
+  sender: {
+    id: string;
+    name: string;
+    profileImage: string;
+  };
 }

@@ -57,10 +57,12 @@ import { CometChat } from '@cometchat/chat-sdk-react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import PostDetailsPlaceholder from './Postdetails.placeholder';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { queryClient } from '@/App';
 import { sendMessageRequest } from '@/services/Chat';
 import { darkModeMapStyles } from '@/utils/GoogleMap/style';
+import { useFocusEffect } from '@react-navigation/native';
+import { updateNotificationsBadge } from '@/store/slices/badgeSlice';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
