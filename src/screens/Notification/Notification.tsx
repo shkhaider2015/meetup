@@ -3,9 +3,7 @@ import { EmptyList, NotificationItem } from '@/components';
 import { SafeScreen } from '@/components/template';
 import { getNotifications } from '@/services/notifications';
 import { AppDispatch, RootState } from '@/store';
-import {
-  clearNotificationsBadge,
-} from '@/store/slices/badgeSlice';
+import { clearNotificationsBadge } from '@/store/slices/badgeSlice';
 import { useTheme } from '@/theme';
 import { RootStackParamList } from '@/types/navigation';
 import { INotificationItem } from '@/types/notificationItem';
@@ -21,6 +19,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { useFocusEffect } from '@react-navigation/native';
+import Notification from 'react-native-push-notification';
 
 const Notifications = ({}: NotificationsScreenType) => {
   const userId = useSelector((state: RootState) => state.user._id);
@@ -58,6 +57,7 @@ const Notifications = ({}: NotificationsScreenType) => {
     useCallback(() => {
       if (badges.Notifications > 0) {
         dispatch(clearNotificationsBadge());
+        Notification.removeAllDeliveredNotifications();
       }
     }, [badges]),
   );
@@ -68,49 +68,47 @@ const Notifications = ({}: NotificationsScreenType) => {
   };
 
   return (
-    <SafeScreen>
-      <View
-        style={[
-          backgrounds.gray30,
-          {
-            minHeight: '100%',
-          },
-        ]}
-      >
-        <FlatList
-          data={notificationData}
-          renderItem={({ item }) => <NotificationItem {...item} />}
-          keyExtractor={(item) => item._id}
-          ItemSeparatorComponent={() => (
-            <View
-              style={[
-                gutters.marginVertical_12,
-                { height: 1, backgroundColor: '#a5a4a846' },
-              ]}
-            />
-          )}
-          contentContainerStyle={{
-            paddingVertical: 34,
-            paddingHorizontal: 24,
-            minHeight: '100%',
-          }}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <EmptyList
-              containerStyle={[{ minHeight: '100%' }]}
-              text="No notifications found"
-            />
-          }
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshData}
-              onRefresh={_onRefresh}
-              tintColor={colors.primary}
-            />
-          }
-        />
-      </View>
-    </SafeScreen>
+    <View
+      style={[
+        backgrounds.gray30,
+        {
+          flex: 1,
+        },
+      ]}
+    >
+      <FlatList
+        data={notificationData}
+        renderItem={({ item }) => <NotificationItem {...item} />}
+        keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={() => (
+          <View
+            style={[
+              gutters.marginVertical_12,
+              { height: 1, backgroundColor: '#a5a4a846' },
+            ]}
+          />
+        )}
+        contentContainerStyle={{
+          paddingVertical: 34,
+          paddingHorizontal: 24,
+          minHeight: '100%',
+        }}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <EmptyList
+            containerStyle={[{ minHeight: '100%' }]}
+            text="No notifications found"
+          />
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshData}
+            onRefresh={_onRefresh}
+            tintColor={colors.primary}
+          />
+        }
+      />
+    </View>
   );
 };
 

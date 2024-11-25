@@ -8,7 +8,6 @@ export const getNotifications = async (userId: string) => {
       .json();
 
     const notificationspayload = response?.payload ;
-    // console.log('notifications ', notificationspayload);
 
     return notificationspayload;
   } catch (error: any) {
