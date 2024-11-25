@@ -105,6 +105,8 @@ const Notifications = ({}: NotificationsScreenType) => {
             refreshing={refreshData}
             onRefresh={_onRefresh}
             tintColor={colors.primary}
+            colors={[colors.primary]}
+            progressBackgroundColor={colors.gray00}
           />
         }
       />
