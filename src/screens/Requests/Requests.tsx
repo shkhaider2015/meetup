@@ -96,6 +96,8 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
               refreshing={refreshData}
               onRefresh={_onRefresh}
               tintColor={colors.primary}
+              colors={[colors.primary]}
+              progressBackgroundColor={colors.gray00}
             />
           }
           ListEmptyComponent={
