@@ -29,8 +29,8 @@ const CustomMarker = (props: IPost) => {
     <Marker
       style={[layout.row, layout.itemsStart]}
       coordinate={{
-        latitude: location?.latitude || 0,
-        longitude: location?.longitude || 0,
+        latitude: location?.coordinates ? location.coordinates[1] : 0,
+        longitude: location?.coordinates ?  location.coordinates[0] : 0,
       }}
       onPress={() => _gotoPostDetails()}
     >
