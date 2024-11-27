@@ -27,6 +27,8 @@ import { useDispatch, useSelector } from 'react-redux';
 const LoadingScreen = ({ navigation }: LoadingScreenType) => {
   const { layout, gutters, fonts, backgrounds } = useTheme();
   const currentUser = useSelector((state: RootState) => state.user);
+  const posts = useSelector((state: RootState) => state.posts);
+  const currenUserLocation = useSelector((state: RootState) => state.location);
 
   const dispatch: AppDispatch = useDispatch();
   const isFirstTimeLoggedIn = false;
@@ -34,9 +36,9 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
     mutationFn: (token: string) => {
       return loadUser(token);
     },
-    onError: (error) => {
-      console.log("----- Load User Error -----", error.message);
-      
+    onError: async (error) => {
+      console.log('----- Load User Error -----', error.message);
+
       if (error.message?.includes('expired')) {
         Toast.show({
           type: 'error',
@@ -48,19 +50,21 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
           dispatch(clearUser());
         }, 500);
       } else {
-        postMutation()
+        if (posts.length === 0) postMutation();
+        else await _checkAccountStatus();
       }
     },
     onSuccess: async (data: any) => {
-      console.log("----- Load User Success -----");
+      console.log('----- Load User Success -----');
       const user: IUserReducer = {
         ...data,
         profileImage: convertImageURLforngRok(data.profileImage),
         isLoggedIn: true,
       };
       dispatch(setUser(user));
-      postMutation()
-
+      // postMutation();
+      if (posts.length === 0) postMutation();
+      else await _checkAccountStatus();
     },
   });
 
@@ -69,21 +73,23 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
       return getAllPost({
         userId: currentUser._id,
         page: 1,
-        limit: 10
-      })
+        limit: 10,
+        latitude: currenUserLocation.latitude,
+        longitude: currenUserLocation.longitude,
+        radiusInKiloMeter: 30,
+      });
     },
     onSuccess: async (payload: any) => {
-      console.log("----- Post Data Success -----");
-      const data: IPostReducer[] = payload?.data
+      // console.log('----- Post Data Success -----');
+      const data: IPostReducer[] = payload?.data;
       dispatch(setPosts(data));
       await _checkAccountStatus();
     },
     onError: async (error) => {
-      console.log("----- Post Data Error -----", error.message);
-      await _checkAccountStatus()
+      // console.log('----- Post Data Error -----', error.message);
+      await _checkAccountStatus();
     },
-    
-  })
+  });
 
   useEffect(() => {
     const initializeUser = () => {
@@ -98,7 +104,7 @@ const LoadingScreen = ({ navigation }: LoadingScreenType) => {
   const _checkAccountStatus = async () => {
     try {
       const isJustLoggedIn = getItem<boolean>(localKey.JUST_LOGGED_IN);
-      
+
       if (!isJustLoggedIn) {
         navigation.replace('Tabs');
         return;

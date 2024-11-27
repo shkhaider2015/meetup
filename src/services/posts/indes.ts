@@ -16,8 +16,8 @@ export const createPost = async (data: IPostForm) => {
       if (key == 'image') {
         formdata.append(key, convertAssetToFile(anyData[key]));
       } else if (key == 'location') {
-        formdata.append('location[latitude]', anyData[key].latitude);
-        formdata.append('location[longitude]', anyData[key].longitude);
+        formdata.append('location[coordinates][1]', anyData[key].latitude);
+        formdata.append('location[coordinates][0]', anyData[key].longitude);
       } else {
         formdata.append(key, anyData[key]);
       }
@@ -42,7 +42,14 @@ export const createPost = async (data: IPostForm) => {
   }
 };
 
-export const getAllPost = async (queryParams: { userId: string, page: number; limit:number }) => {
+export const getAllPost = async (queryParams: {
+  userId: string;
+  page: number;
+  limit: number;
+  latitude: number;
+  longitude: number;
+  radiusInKiloMeter: number;
+}) => {
   try {
     const response: any = await instance
       .get(END_POINTS.POST, {
@@ -127,8 +134,8 @@ export const updatePost = async (
         // case may user remove existing
         if (!value && !imageURL) formdata.append(key, null);
       } else if (key == 'location' && !_.isEmpty(value)) {
-        formdata.append('location[latitude]', anyData[key].latitude);
-        formdata.append('location[longitude]', anyData[key].longitude);
+        formdata.append('location[coordinates][1]', anyData[key].latitude);
+        formdata.append('location[coordinates][0]', anyData[key].longitude);
       } else {
         if (!_.isEmpty(value)) {
           formdata.append(key, anyData[key] || null);
