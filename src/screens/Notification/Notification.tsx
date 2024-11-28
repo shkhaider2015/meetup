@@ -20,6 +20,7 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { useFocusEffect } from '@react-navigation/native';
 import Notification from 'react-native-push-notification';
+import NotificationPlaceholder from './Notification.placeholder';
 
 const Notifications = ({}: NotificationsScreenType) => {
   const userId = useSelector((state: RootState) => state.user._id);
@@ -29,6 +30,7 @@ const Notifications = ({}: NotificationsScreenType) => {
     [],
   );
   const [refreshData, setRefreshData] = useState(false);
+  const [loadinng, setLoading] = useState(false);
 
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
   const { isPending, isError, mutate } = useMutation({
@@ -38,23 +40,27 @@ const Notifications = ({}: NotificationsScreenType) => {
     onSuccess: (data: INotificationItem[]) => {
       console.log('Notifications fetched successfully:', data);
       setNotificationData(data);
-      setRefreshData(false);
+      if (refreshData) setRefreshData(false);
+      if (loadinng) setLoading(false);
     },
     onError: (error) => {
       console.error('Error fetching notifications:', error);
-      setRefreshData(false);
+      if (refreshData) setRefreshData(false);
+      if (loadinng) setLoading(false);
     },
   });
 
   useEffect(() => {
     console.log('userId:', userId);
     if (userId) {
+      setLoading(true);
       mutate();
     }
   }, [userId]);
 
   useFocusEffect(
     useCallback(() => {
+      mutate();
       if (badges.Notifications > 0) {
         dispatch(clearNotificationsBadge());
         Notification.removeAllDeliveredNotifications();
@@ -66,6 +72,8 @@ const Notifications = ({}: NotificationsScreenType) => {
     setRefreshData(true);
     mutate();
   };
+
+  if (loadinng) return <NotificationPlaceholder />;
 
   return (
     <View
