@@ -39,6 +39,7 @@ import _ from 'lodash';
 import LottieView from 'lottie-react-native';
 import {
   Dimensions,
+  RefreshControl,
   ScrollView,
   Share,
   StyleSheet,
@@ -78,10 +79,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
 
   const [chatLoading, setChatLoading] = useState(false);
 
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, isRefetching, refetch } = useQuery({
     queryKey: ['postdetail', postId],
     queryFn: () => getPostById({ id: postId, userId: currentUser._id }),
     enabled: !!postId,
+    
   });
 
   const {
@@ -283,6 +285,9 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     );
   };
 
+  const _onRefresh = () => {
+    refetch();
+  };
 
   if (isLoading) {
     return <PostDetailsPlaceholder />;
@@ -392,7 +397,17 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
           </View>
         )}
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={_onRefresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+            progressBackgroundColor={colors.gray00}
+          />
+        }
+      >
         <View style={[backgrounds.gray00, { minHeight: screenHeight }]}>
           <View style={[gutters.paddingHorizontal_24]}>
             <View
@@ -411,43 +426,45 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   fastImageProp={{ style: { borderRadius: 10 } }}
                 />
               )}
-              {!_.isEmpty(location) && !_.isEmpty(location.coordinates) && _.isEmpty(image) && (
-                <RNMapView
-                  provider="google"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  initialRegion={{
-                    ...getRegionForCoordinates([
-                      {
+              {!_.isEmpty(location) &&
+                !_.isEmpty(location.coordinates) &&
+                _.isEmpty(image) && (
+                  <RNMapView
+                    provider="google"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    initialRegion={{
+                      ...getRegionForCoordinates([
+                        {
+                          latitude: location.coordinates
+                            ? location.coordinates[1]
+                            : 0,
+                          longitude: location.coordinates
+                            ? location.coordinates[0]
+                            : 0,
+                        },
+                      ]),
+                    }}
+                    scrollEnabled={true}
+                    zoomEnabled={true}
+                    rotateEnabled={true}
+                    pitchEnabled={true}
+                    // mapPadding={{ top: 50, right: 50, bottom: 5, left: 5 }}
+                  >
+                    <Marker
+                      coordinate={{
                         latitude: location.coordinates
                           ? location.coordinates[1]
                           : 0,
                         longitude: location.coordinates
                           ? location.coordinates[0]
                           : 0,
-                      },
-                    ]),
-                  }}
-                  scrollEnabled={true}
-                  zoomEnabled={true}
-                  rotateEnabled={true}
-                  pitchEnabled={true}
-                  // mapPadding={{ top: 50, right: 50, bottom: 5, left: 5 }}
-                >
-                  <Marker
-                    coordinate={{
-                      latitude: location.coordinates
-                        ? location.coordinates[1]
-                        : 0,
-                      longitude: location.coordinates
-                        ? location.coordinates[0]
-                        : 0,
-                    }}
-                  />
-                </RNMapView>
-              )}
+                      }}
+                    />
+                  </RNMapView>
+                )}
             </View>
             <View
               style={[

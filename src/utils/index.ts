@@ -318,8 +318,6 @@ export const distanceBetweenTwoCoordinates = (
     Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) ** 2;
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  console.log('Distance ', R * c);
   const totalDistance = R * c;
 
   return `${totalDistance.toFixed(2)} km`; // Distance in kilometers
