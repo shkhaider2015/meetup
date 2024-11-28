@@ -31,8 +31,7 @@ export interface IPostReducer {
 }
 
 interface IPostLocation {
-  latitude: number;
-  longitude: number;
+  coordinates: number[]
 }
 
 interface IPostUser {

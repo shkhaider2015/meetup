@@ -1,6 +1,13 @@
 import { activityData } from '@/constants/activities';
 import store from '@/store';
-import { Alert, Dimensions, Linking, PermissionsAndroid, Platform, Share } from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  Share,
+} from 'react-native';
 import { Asset } from 'react-native-image-picker';
 import {
   request,
@@ -97,9 +104,9 @@ export const requestLocationPermission = async (): Promise<boolean> => {
             text: 'Open Settings',
             onPress: () => Linking.openSettings(),
           },
-        ]
+        ],
       );
-      return false
+      return false;
     } else {
       console.log('You cannot use Geolocation', granted);
       return false;
@@ -207,6 +214,7 @@ export function getRegionForCoordinates(
   };
 }
 
+
 export const convertImageURLforngRok = (url: string) => {
   const baseUrl = process.env.DEV_API_URL || '';
 
@@ -286,4 +294,33 @@ export const isValidJSON = (str: string): boolean => {
   } catch {
     return false;
   }
-}
+};
+
+export const distanceBetweenTwoCoordinates = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): string => {
+  console.log(lat1, lon1, lat2, lon2);
+
+  const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
+  const R = 6371;
+
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+
+  const radLat1 = toRadians(lat1);
+  const radLat2 = toRadians(lat2);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  console.log('Distance ', R * c);
+  const totalDistance = R * c;
+
+  return `${totalDistance.toFixed(2)} km`; // Distance in kilometers
+};
