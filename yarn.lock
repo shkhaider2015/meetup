@@ -9158,6 +9158,7 @@ __metadata:
     react-native-svg: ^15.4.0
     react-native-svg-transformer: ^1.5.0
     react-native-tab-view: ^3.5.2
+    react-native-theme-switch-animation: ^0.8.0
     react-native-toast-message: ^2.2.0
     react-native-ui-datepicker: ^2.0.3
     react-redux: ^9.1.2
@@ -10789,6 +10790,16 @@ __metadata:
     react-native: "*"
     react-native-pager-view: "*"
   checksum: bd287e5543881aa662ee55418a3bd5dacb25033425a9fcb0fff21c3a3b96f956af1a77cd9bab4e7a8e94590080a5d8e3cb99cfa8613b19bf6da24bfc9b4942d4
+  languageName: node
+  linkType: hard
+
+"react-native-theme-switch-animation@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "react-native-theme-switch-animation@npm:0.8.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 2571d5a83384204d2196d4b699c4fcedb7f4e6c3c48614945555cb398c5f30c2c1a2459fbf3ad8152027646c2b16ce54d7f341800261e9698641b41edc8d5857
   languageName: node
   linkType: hard
 

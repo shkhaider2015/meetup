@@ -61,6 +61,7 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^15.4.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-theme-switch-animation": "^0.8.0",
     "react-native-toast-message": "^2.2.0",
     "react-native-ui-datepicker": "^2.0.3",
     "react-redux": "^9.1.2",

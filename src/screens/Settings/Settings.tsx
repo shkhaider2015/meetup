@@ -14,6 +14,7 @@ import { Dimensions, ScrollView, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
+import switchTheme from 'react-native-theme-switch-animation';
 
 const SettingsScreen = ({ navigation }: SettingsScreenType) => {
   const { gutters, colors, changeTheme, variant } = useTheme();
@@ -48,7 +49,19 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
   };
 
   const _toggleTheme = () => {
-    changeTheme(variant === 'dark' ? 'default' : 'dark');
+    switchTheme({
+      switchThemeFunction: () => {
+        changeTheme(variant === 'dark' ? 'default' : 'dark');
+      },
+      animationConfig: {
+        type: 'circular',
+        duration: 700,
+        startingPoint: {
+          cxRatio: 0.7,
+          cyRatio: 0.36,
+        },
+      },
+    });
   };
 
   return (
@@ -74,13 +87,15 @@ const SettingsScreen = ({ navigation }: SettingsScreenType) => {
           /> */}
           <SettingsItem
             label="Logout"
-            Icon={() => (
-              <Signout width={20} height={20} color={'#FFFFFF'} />
-            )}
+            Icon={() => <Signout width={20} height={20} color={'#FFFFFF'} />}
             onPress={() => _logout()}
           />
 
-          <Button label='Toggle Theme'  onPress={() => _toggleTheme()} containerStyle={[ gutters.marginTop_24 ]}/>
+          <Button
+            label="Toggle Theme"
+            onPress={() => _toggleTheme()}
+            containerStyle={[gutters.marginTop_24]}
+          />
         </View>
       </ScrollView>
     </SafeScreen>
