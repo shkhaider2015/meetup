@@ -1,4 +1,4 @@
-import { ChevronLeft, Star, Tick } from '@/assets/icon';
+import { Tick } from '@/assets/icon';
 import {
   Header,
   ProfileSectionActivities,
@@ -85,11 +85,11 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (userId && currentUser) {
+      if (userId && currentUser && !userInfo) {
         mutate();
         postsMutation();
       }
-    }, [userId, currentUser]),
+    }, [userId, currentUser, userInfo]),
   );
 
   const _goBack = () => {

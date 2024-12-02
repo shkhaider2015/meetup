@@ -25,10 +25,20 @@ const DatePicker = (props: DatePickerProps) => {
     minutes: 0,
     period: 'am'
   });
+  const [timeLimit, setTimeLimit] = useState({
+    minHour: 1,
+    minMinutes: 0,
+    minSeconds: 0,
+    maxHour: 24,
+    maxMinutes: 59,
+    maxSeconds: 59
+  })
   const [snapPoints] = useState<string[]>(type === "TIME" ? ["40%"] : ["65%"]);
 
   const { backgrounds, fonts, colors, gutters, layout, variant } = useTheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const yesterday = dayjs().subtract(1, 'day').toDate();
 
   useEffect(() => {
     if (open) {
@@ -229,6 +239,7 @@ const DatePicker = (props: DatePickerProps) => {
                 ...fontFamily._600_SemiBold,
                 ...fonts.gray800
               }}
+              minDate={yesterday}
             />
           )}
           <View

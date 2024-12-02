@@ -66,6 +66,7 @@ import {
 } from '@/assets/images';
 import { google } from '@/constants/keys';
 import { darkModeMapStyles } from '@/utils/GoogleMap/style';
+import { Image as FastImage } from '@/components/template';
 
 const postInitialValues: PostStateType = {
   date: undefined,
@@ -540,38 +541,6 @@ const Post = ({ navigation, route }: PostScreenType) => {
                 </RNMapView>
               </View>
             )}
-            {post.imageURL && !post.imageUri && (
-              <ImageBackground
-                source={{ uri: convertImageURLforngRok(post.imageURL) }}
-                style={{
-                  width: '100%',
-                  height: '60%',
-                  position: 'relative',
-                }}
-                imageStyle={[borders.rounded_16]}
-              >
-                <TouchableOpacity
-                  style={[
-                    layout.absolute,
-                    layout.top0,
-                    layout.right0,
-                    layout.justifyCenter,
-                    layout.itemsCenter,
-                    backgrounds.gray150,
-                    {
-                      width: 30,
-                      height: 30,
-                      borderRadius: 40,
-                      marginTop: -8,
-                      marginRight: -5,
-                    },
-                  ]}
-                  onPress={() => _onCancelData('IMAGE')}
-                >
-                  <Close color={colors.gray800} width={20} height={20} />
-                </TouchableOpacity>
-              </ImageBackground>
-            )}
             {post.imageUri && (
               <ImageBackground
                 source={{ uri: post.imageUri.uri }}
@@ -603,6 +572,47 @@ const Post = ({ navigation, route }: PostScreenType) => {
                   <Close color={colors.gray800} width={20} height={20} />
                 </TouchableOpacity>
               </ImageBackground>
+            )}
+            {post.imageURL && !post.imageUri && (
+              <View
+                style={[
+                  {
+                    width: '100%',
+                    height: '60%',
+                    position: 'relative',
+                  },
+                  borders.rounded_16,
+                ]}
+              >
+                <FastImage
+                  imageURL={convertImageURLforngRok(post.imageURL || '')}
+                  containerStyle={{
+                    width: '100%',
+                    height: 'auto',
+                  }}
+                  fastImageProp={{ style: { borderRadius: 10 } }}
+                />
+                <TouchableOpacity
+                  style={[
+                    layout.absolute,
+                    layout.top0,
+                    layout.right0,
+                    layout.justifyCenter,
+                    layout.itemsCenter,
+                    backgrounds.gray150,
+                    {
+                      width: 30,
+                      height: 30,
+                      borderRadius: 40,
+                      marginTop: -8,
+                      marginRight: -5,
+                    },
+                  ]}
+                  onPress={() => _onCancelData('IMAGE')}
+                >
+                  <Close color={colors.gray800} width={20} height={20} />
+                </TouchableOpacity>
+              </View>
             )}
             {post.address && (
               <View
