@@ -24,7 +24,8 @@ const limit = 10;
 
 const ListView = ({}: ListViewScreenType) => {
   const posts = useSelector((state: RootState) => state.posts);
-  const user = useSelector((state: RootState) => state.user);
+  const currentUser = useSelector((state: RootState) => state.user);
+  const currenUserLocation = useSelector((state: RootState) => state.location);
   const [refreshData, setRefreshData] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -38,7 +39,14 @@ const ListView = ({}: ListViewScreenType) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: (data: { page: number }) => {
-      return getAllPost({ userId: user._id, page: data.page, limit });
+      return getAllPost({
+        userId: currentUser._id,
+        page: data.page,
+        limit,
+        latitude: currenUserLocation.latitude,
+        longitude: currenUserLocation.longitude,
+        radiusInKiloMeter: 200,
+      });
     },
     onSuccess: (payload: any) => {
       const data: IPostReducer[] = payload?.data;
@@ -73,7 +81,6 @@ const ListView = ({}: ListViewScreenType) => {
     setLoadMore(true);
   };
 
-  console.log('Hasmore ', hasMore);
 
   return (
     <SafeScreen>
@@ -97,6 +104,8 @@ const ListView = ({}: ListViewScreenType) => {
               refreshing={refreshData}
               onRefresh={_onRefresh}
               tintColor={colors.primary}
+              colors={[colors.primary]}
+              progressBackgroundColor={colors.gray00}
             />
           }
           ListEmptyComponent={

@@ -31,6 +31,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationHookProps } from '@/types/navigation';
 import {
   convertImageURLforngRok,
+  distanceBetweenTwoCoordinates,
   getIconByID,
   getRegionForCoordinates,
   sharePost,
@@ -63,6 +64,7 @@ const Post = (props: IPost) => {
     user,
     activity,
     location,
+    address,
     createdAt,
     details,
     date,
@@ -73,6 +75,7 @@ const Post = (props: IPost) => {
     isChatStarts,
   } = props;
   const currentUser = useSelector((state: RootState) => state.user);
+  const currentUserLocation = useSelector((state: RootState) => state.location);
   const [showDetails, setShowDetails] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
 
@@ -174,13 +177,18 @@ const Post = (props: IPost) => {
   };
 
   const _onEdit = () => {
+    const postLocation = location?.coordinates && location.coordinates.length === 2 ? {
+      latitude: location.coordinates[1],
+      longitude: location.coordinates[0]
+    } : undefined
     const initialValues: PostStateType = {
       text: details,
       imageURL: image,
-      location: location,
+      location: postLocation,
       date: !_.isEmpty(date) ? dayjs(date) : undefined,
       time: !_.isEmpty(time) ? dayjs(time) : undefined,
       activity: activityData.find((item) => item.id === activity),
+      address: address
     };
     navigate('Post', { initialValues: initialValues, postId: _id });
   };
@@ -233,6 +241,17 @@ const Post = (props: IPost) => {
     });
   };
 
+  const _getDistance = () => {
+    if(_.isEmpty(location?.coordinates) || location?.coordinates.length !== 2) return '';
+    if(currentUserLocation.latitude === 0 || currentUserLocation.longitude === 0) return ''
+    return distanceBetweenTwoCoordinates(
+      location?.coordinates[1],
+      location?.coordinates[0],
+      currentUserLocation.latitude,
+      currentUserLocation.longitude,
+    );
+  };
+
   return (
     <View style={[backgrounds.gray00, gutters.marginTop_24, layout.relative]}>
       {isPending && (
@@ -281,7 +300,9 @@ const Post = (props: IPost) => {
               <Tick />
             </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-              <Text style={[fonts.size_12, fonts.gray200]}>3km</Text>
+              <Text style={[fonts.size_12, fonts.gray200]}>
+                {_getDistance()}
+              </Text>
               {/* <Tick /> */}
             </View>
           </View>
@@ -327,7 +348,7 @@ const Post = (props: IPost) => {
             style={styles.location}
           />
         )} */}
-        {!_.isEmpty(location) && _.isEmpty(image) && (
+        {!_.isEmpty(location) && !_.isEmpty(location.coordinates) && _.isEmpty(image) && (
           <RNMapView
             provider="google"
             style={{
@@ -337,8 +358,8 @@ const Post = (props: IPost) => {
             initialRegion={{
               ...getRegionForCoordinates([
                 {
-                  latitude: location.latitude,
-                  longitude: location.longitude,
+                  latitude: location.coordinates ? location.coordinates[1] : 0 ,
+                  longitude: location.coordinates ? location.coordinates[0] : 0,
                 },
               ]),
             }}
@@ -349,8 +370,8 @@ const Post = (props: IPost) => {
           >
             <Marker
               coordinate={{
-                latitude: location.latitude || 0,
-                longitude: location.longitude || 0,
+                latitude: location.coordinates ? location.coordinates[1] : 0 ,
+                longitude: location.coordinates ? location.coordinates[0] : 0,
               }}
             />
           </RNMapView>

@@ -1,113 +1,103 @@
-import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationState } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme';
 import AuthNavigator from './AuthNavigator';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import ProtectedScreens from './Protected';
 import { useEffect, useState } from 'react';
-import { NetworkStatusBar } from '@/components';
-import { RootStackParamList } from '@/types/navigation';
-import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import { DEEP_LINK_IDS } from '@/constants';
+import PushNotification from 'react-native-push-notification';
+import { linking } from '@/utils/Deeplinking';
+import _ from 'lodash';
+import { isValidJSON } from '@/utils';
+import {
+  updateChatBadge,
+  updateNotificationsBadge,
+} from '@/store/slices/badgeSlice';
+
+const getActiveRouteName = (
+  state: NavigationState | undefined,
+): string | null => {
+  if (!state || state.index == null) return null;
+
+  const route = state.routes[state.index];
+  if (route.state) {
+    // Recursively check nested navigator state
+    return getActiveRouteName(route.state as NavigationState);
+  }
+
+  return route.name;
+};
 
 function ApplicationNavigator() {
   const { navigationTheme } = useTheme();
+  const dispatch: AppDispatch = useDispatch();
+
   const user = useSelector((state: RootState) => state.user);
-  
-  interface NotificationData {
-    navigationId?: string;
-    id?: string;
-  }
-  
-  function buildDeepLinkFromNotificationData(data: NotificationData | undefined): string | null {
-    const navigationId = data?.navigationId;
-    if (!navigationId || !DEEP_LINK_IDS.includes(navigationId)) {
-      console.warn('Unverified navigationId', navigationId);
-      return null;
-    }
-  
-    if (navigationId === 'home') {
-      return 'mingleeapp://home';
-    }
-  
-    if (navigationId === 'settings') {
-      return 'mingleeapp://settings';
-    }
+  const [currentRouteName, setCurrentRouteName] = useState<string | null>(null);
 
-    if (navigationId === 'post') {
-      const postId = data?.id;
-      if (typeof postId === 'string') {
-        return `mingleeapp://post/${postId}`;
-      }
-    }
-  
-  
-    console.warn('Missing postId');
-    return null;
-  }
-  
-  const linking: LinkingOptions<RootStackParamList> = {
-    prefixes: ['mingleeapp://', process.env.DEV_API_URL || ''],
-    config: {
-      initialRouteName: "Tabs",
-      screens: {
-        Tabs: {
-          screens: {
-            Explore: "explore"
-          }
-        },
-        PostDetails: 'post/:postId',
-        Settings: 'settings',
-        OtherProfile: 'user/:userId'
-      },
-    },
-    async getInitialURL() {
-      const url = await Linking.getInitialURL();
-      console.log("Url ", url);
-      
-      if (typeof url === 'string') {
-        return url;
-      }
-  
-      const message = await messaging().getInitialNotification();
-      const deeplinkURL = buildDeepLinkFromNotificationData(message?.data as NotificationData);
-      if (typeof deeplinkURL === 'string') {
-        return deeplinkURL;
-      }
-      return null;
-    },
-    subscribe(listener: (url: string) => void) {
-      const onReceiveURL = ({ url }: { url: string }) => {
-        console.log("URL Listener ", url);
-        
-       return listener(url)
-      };
-  
-
-      // Listen to incoming links from deep linking
-      const linkingSubscription = Linking.addEventListener('url', onReceiveURL);
-  
-      // Handle background notification
-      const unsubscribe = messaging().onNotificationOpenedApp(remoteMessage => {
-        const url = buildDeepLinkFromNotificationData(remoteMessage.data as NotificationData);
-        if (typeof url === 'string') {
-          listener(url);
-        }
-      });
-  
-      return () => {
-        linkingSubscription.remove();
-        unsubscribe();
-      };
-    },
+  const onStateChange = (state?: NavigationState) => {
+    const activeRouteName = getActiveRouteName(state);
+    setCurrentRouteName(activeRouteName);
   };
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      // console.log('Foreground Message:', remoteMessage);
+      let userData: any = null;
+      let notificationType: 'Chat' | 'Notification' = 'Notification';
+      if (typeof remoteMessage.data?.message === 'string') {
+        if (isValidJSON(remoteMessage.data?.message)) {
+          notificationType = 'Chat';
+          userData = JSON.parse(_.cloneDeep(remoteMessage.data?.message));
+          userData.redirectPath = `mingleeapp://chat/${userData.sender}`;
+          userData.title = remoteMessage.data?.title.toString();
+          userData.message = remoteMessage.notification?.body || '';
+        } else {
+          notificationType = 'Notification';
+          userData = remoteMessage.data;
+        }
+      }
+
+      // console.log("     -------------------------------         ");
+      // console.log("------------  User Data  --------- ", userData);
+      // console.log("     -------------------------------         ");
+
+      if (
+        notificationType === 'Chat' &&
+        (currentRouteName === 'Messages' || currentRouteName === 'Chat')
+      )
+        return;
+
+      if (
+        notificationType === 'Notification' &&
+        currentRouteName !== 'Notification'
+      )
+        dispatch(updateNotificationsBadge(1));
+      if (notificationType === 'Chat') dispatch(updateChatBadge(1));
+
+      // Handle the foreground notification here
+      PushNotification.localNotification({
+        channelId: 'default',
+        title: userData.title || 'You have received new notification',
+        message: userData.message || '',
+        smallIcon: 'ic_launcher.png',
+        userInfo: userData,
+      });
+    });
+
+    return unsubscribe;
+  }, [currentRouteName]);
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer linking={linking} theme={navigationTheme}>
-        { user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator /> }
+      <NavigationContainer
+        linking={linking}
+        theme={navigationTheme}
+        onStateChange={onStateChange}
+      >
+        {user.isLoggedIn ? <ProtectedScreens /> : <AuthNavigator />}
       </NavigationContainer>
       {/* <NetworkStatusBar /> */}
     </SafeAreaProvider>

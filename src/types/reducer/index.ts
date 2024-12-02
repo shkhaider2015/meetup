@@ -31,8 +31,7 @@ export interface IPostReducer {
 }
 
 interface IPostLocation {
-  latitude: number;
-  longitude: number;
+  coordinates: number[]
 }
 
 interface IPostUser {
@@ -72,4 +71,10 @@ export enum EMessageRequestStatus {
   ACCEPTED = 'ACCEPTED',
   DECLINED = 'DECLINED',
   PENDING = 'PENDING',
+}
+
+export interface IBadge {
+  Chat: number;
+  Notifications: number;
+  Requests: number;
 }

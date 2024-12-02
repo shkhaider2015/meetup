@@ -28,6 +28,7 @@ import { IPostReducer } from '@/types/reducer';
 import { PostStateType } from '@/types/screens/post';
 import {
   convertImageURLforngRok,
+  distanceBetweenTwoCoordinates,
   getIconByID,
   getRegionForCoordinates,
   sharePost,
@@ -38,6 +39,7 @@ import _ from 'lodash';
 import LottieView from 'lottie-react-native';
 import {
   Dimensions,
+  RefreshControl,
   ScrollView,
   Share,
   StyleSheet,
@@ -57,14 +59,17 @@ import { CometChat } from '@cometchat/chat-sdk-react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import PostDetailsPlaceholder from './Postdetails.placeholder';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { queryClient } from '@/App';
 import { sendMessageRequest } from '@/services/Chat';
+import { useFocusEffect } from '@react-navigation/native';
+import { updateNotificationsBadge } from '@/store/slices/badgeSlice';
 
 const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   const { postId } = route.params;
 
   const currentUser = useSelector((state: RootState) => state.user);
+  const currentUserLocation = useSelector((state: RootState) => state.location);
   const dispatch: AppDispatch = useDispatch();
   const screenHeight =
     Dimensions.get('screen').height - heights.tabNavigationHeader;
@@ -74,10 +79,11 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
 
   const [chatLoading, setChatLoading] = useState(false);
 
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, isRefetching, refetch } = useQuery({
     queryKey: ['postdetail', postId],
     queryFn: () => getPostById({ id: postId, userId: currentUser._id }),
     enabled: !!postId,
+    
   });
 
   const {
@@ -200,13 +206,21 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
   };
 
   const _onEdit = () => {
+    const postLocation =
+      location?.coordinates && location.coordinates.length === 2
+        ? {
+            latitude: location.coordinates[1],
+            longitude: location.coordinates[0],
+          }
+        : undefined;
     const initialValues: PostStateType = {
       text: details,
       imageURL: image,
-      location: location,
+      location: postLocation,
       date: !_.isEmpty(date) ? dayjs(date) : undefined,
       time: !_.isEmpty(time) ? dayjs(time) : undefined,
       activity: activityData.find((item) => item.id === activity),
+      address: address,
     };
     navigation.navigate('Post', { initialValues: initialValues, postId: _id });
   };
@@ -253,6 +267,26 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
     } else {
       navigation.replace('Tabs');
     }
+  };
+
+  const _getDistance = () => {
+    if (_.isEmpty(location?.coordinates) || location?.coordinates.length !== 2)
+      return '';
+    if (
+      currentUserLocation.latitude === 0 ||
+      currentUserLocation.longitude === 0
+    )
+      return '';
+    return distanceBetweenTwoCoordinates(
+      location?.coordinates[1],
+      location?.coordinates[0],
+      currentUserLocation.latitude,
+      currentUserLocation.longitude,
+    );
+  };
+
+  const _onRefresh = () => {
+    refetch();
   };
 
   if (isLoading) {
@@ -317,13 +351,13 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       </TouchableOpacity>
       <View style={[layout.col, gutters.marginHorizontal_12]}>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-        <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
-          {user.name}
-        </Text>
-        <Tick />
+          <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
+            {user.name}
+          </Text>
+          <Tick />
         </View>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
-          <Text style={[fonts.size_12, fonts.gray200]}>{'3km'}</Text>
+          <Text style={[fonts.size_12, fonts.gray200]}>{_getDistance()}</Text>
           {/* <Tick /> */}
         </View>
       </View>
@@ -354,17 +388,26 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
               layout.justifyCenter,
             ]}
           >
-            {
-              currentUser._id === user._id && <MenuHr
-              color={colors.gray300}
-              onPress={() => _onBottomSheetOpen()}
-            />
-            }
-            
+            {currentUser._id === user._id && (
+              <MenuHr
+                color={colors.gray300}
+                onPress={() => _onBottomSheetOpen()}
+              />
+            )}
           </View>
         )}
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={_onRefresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+            progressBackgroundColor={colors.gray00}
+          />
+        }
+      >
         <View style={[backgrounds.gray00, { minHeight: screenHeight }]}>
           <View style={[gutters.paddingHorizontal_24]}>
             <View
@@ -383,30 +426,45 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
                   fastImageProp={{ style: { borderRadius: 10 } }}
                 />
               )}
-              {!_.isEmpty(location) && _.isEmpty(image) && (
-                <RNMapView
-                  provider="google"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  initialRegion={{
-                    ...getRegionForCoordinates([
-                      {
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                      },
-                    ]),
-                  }}
-                >
-                  <Marker
-                    coordinate={{
-                      latitude: location.latitude || 0,
-                      longitude: location.longitude || 0,
+              {!_.isEmpty(location) &&
+                !_.isEmpty(location.coordinates) &&
+                _.isEmpty(image) && (
+                  <RNMapView
+                    provider="google"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                     }}
-                  />
-                </RNMapView>
-              )}
+                    initialRegion={{
+                      ...getRegionForCoordinates([
+                        {
+                          latitude: location.coordinates
+                            ? location.coordinates[1]
+                            : 0,
+                          longitude: location.coordinates
+                            ? location.coordinates[0]
+                            : 0,
+                        },
+                      ]),
+                    }}
+                    scrollEnabled={true}
+                    zoomEnabled={true}
+                    rotateEnabled={true}
+                    pitchEnabled={true}
+                    // mapPadding={{ top: 50, right: 50, bottom: 5, left: 5 }}
+                  >
+                    <Marker
+                      coordinate={{
+                        latitude: location.coordinates
+                          ? location.coordinates[1]
+                          : 0,
+                        longitude: location.coordinates
+                          ? location.coordinates[0]
+                          : 0,
+                      }}
+                    />
+                  </RNMapView>
+                )}
             </View>
             <View
               style={[

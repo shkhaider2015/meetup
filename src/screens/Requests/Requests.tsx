@@ -19,6 +19,7 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
+import NotificationPlaceholder from '../Notification/Notification.placeholder';
 
 const RequestsScreen = ({ navigation }: RequestsScreenType) => {
   const { layout, gutters, colors } = useTheme();
@@ -28,6 +29,7 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
 
   const [refreshData, setRefreshData] = useState(false);
   const [data, setData] = useState<IMessageRequest[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: () => {
@@ -36,14 +38,17 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
     onSuccess: (data: IMessageRequest[]) => {
       setData(data);
       setRefreshData(false);
+      if (loading) setLoading(false);
     },
     onError: () => {
       setRefreshData(false);
+      if (loading) setLoading(false);
     },
   });
 
   useEffect(() => {
     if (!_.isEmpty(currentUser._id)) {
+      setLoading(true);
       mutate();
     }
   }, [currentUser]);
@@ -60,66 +65,64 @@ const RequestsScreen = ({ navigation }: RequestsScreenType) => {
     setData((pS) => pS.filter((item) => item._id !== id));
   };
 
+  if (loading) return <NotificationPlaceholder />;
+
   return (
-    <SafeScreen>
-      <View
-        style={[
-          {
-            height: screenHeight,
-          },
-          gutters.paddingHorizontal_16,
-        ]}
-      >
-        {/* <Header label="Message Request" /> */}
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <MessageRequestItem
-              {...item}
-              onAccept={onAccept}
-              onDecline={onDecline}
-              type={item.sender._id === currentUser._id ? "SENDER" : "RECEIVER"}
-            />
-          )}
-          keyExtractor={(item) => item.toString()}
-          ItemSeparatorComponent={() => (
-            <View
-              style={[
-                { height: 10 },
-                layout.fullWidth,
-                gutters.marginVertical_8,
-              ]}
-            />
-          )}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshData}
-              onRefresh={_onRefresh}
-              tintColor={colors.primary}
-            />
-          }
-          ListEmptyComponent={
-            <EmptyList
-              containerStyle={[{ minHeight: screenHeight - screenHeight / 3 }]}
-              text="No request found"
-            />
-          }
-          ListHeaderComponent={
-            <View style={[layout.justifyCenter, layout.itemsCenter]}>
-              {isPending && (
-                <ActivityIndicator
-                  size={'large'}
-                  color={colors.primary}
-                  style={[gutters.marginTop_16]}
-                />
-              )}
-            </View>
-          }
-          style={[gutters.marginVertical_16, { minHeight: '60%' }]}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    </SafeScreen>
+    <View
+      style={[
+        {
+          flex: 1,
+        },
+        gutters.paddingHorizontal_16,
+      ]}
+    >
+      {/* <Header label="Message Request" /> */}
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <MessageRequestItem
+            {...item}
+            onAccept={onAccept}
+            onDecline={onDecline}
+            type={item.sender._id === currentUser._id ? 'SENDER' : 'RECEIVER'}
+          />
+        )}
+        keyExtractor={(item) => item.toString()}
+        ItemSeparatorComponent={() => (
+          <View
+            style={[{ height: 10 }, layout.fullWidth, gutters.marginVertical_8]}
+          />
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshData}
+            onRefresh={_onRefresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+            progressBackgroundColor={colors.gray00}
+          />
+        }
+        ListEmptyComponent={
+          <EmptyList
+            containerStyle={[{ minHeight: screenHeight - screenHeight / 3 }]}
+            text="No request found"
+          />
+        }
+        // ListHeaderComponent={
+        //   <View style={[layout.justifyCenter, layout.itemsCenter]}>
+        //     {isPending && (
+        //       <ActivityIndicator
+        //         size={'large'}
+        //         color={colors.primary}
+        //         style={[gutters.marginTop_16]}
+        //       />
+        //     )}
+        //   </View>
+        // }
+        style={[gutters.marginVertical_16, { minHeight: '60%' }]}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 

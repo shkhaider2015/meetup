@@ -39,6 +39,7 @@ import { Image as FastImage } from '@/components/template';
 import { convertImageURLforngRok } from '@/utils';
 import { Header } from '@/components';
 import NotificationTabNavigator from '../NotificationTabNavigator/NotificationTabNavigator';
+import { IBadge } from '@/types/reducer';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -46,6 +47,7 @@ function TabsNavigator() {
   const { backgrounds } = useTheme();
   const { replace } = useNavigation<NavigationHookProps>();
   const userLocation = useSelector((state: RootState) => state.location);
+  const badges = useSelector((state: RootState) => state.badge);
 
   useFocusEffect(
     useCallback(() => {
@@ -57,7 +59,7 @@ function TabsNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused),
+        tabBarIcon: ({ focused }) => tabBarIconOption(route, focused, badges),
         tabBarStyle: {
           backgroundColor: backgrounds.gray00.backgroundColor,
           height: heights.bottomTabBarHeight,
@@ -100,6 +102,7 @@ function TabsNavigator() {
 const tabBarIconOption = (
   route: RouteProp<RootStackParamList, keyof RootStackParamList>,
   focused: boolean,
+  badges: IBadge,
 ) => {
   let Icon: FC<SvgProps>;
 
@@ -123,7 +126,32 @@ const tabBarIconOption = (
       Icon = focused ? Tab_Explore_Selected : Tab_Explore_Default;
       break;
   }
-  return <Icon />;
+  return (
+    <View
+      style={{
+        position: 'relative',
+      }}
+    >
+      {((route.name === 'Chat' && badges.Chat > 0) ||
+        (route.name === 'Notifications' && badges.Notifications > 0)) && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            marginRight: -5,
+            marginTop: -5,
+            width: 8,
+            height: 8,
+            borderRadius: 15,
+            backgroundColor: '#fe333d',
+          }}
+        />
+      )}
+
+      <Icon />
+    </View>
+  );
 };
 
 const exploreOptions = (): BottomTabNavigationOptions => {
