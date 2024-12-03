@@ -205,13 +205,13 @@ const notificationOptions: BottomTabNavigationOptions = {
         <Image source={MeetupIcon} style={{ width: 40, height: 35 }} />
       )}
       label="Notifications"
-      rightComponnent={() => (
-        <Button
-          Icon={<Search width={17} height={17} />}
-          type="SECONDARY"
-          isCirculer
-          containerStyle={[{ width: 35, height: 35 }]}
-        />
+      rightComponnent={() => ( <View style={{ width: 27 }} />
+        // <Button
+        //   Icon={<Search width={17} height={17} />}
+        //   type="SECONDARY"
+        //   isCirculer
+        //   containerStyle={[{ width: 35, height: 35 }]}
+        // />
       )}
     />
   ),
