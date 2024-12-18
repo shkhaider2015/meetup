@@ -159,7 +159,7 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
 
         <Button
           type="SECONDARY"
-          label="Decline"
+          label={type === "RECEIVER" ? "Decline" : "Cancel"}
           containerStyle={[{ height: 30, width: '25%' }]}
           textStyle={[{ fontSize: 12 }, fontFamily._600_SemiBold]}
           onPress={_onDecline}

@@ -4,7 +4,7 @@ import { ExploreTabsParamList } from '@/types/navigation';
 import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import RNMapView, { Details, Region } from 'react-native-maps';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import CustomMarker from '@/components/CustomMarker/CustomMarker';
 import { getRegionForCoordinates, requestLocationPermission } from '@/utils';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
@@ -13,6 +13,10 @@ import { AppDispatch, RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation } from '@/store/slices/locationSlice';
 import { useTheme } from '@/theme';
+import { useMutation } from '@tanstack/react-query';
+import { getAllPost } from '@/services/posts/indes';
+import { IPostReducer } from '@/types/reducer';
+import { setPosts } from '@/store/slices/postSlice';
 
 const MapView = ({ navigation }: MapViewScreenType) => {
   const screenHeight =
@@ -21,19 +25,36 @@ const MapView = ({ navigation }: MapViewScreenType) => {
 
   const location = useSelector((state: RootState) => state.location);
   const [mapState, setMapState] = useState<Region>(location);
-
+  const currentUser = useSelector((state: RootState) => state.user);
   const posts = useSelector((state: RootState) => state.posts);
 
-  const { colors } = useTheme();
   const { showLoader, hideLoader } = useLoader();
   const dispatch: AppDispatch = useDispatch();
 
-  //* No Need of this
-  // useLayoutEffect(() => {
-  //   if (location.latitude === 0 && location.longitude === 0) {
-  //     getLocation();
-  //   }
-  // }, [location]);
+  const { mutate: postMutation } = useMutation({
+    mutationFn: () => {
+      return getAllPost({
+        userId: currentUser._id,
+        page: 1,
+        limit: 10,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        radiusInKiloMeter: 30,
+      });
+    },
+    onSuccess: async (payload: any) => {
+      // console.log('----- Post Data Success -----');
+      const data: IPostReducer[] = payload?.data;
+      dispatch(setPosts(data));
+    },
+    onError: async (error) => {
+      console.log('----- Post Data Error -----', error.message);
+    },
+  });
+
+  useEffect(() => {
+    postMutation()
+  }, [location])
 
   const _onRegionChange = (region: Region, details: Details) => {
     setMapState((pS) => ({ ...pS, region: region }));

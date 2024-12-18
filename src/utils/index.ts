@@ -322,3 +322,14 @@ export const distanceBetweenTwoCoordinates = (
 
   return `${totalDistance.toFixed(2)} km`; // Distance in kilometers
 };
+
+export const minimizeName = (name:string):string => {
+  let fullname = name;
+
+  let fullNameLength = fullname.length;
+  let parts = fullname.split(' ');
+
+  if(fullNameLength <= 20) return fullname;
+
+  return `${fullname.slice(0, 20)}...`
+} 

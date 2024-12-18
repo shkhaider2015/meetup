@@ -1,15 +1,15 @@
-import { AppleLogo, GoogleLogo } from "@/assets/icon";
-import { Button, InputField } from "@/components/template";
-import Checkbox from "@/components/template/Checkbox/Checkbox";
-import { signup } from "@/services/users";
-import { useTheme } from "@/theme";
-import { fontFamily, heights } from "@/theme/_config";
-import { ISignupForm } from "@/types/forms";
-import { RootStackParamList } from "@/types/navigation";
-import { userSignupSchema } from "@/types/schemas/user";
-import { useMutation } from "@tanstack/react-query";
-import { useFormik } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { AppleLogo, GoogleLogo } from '@/assets/icon';
+import { Button, InputField } from '@/components/template';
+import Checkbox from '@/components/template/Checkbox/Checkbox';
+import { signup } from '@/services/users';
+import { useTheme } from '@/theme';
+import { fontFamily, heights } from '@/theme/_config';
+import { ISignupForm } from '@/types/forms';
+import { RootStackParamList } from '@/types/navigation';
+import { userSignupSchema } from '@/types/schemas/user';
+import { useMutation } from '@tanstack/react-query';
+import { useFormik } from 'formik';
+import { useEffect, useRef, useState } from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -19,62 +19,62 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-} from "react-native";
-import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
-import Toast from "react-native-toast-message";
+} from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import Toast from 'react-native-toast-message';
 
 const SignupScreen = ({ navigation }: SignupScreenType) => {
   const { fonts, gutters, layout, backgrounds } = useTheme();
-  const { height } = Dimensions.get("screen");
+  const { height } = Dimensions.get('screen');
 
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const confirmPasswordRef = useRef<TextInput>(null);
 
-  const {isPending, mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: (data: ISignupForm) => {
       return signup(data);
     },
-    onSuccess(data:any) {
-      console.log("Success : ", data);
-      const userId = data?.payload?.id || "" ;
-      const email = data?.payload?.email || "";
+    onSuccess(data: any) {
+      console.log('Success : ', data);
+      const userId = data?.payload?.id || '';
+      const email = data?.payload?.email || '';
 
       Toast.show({
-        type: "success",
-        text1: "Account created successfully",
-        text2: data?.message
-      })
+        type: 'success',
+        text1: 'Account created successfully',
+        text2: data?.message,
+      });
       setTimeout(() => {
-        navigation.navigate("OTP", {
+        navigation.navigate('OTP', {
           id: userId,
           email: email,
-          type: "ACCOUNT_ACTIVATION"
+          type: 'ACCOUNT_ACTIVATION',
         });
-      }, 200)
+      }, 200);
     },
     onError: (error) => {
-      console.log("Error on query", error);
+      console.log('Error on query', error);
       Toast.show({
-        type: "error",
-        text1: "Account creation failed",
-        text2: error.message || "An unknown error accured"
-      })
-    }
+        type: 'error',
+        text1: 'Account creation failed',
+        text2: error.message || 'An unknown error accured',
+      });
+    },
   });
 
   const formik = useFormik<ISignupForm>({
     initialValues: {
-      full_name: __DEV__ ? "Shakeel 7" : "",
-      email: __DEV__ ? "shakeel7@yopmail.com" : "",
-      password: __DEV__ ? "Admin@1735" : "",
-      confirm_password: __DEV__ ? "Admin@1735" : "",
+      full_name: __DEV__ ? 'Shakeel 7' : '',
+      email: __DEV__ ? 'shakeel7@yopmail.com' : '',
+      password: __DEV__ ? 'Admin@1735' : '',
+      confirm_password: __DEV__ ? 'Admin@1735' : '',
       terms_and_condition: __DEV__ ? true : false,
     },
     validationSchema: userSignupSchema,
     onSubmit: (values) => {
       console.log(values);
-      mutate(values)
+      mutate(values);
       // Toast.show({
       //   type: "success",
       //   text1: "Your account has been created successfully",
@@ -111,8 +111,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             <View style={[gutters.marginTop_40]}>
               <InputField
                 placeholder="Full Name"
-                onChangeText={formik.handleChange("full_name")}
-                onBlur={formik.handleBlur("full_name")}
+                onChangeText={formik.handleChange('full_name')}
+                onBlur={formik.handleBlur('full_name')}
                 value={formik.values.full_name}
                 onSubmitEditing={() => _handleNext(emailRef)}
                 returnKeyType="next"
@@ -136,8 +136,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
               <InputField
                 ref={emailRef}
                 placeholder="Email Address"
-                onChangeText={formik.handleChange("email")}
-                onBlur={formik.handleBlur("email")}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
                 value={formik.values.email}
                 onSubmitEditing={() => _handleNext(passwordRef)}
                 returnKeyType="next"
@@ -161,8 +161,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                 ref={passwordRef}
                 placeholder="Password"
                 inputType="PASSWORD"
-                onChangeText={formik.handleChange("password")}
-                onBlur={formik.handleBlur("password")}
+                onChangeText={formik.handleChange('password')}
+                onBlur={formik.handleBlur('password')}
                 value={formik.values.password}
                 onSubmitEditing={() => _handleNext(confirmPasswordRef)}
                 returnKeyType="next"
@@ -186,8 +186,8 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
                 ref={confirmPasswordRef}
                 placeholder="Confirm Password"
                 inputType="PASSWORD"
-                onChangeText={formik.handleChange("confirm_password")}
-                onBlur={formik.handleBlur("confirm_password")}
+                onChangeText={formik.handleChange('confirm_password')}
+                onBlur={formik.handleBlur('confirm_password')}
                 value={formik.values.confirm_password}
                 onSubmitEditing={() => Keyboard.dismiss()}
                 isError={
@@ -211,9 +211,9 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             >
               <Checkbox
                 onChange={(val) =>
-                  formik.setFieldValue("terms_and_condition", val)
+                  formik.setFieldValue('terms_and_condition', val)
                 }
-                onBlur={() => formik.handleBlur("terms_and_condition")}
+                onBlur={() => formik.handleBlur('terms_and_condition')}
                 checked={formik.values.terms_and_condition}
               />
               <View
@@ -272,77 +272,12 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
             <Button
               label="Sign Up"
               onPress={formik.handleSubmit}
-              containerStyle={[gutters.marginVertical_16]}
+              containerStyle={[gutters.marginTop_40]}
               loading={isPending}
               disabled={isPending}
             />
 
-            <View
-              style={[
-                layout.row,
-                layout.justifyCenter,
-                layout.itemsCenter,
-                gutters.marginVertical_16,
-              ]}
-            >
-              <View
-                style={[{ height: 1 }, backgrounds.gray70, layout.flex_1]}
-              />
-              <Text
-                style={[
-                  gutters.marginHorizontal_12,
-                  fonts.gray250,
-                  fonts.size_14,
-                ]}
-              >
-                OR
-              </Text>
-              <View
-                style={[{ height: 1 }, backgrounds.gray70, layout.flex_1]}
-              />
-            </View>
-            <View
-              style={[
-                layout.row,
-                layout.justifyBetween,
-                layout.itemsCenter,
-                { columnGap: 10 },
-              ]}
-            >
-              <Button
-                type="SECONDARY"
-                label="Google"
-                Icon={<GoogleLogo width={20} />}
-                containerStyle={[layout.flex_1]}
-                disabled={isPending}
-                onPress={async () => {
-                  fetch('https://871f-103-196-160-178.ngrok-free.app/', {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  })
-                    .then(response => {
-                      if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                      }
-                      return  response.json();
-                    })
-                    .then(data => console.log(data.json()))
-                    .catch(error => {
-                      console.error('Fetch error:', error);
-                    });
-                }}
-              />
-              <Button
-                type="SECONDARY"
-                label="Apple"
-                Icon={<AppleLogo width={20} />}
-                containerStyle={[layout.flex_1]}
-                disabled={isPending}
-                
-              />
-            </View>
+            {/* Romove social buttons from signup */}
           </View>
 
           <View
@@ -382,6 +317,6 @@ const SignupScreen = ({ navigation }: SignupScreenType) => {
   );
 };
 
-type SignupScreenType = NativeStackScreenProps<RootStackParamList, "Signup">;
+type SignupScreenType = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 
 export default SignupScreen;

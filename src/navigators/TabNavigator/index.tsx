@@ -36,7 +36,7 @@ import { SvgProps } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import { Platform } from 'react-native';
 import { Image as FastImage } from '@/components/template';
-import { convertImageURLforngRok } from '@/utils';
+import { convertImageURLforngRok, minimizeName } from '@/utils';
 import { Header } from '@/components';
 import NotificationTabNavigator from '../NotificationTabNavigator/NotificationTabNavigator';
 import { IBadge } from '@/types/reducer';
@@ -234,7 +234,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
               alignItems: 'center',
               height: '100%',
               columnGap: 6,
-              flex: 1,
+              flex: 5,
             }}
           >
             <Text
@@ -245,7 +245,7 @@ const profileOptions = (): BottomTabNavigationOptions => {
                 marginTop: 3,
               }}
             >
-              {userName}
+              {minimizeName(userName)}
             </Text>
             <Tick width={15} height={15} />
           </View>

@@ -135,7 +135,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
           </View>
         )}
       />
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true} >
         <View
           style={[
             backgrounds.gray30,
@@ -153,6 +153,7 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
             userId={userId}
             usersChatId={userInfo?.cometchat.id}
             chatStatusProp={userInfo?.chatStatus as EChatStatus}
+            socialLinks={userInfo?.socialLinks}
           />
           <ProfileSectionDescription
             name={userInfo?.name}
@@ -181,6 +182,13 @@ interface IUserInfo {
   bio: string;
   activities: string[];
   chatStatus: EChatStatus;
+  socialLinks: {
+    instagram: string,
+    x: string,
+    facebook: string,
+    snapchat: string,
+    tiktok: string
+  }
 }
 
 type OtherProfileScreenType = NativeStackScreenProps<

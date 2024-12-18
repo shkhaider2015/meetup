@@ -70,9 +70,12 @@ const Profile = ({ navigation }: ProfileScreenType) => {
     }, [user]),
   );
 
+  console.log("User social ", user.socialLinks);
+  
+
   return (
     <SafeScreen>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <View
           style={[
             backgrounds.gray30,
@@ -87,6 +90,7 @@ const Profile = ({ navigation }: ProfileScreenType) => {
             isCurrentUser={true}
             onPressButton={_OpenEditProfile}
             profileImage={user.profileImage}
+            socialLinks={user.socialLinks}
           />
           <ProfileSectionDescription
             name={user.name}

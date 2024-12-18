@@ -13,3 +13,8 @@ export { default as AddLocatioLogo } from './images/map.png';
 export { default as AddActivityLogo } from './images/puzzle-pieces.png';
 export { default as AddDateLogo } from './images/schedule.png';
 export { default as AddTimeLogo } from './images/clock.png';
+export { default as InstagramLogo } from './images/instagram.svg';
+export { default as XLogo } from './images/x.svg';
+export { default as FacebookLogo } from './images/facebbook.svg';
+export { default as TikTokLogo } from './images/tiktok.svg';
+export { default as SnapChatLogo } from './images/snapchat.svg';

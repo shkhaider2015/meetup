@@ -8,7 +8,7 @@ import { fontFamily, heights } from '@/theme/_config';
 import { ExploreTabsParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
