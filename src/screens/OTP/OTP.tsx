@@ -269,7 +269,7 @@ function OTP({ navigation, route }: OTPScreenType) {
 }
 
 const Counter = ({ state, setState }: CounterProps) => {
-  const [counter, setCounter] = useState<number>(180);
+  const [counter, setCounter] = useState<number>(30);
 
   useEffect(() => {
     if (counter > 0) {
@@ -281,7 +281,7 @@ const Counter = ({ state, setState }: CounterProps) => {
     }
     if (counter === 0) setState('FINISH');
   }, [counter]);
-  33;
+  
   return <Text>{counter > 0 ? counter : ''}</Text>;
 };
 
