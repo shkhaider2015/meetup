@@ -110,17 +110,18 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
   };
 
   const _onPressSocialLink = async (url?: string) => {
-    console.log('URL : ', url);
-    if (_.isEmpty(url) || !url) return;
-    const canOpenURL = await Linking.canOpenURL(url);
-    if (canOpenURL) {
+    try {
+      console.log('URL : ', url);
+      if (_.isEmpty(url) || !url) return;
+      await Linking.canOpenURL(url);
       await Linking.openURL(url);
-    } else {
+    } catch (error) {
+      console.log("Error Url ", error)
       Toast.show({
         type: 'error',
-        text1: "URL is not valid",
-        text2: "Please update URL in edit profile"
-      })
+        text1: 'URL is not valid',
+        text2: 'Please update URL in edit profile',
+      });
     }
   };
 
