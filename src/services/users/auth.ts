@@ -275,7 +275,6 @@ export const changePassword = async (userId: string, data: IChangePassword) => {
 export const updateProfile = async (userId: string, data: any) => {
   try {
     const formData = new FormData();
-
     Object.keys(data).forEach((key) => {
       if (!_.isEmpty(data[key])) {
         if (key == 'profileImage') {
@@ -288,12 +287,21 @@ export const updateProfile = async (userId: string, data: any) => {
           data[key]?.forEach((item: string) => {
             formData.append('activitiesToDelete[]', item);
           });
+        } else if(key === 'socialLinks') {
+          Object.keys(data[key]).forEach(item => {
+            formData.append(`socialLinks[${item}]`, data[key][item])
+          })
         } else {
           formData.append(key, data[key]);
         }
       }
     });
 
+    console.log("Data : ", data);
+    console.log("Form Data : ", formData);
+    console.log("Form Data : ", formData.getParts());
+    
+    
     const response: any = await instance
       .post(`${END_POINTS.UPDATE_PROFILE}/${userId}`, {
         body: formData,

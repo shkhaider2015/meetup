@@ -10,7 +10,7 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
   const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
 
   const renderTextWithHighlights = (text: string | undefined) => {
-    if(!text || _.isEmpty(text)) return
+    if(!text || _.isEmpty(text)) return 'Please update your profile'
     // Split the text on spaces to process each word
     const words = text.split(' ');
 
@@ -38,15 +38,16 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
           gutters.gap_6,
         ]}
       >
-        <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>
-          {name}
+        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
+          {'Profession'}
         </Text>
         <View style={[backgrounds.gray180, { width: 1, height: 14 }]} />
         <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>
           {profession}
         </Text>
       </View>
-      <View>
+      <View style={[ gutters.marginTop_16 ]} >
+        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>About</Text>
         <Text
           style={[
             fontFamily._400_Regular,

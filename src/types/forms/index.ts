@@ -35,7 +35,20 @@ export interface IEditProfileForm {
 
   activitiesToDelete: string[];
 
-  profession?: string
+  profession?: string;
+
+  socialLinks: {
+    instagram?: string;
+  
+    x: string;
+  
+    facebook?: string;
+  
+    snapchat?: string;
+
+    tiktok?: string
+  }
+
 }
 
 export interface IPostForm {

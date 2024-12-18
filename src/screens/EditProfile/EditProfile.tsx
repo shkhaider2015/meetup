@@ -50,6 +50,11 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
   const { height } = Dimensions.get('screen');
   const professionRef = useRef<TextInput>(null);
   const bioRef = useRef<TextInput>(null);
+  const instagramRef = useRef<TextInput>(null);
+  const xRef = useRef<TextInput>(null);
+  const facebookRef = useRef<TextInput>(null);
+  const snapchatRef = useRef<TextInput>(null);
+  const tiktokRef = useRef<TextInput>(null);
   const [showActivity, setShowActivity] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -94,6 +99,13 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
       activitiesToAdd: [],
       activitiesToDelete: [],
       profession: user.profession,
+      socialLinks: {
+        instagram: user.socialLinks.instagram,
+        x: user.socialLinks.x,
+        facebook: user.socialLinks.facebook,
+        snapchat: user.socialLinks.snapchat,
+        tiktok: user.socialLinks.tiktok,
+      },
     },
     validationSchema: editProfileSchema,
     onSubmit: (values) => {
@@ -121,6 +133,8 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
 
     formik.setFieldValue('activitiesToAdd', addIds);
     formik.setFieldValue('activitiesToDelete', deleteIds);
+
+    _handleNext(instagramRef);
   };
 
   const _uploadImage = async () => {
@@ -227,7 +241,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                   type="PRIMARY"
                   label="Upload Image"
                   textStyle={[fontFamily._700_Bold, fonts.size_16]}
-                  containerStyle={[gutters.marginTop_8]}
+                  containerStyle={[gutters.marginTop_8, { height: 50 }]}
                   onPress={_uploadImage}
                 />
               </View>
@@ -358,6 +372,192 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
                 // value={formik.values.activitesToAdd?.[0]}
                 onPress={() => setShowActivity(true)}
               />
+            </View>
+
+            {/* Social Loinks */}
+            {/* Instagram */}
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                Instagram Profile
+              </Text>
+              <InputField
+                ref={instagramRef}
+                placeholder="johnDoe"
+                onChangeText={formik.handleChange('socialLinks.instagram')}
+                onBlur={formik.handleBlur('socialLinks.instagram')}
+                value={formik.values.socialLinks?.instagram}
+                onSubmitEditing={() => _handleNext(xRef)}
+                returnKeyType="next"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.socialLinks?.instagram &&
+                  formik.errors.socialLinks?.instagram
+                    ? true
+                    : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.socialLinks?.instagram &&
+                formik.errors.socialLinks?.instagram
+                  ? formik.errors.socialLinks?.instagram
+                  : ''}
+              </Text>
+            </View>
+            {/* X */}
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                X Profile
+              </Text>
+              <InputField
+                ref={xRef}
+                placeholder="johnDoe"
+                onChangeText={formik.handleChange('socialLinks.x')}
+                onBlur={formik.handleBlur('socialLinks.x')}
+                value={formik.values.socialLinks?.x}
+                onSubmitEditing={() => _handleNext(facebookRef)}
+                returnKeyType="next"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.socialLinks?.x && formik.errors.socialLinks?.x
+                    ? true
+                    : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.socialLinks?.x && formik.errors.socialLinks?.x
+                  ? formik.errors.socialLinks?.x
+                  : ''}
+              </Text>
+            </View>
+            {/* Facebook */}
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                Facebook Profile
+              </Text>
+              <InputField
+                ref={facebookRef}
+                placeholder="johnDoe"
+                onChangeText={formik.handleChange('socialLinks.facebook')}
+                onBlur={formik.handleBlur('socialLinks.facebook')}
+                value={formik.values.socialLinks?.facebook}
+                onSubmitEditing={() => _handleNext(snapchatRef)}
+                returnKeyType="next"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.socialLinks?.facebook &&
+                  formik.errors.socialLinks?.facebook
+                    ? true
+                    : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.socialLinks?.facebook &&
+                formik.errors.socialLinks?.facebook
+                  ? formik.errors.socialLinks?.facebook
+                  : ''}
+              </Text>
+            </View>
+            {/* Snapchat */}
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                Snnapchat Profile
+              </Text>
+              <InputField
+                ref={snapchatRef}
+                placeholder="johnDoe"
+                onChangeText={formik.handleChange('socialLinks.snapchat')}
+                onBlur={formik.handleBlur('socialLinks.snapchat')}
+                value={formik.values.socialLinks?.snapchat}
+                onSubmitEditing={() => _handleNext(tiktokRef)}
+                returnKeyType="next"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.socialLinks?.snapchat &&
+                  formik.errors.socialLinks?.snapchat
+                    ? true
+                    : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.socialLinks?.snapchat &&
+                formik.errors.socialLinks?.snapchat
+                  ? formik.errors.socialLinks?.snapchat
+                  : ''}
+              </Text>
+            </View>
+
+            {/* Tiktok */}
+            <View style={[gutters.marginTop_10]}>
+              <Text
+                style={[
+                  fonts.gray250,
+                  fonts.size_14,
+                  fontFamily._400_Regular,
+                  gutters.marginBottom_10,
+                ]}
+              >
+                Tiktok Profile
+              </Text>
+              <InputField
+                ref={tiktokRef}
+                placeholder="johnDoe"
+                onChangeText={formik.handleChange('socialLinks.tiktok')}
+                onBlur={formik.handleBlur('socialLinks.tiktok')}
+                value={formik.values.socialLinks?.tiktok}
+                onSubmitEditing={() => Keyboard.dismiss()}
+                returnKeyType="done"
+                keyboardType="default"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                isError={
+                  formik.touched.socialLinks?.tiktok &&
+                  formik.errors.socialLinks?.tiktok
+                    ? true
+                    : false
+                }
+              />
+              <Text style={[gutters.marginLeft_12, fonts.size_12, fonts.error]}>
+                {formik.touched.socialLinks?.tiktok &&
+                formik.errors.socialLinks?.tiktok
+                  ? formik.errors.socialLinks?.tiktok
+                  : ''}
+              </Text>
             </View>
           </View>
         </ScrollView>

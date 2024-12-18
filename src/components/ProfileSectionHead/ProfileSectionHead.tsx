@@ -1,9 +1,15 @@
 import { DummyJohnsonPost } from '@/assets/dummyImages';
-import { Envelop, Persons } from '@/assets/icon';
+import { Edit, Envelop, Persons } from '@/assets/icon';
 import { useTheme } from '@/theme';
 import { fontFamily } from '@/theme/_config';
 import { widthInPercentage } from '@/utils';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Button, Image } from '../template';
 import { useMutation } from '@tanstack/react-query';
 import { sendMessageRequest } from '@/services/Chat';
@@ -14,6 +20,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationHookProps } from '@/types/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import {
+  FacebookLogo,
+  InstagramLogo,
+  SnapChatLogo,
+  TikTokLogo,
+  XLogo,
+} from '@/assets/images';
+import _ from 'lodash';
 
 const ProfileHeadSection = (props: IProfileHeadSection) => {
   const {
@@ -23,13 +37,16 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
     userId,
     usersChatId,
     chatStatusProp,
+    socialLinks,
   } = props;
   const { layout, gutters, backgrounds, fonts, borders, colors } = useTheme();
   const { navigate } = useNavigation<NavigationHookProps>();
   const currentUser = useSelector((state: RootState) => state.user);
 
   const [chatLoading, setChatLoading] = useState(false);
-  const [chatStatus, setChatStatus] = useState<EChatStatus>(chatStatusProp || EChatStatus.DECLINED)
+  const [chatStatus, setChatStatus] = useState<EChatStatus>(
+    chatStatusProp || EChatStatus.DECLINED,
+  );
 
   const { isPending: startChatPending, mutate: startChatMutate } = useMutation({
     mutationFn: () => {
@@ -39,7 +56,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
       });
     },
     onSuccess: (data: any) => {
-      setChatStatus(EChatStatus.PENDING)
+      setChatStatus(EChatStatus.PENDING);
       Toast.show({
         type: 'success',
         text1: 'Message request sent successfully',
@@ -92,7 +109,20 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
     }
   };
 
-  
+  const _onPressSocialLink = async (url?: string) => {
+    console.log('URL : ', url);
+    if (_.isEmpty(url) || !url) return;
+    const canOpenURL = await Linking.canOpenURL(url);
+    if (canOpenURL) {
+      await Linking.openURL(url);
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: "URL is not valid",
+        text2: "Please update URL in edit profile"
+      })
+    }
+  };
 
   return (
     <View
@@ -133,97 +163,75 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
         />
       </View>
       {/* Details Column */}
-      <View style={[{ flex: 1, rowGap: 20 }]}>
+      <View style={[{ flex: 1, rowGap: 30, paddingLeft: 15 }]}>
         {/* Followers section */}
         <View
           style={[
             layout.row,
-            isCurrentUser ? layout.justifyCenter : layout.justifyStart,
+            layout.justifyStart,
             layout.itemsCenter,
             gutters.paddingRight_10,
-            gutters.gap_10,
+            gutters.gap_12,
           ]}
         >
-          {/* Followers */}
-          <View
-            style={[
-              layout.row,
-              layout.justifyBetween,
-              layout.itemsEnd,
-              gutters.gap_8,
-            ]}
-          >
-            <Persons
-              width={widthInPercentage(8)}
-              height={widthInPercentage(8)}
-            />
-            <View style={[layout.col]}>
-              <Text
-                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
-              >
-                1,232
-              </Text>
-              <Text
-                style={[
-                  fonts.size_10,
-                  fontFamily._500_Medium,
-                  fonts.gray800,
-                  { marginTop: -5 },
-                ]}
-              >
-                Followers
-              </Text>
-            </View>
-          </View>
-          {/* Following */}
-          {/* {isCurrentUser && ( */}
-          <View
-            style={[
-              layout.row,
-              layout.justifyStart,
-              layout.itemsEnd,
-              gutters.gap_8,
-            ]}
-          >
-            <Persons
-              width={widthInPercentage(8)}
-              height={widthInPercentage(8)}
-            />
-            <View style={[layout.col]}>
-              <Text
-                style={[fontFamily._700_Bold, fonts.gray800, { fontSize: 14 }]}
-              >
-                1,232
-              </Text>
-              <Text
-                style={[
-                  fonts.size_10,
-                  fontFamily._500_Medium,
-                  fonts.gray800,
-                  { marginTop: -5 },
-                ]}
-              >
-                Following
-              </Text>
-            </View>
-          </View>
-          {/* )} */}
+          {!_.isEmpty(socialLinks?.instagram) && (
+            <TouchableOpacity
+              style={styles.socialIconContainer}
+              onPress={() => _onPressSocialLink(socialLinks?.instagram)}
+            >
+              <InstagramLogo width={35} height={35} />
+            </TouchableOpacity>
+          )}
+          {!_.isEmpty(socialLinks?.x) && (
+            <TouchableOpacity
+              style={styles.socialIconContainer}
+              onPress={() => _onPressSocialLink(socialLinks?.x)}
+            >
+              <XLogo width={35} height={35} />
+            </TouchableOpacity>
+          )}
+          {!_.isEmpty(socialLinks?.facebook) && (
+            <TouchableOpacity
+              style={styles.socialIconContainer}
+              onPress={() => _onPressSocialLink(socialLinks?.facebook)}
+            >
+              <FacebookLogo width={35} height={35} />
+            </TouchableOpacity>
+          )}
+          {!_.isEmpty(socialLinks?.snapchat) && (
+            <TouchableOpacity
+              style={styles.socialIconContainer}
+              onPress={() => _onPressSocialLink(socialLinks?.snapchat)}
+            >
+              <SnapChatLogo width={35} height={35} />
+            </TouchableOpacity>
+          )}
+          {!_.isEmpty(socialLinks?.tiktok) && (
+            <TouchableOpacity
+              style={styles.socialIconContainer}
+              onPress={() => _onPressSocialLink(socialLinks?.tiktok)}
+            >
+              <TikTokLogo width={35} height={35} />
+            </TouchableOpacity>
+          )}
         </View>
         {/* Edit Profile / Follow button */}
         {isCurrentUser ? (
           <Button
-            label="Edit Profile"
+            label="Edit"
             type={'PRIMARY'}
+            Icon={<Edit color={'#FFFFFF'} width={22} height={22} />}
             containerStyle={[
               backgrounds.gray800,
               borders.rounded_16,
-              { width: '60%', height: 45 },
+              layout.itemsCenter,
+              { width: '50%', height: 45 },
             ]}
             onPress={onPressButton}
           />
         ) : (
           <View style={[layout.row, layout.justifyBetween]}>
-            <Button
+            {/* <Button
               label={isFollow ? 'Following' : 'Follow'}
               type={'PRIMARY'}
               containerStyle={[
@@ -233,7 +241,7 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
               textStyle={[fontFamily._600_SemiBold, fonts.size_12]}
               onPress={_onFollow}
               disabled={chatLoading}
-            />
+            /> */}
             <Button
               label={
                 chatStatus === EChatStatus.PENDING ? 'Request Sent' : 'Message'
@@ -280,6 +288,20 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  socialIconContainer: {
+    width: 35,
+    height: 35,
+    borderRadius: 35,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
 });
 
 export enum EChatStatus {
@@ -296,6 +318,13 @@ interface IProfileHeadSection {
   userId?: string;
   usersChatId?: string;
   chatStatusProp?: EChatStatus;
+  socialLinks?: {
+    instagram: string;
+    x: string;
+    facebook: string;
+    snapchat: string;
+    tiktok: string;
+  };
 }
 
 export default ProfileHeadSection;

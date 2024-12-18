@@ -16,7 +16,14 @@ const initialState: IUserReducer = getItem<IUserReducer>('user') || {
   },
   activities: [],
   bio: '',
-  profession: ''
+  profession: '',
+  socialLinks: {
+    instagram: '',
+    x: '',
+    facebook: '',
+    snapchat: '',
+    tiktok: ''
+  }
 };
 
 const userSlice = createSlice({
@@ -42,7 +49,14 @@ const userSlice = createSlice({
         },
         activities: [],
         bio: '',
-        profession: ''
+        profession: '',
+        socialLinks: {
+          instagram: '',
+          x: '',
+          facebook: '',
+          snapchat: '',
+          tiktok: ''
+        }
       };
     },
   },

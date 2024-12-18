@@ -12,7 +12,7 @@ export const userSchema = yup.object().shape({
     id: yup.string().required(),
   }),
   activities: yup.array().of(yup.string().required()).required(),
-  bio: yup.string()
+  bio: yup.string(),
 });
 
 export const userLoginSchema = yup.object().shape({
@@ -39,6 +39,9 @@ export const userSignupSchema = yup.object().shape({
   password: yup
     .string()
     .min(8, 'Password must be at least 8 characters long')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number')
     .required('Password is required'),
   confirm_password: yup
     .string()
@@ -72,20 +75,29 @@ export const editProfileSchema = yup.object().shape({
     .required('Display name is required'),
   bio: yup.string(),
   interests: yup.string(),
-  profession: yup.string()
-
+  profession: yup.string(),
+  socialLinks: yup.object().shape({
+    instagram: yup.string().matches(/^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/, 'Please enter valid instagram profile link'),
+    x: yup.string().matches(/^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/, 'Please enter valid instagram profile link'),
+    facebook: yup.string().matches(/^https?:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?$/, 'Please enter valid instagram profile link'),
+    snapchat: yup.string().matches(/^https?:\/\/(www\.)?snapchat\.com\/add\/[a-zA-Z0-9._]+\/?$/, 'Please enter valid instagram profile link'),
+    tiktok: yup.string().matches(/^https?:\/\/(www\.)?tiktok\.com\/@([a-zA-Z0-9._]+)\/?$/, 'Please enter valid instagram profile link'),
+  }),
 });
 
 export const ChangePasswordSchema = yup.object().shape({
-  currentPassword: yup.string().required("Current Password is required"),
+  currentPassword: yup.string().required('Current Password is required'),
   newPassword: yup
     .string()
     .min(8, 'Password must be at least 8 characters long')
-    .max(50, "Password should not be greater than 50 characters")
-    .notOneOf([yup.ref('currentPassword')], 'New Password must be different from the current password')
+    .max(50, 'Password should not be greater than 50 characters')
+    .notOneOf(
+      [yup.ref('currentPassword')],
+      'New Password must be different from the current password',
+    )
     .required('New Password is required'),
   confirmNewPassword: yup
     .string()
     .oneOf([yup.ref('newPassword'), undefined], 'Passwords must match')
     .required('Confirm Password is reqiuired'),
-})
+});
