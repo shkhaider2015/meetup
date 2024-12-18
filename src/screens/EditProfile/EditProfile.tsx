@@ -389,7 +389,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               </Text>
               <InputField
                 ref={instagramRef}
-                placeholder="johnDoe"
+                placeholder="https://www.instagram.com/johnDoe"
                 onChangeText={formik.handleChange('socialLinks.instagram')}
                 onBlur={formik.handleBlur('socialLinks.instagram')}
                 value={formik.values.socialLinks?.instagram}
@@ -426,7 +426,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               </Text>
               <InputField
                 ref={xRef}
-                placeholder="johnDoe"
+                placeholder="https://www.x.com/johnDoe"
                 onChangeText={formik.handleChange('socialLinks.x')}
                 onBlur={formik.handleBlur('socialLinks.x')}
                 value={formik.values.socialLinks?.x}
@@ -461,7 +461,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               </Text>
               <InputField
                 ref={facebookRef}
-                placeholder="johnDoe"
+                placeholder="https://www.facebook.com/johnDoe"
                 onChangeText={formik.handleChange('socialLinks.facebook')}
                 onBlur={formik.handleBlur('socialLinks.facebook')}
                 value={formik.values.socialLinks?.facebook}
@@ -498,7 +498,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               </Text>
               <InputField
                 ref={snapchatRef}
-                placeholder="johnDoe"
+                placeholder="https://www.snapchat.com/add/johnDoe"
                 onChangeText={formik.handleChange('socialLinks.snapchat')}
                 onBlur={formik.handleBlur('socialLinks.snapchat')}
                 value={formik.values.socialLinks?.snapchat}
@@ -536,7 +536,7 @@ const EditProfileScreen = ({ navigation }: EditProfileScreenType) => {
               </Text>
               <InputField
                 ref={tiktokRef}
-                placeholder="johnDoe"
+                placeholder="https://www.tiktok.com/@johnDoe"
                 onChangeText={formik.handleChange('socialLinks.tiktok')}
                 onBlur={formik.handleBlur('socialLinks.tiktok')}
                 value={formik.values.socialLinks?.tiktok}
