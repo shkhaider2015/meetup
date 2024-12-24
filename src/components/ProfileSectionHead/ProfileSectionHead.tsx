@@ -171,8 +171,9 @@ const ProfileHeadSection = (props: IProfileHeadSection) => {
             layout.row,
             layout.justifyStart,
             layout.itemsCenter,
-            gutters.paddingRight_10,
+            gutters.paddingRight_32,
             gutters.gap_12,
+            layout.wrap,
           ]}
         >
           {!_.isEmpty(socialLinks?.instagram) && (
