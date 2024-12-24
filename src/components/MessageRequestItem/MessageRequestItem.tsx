@@ -148,7 +148,7 @@ const MessageRequestItem = (props: IMessageRequestItem) => {
         {type === 'RECEIVER' && (
           <Button
             type="PRIMARY"
-            label="Accept"
+            label="Approve"
             containerStyle={[{ height: 30, width: '28%' }]}
             textStyle={[{ fontSize: 12 }, fontFamily._600_SemiBold]}
             onPress={_onAccept}

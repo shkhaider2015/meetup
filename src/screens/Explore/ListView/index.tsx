@@ -149,7 +149,7 @@ const ListView = ({}: ListViewScreenType) => {
                       gutters.marginVertical_12,
                     ]}
                   >
-                    You are all set
+                    Swipe Up
                   </Text>
                 </View>
               );

@@ -182,8 +182,8 @@ const Interests = ({ navigation }: InterestsScreenType) => {
           >
             Select Up to 3 Interests
           </Text>
-          <Text style={[fonts.alignCenter, fonts.gray250, fonts.size_16]}>
-            Tell us what piques your curiosity and passions
+          <Text style={[fonts.alignCenter, fonts.black, fonts.size_16]}>
+            Craft Your Canvas: Pick Your Top Interests!
           </Text>
         </View>
         <ScrollView>
@@ -209,7 +209,9 @@ const Interests = ({ navigation }: InterestsScreenType) => {
         ]}
       >
         <TouchableOpacity onPress={_onSkip}>
-          <Text style={[fonts.primary, fonts.alignCenter]}>Skip for now</Text>
+          <Text style={[fonts.black, fonts.alignCenter, fonts.bold]}>
+            Skip for now
+          </Text>
         </TouchableOpacity>
         <Button
           label="Add Interests"
