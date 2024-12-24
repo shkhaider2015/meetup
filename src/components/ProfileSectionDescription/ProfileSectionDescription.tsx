@@ -1,7 +1,9 @@
-import { useTheme } from "@/theme";
-import { fontFamily } from "@/theme/_config";
-import _ from "lodash";
-import { Text, View } from "react-native";
+import { useTheme } from '@/theme';
+import { fontFamily } from '@/theme/_config';
+import _ from 'lodash';
+import { Text, View } from 'react-native';
+import { ShopRemove } from '@/assets/icon';
+import EmptyIcon from "@/components/EmptyIcon/EmptyIcon";
 
 const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
   const { name, profession, description } = props;
@@ -30,42 +32,55 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
 
   return (
     <View style={[gutters.paddingHorizontal_32, gutters.paddingVertical_24]}>
-      <View
-        style={[
-          layout.row,
-          layout.justifyStart,
-          layout.itemsCenter,
-          gutters.gap_6,
-        ]}
-      >
-        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
-          {'Profession'}
-        </Text>
-        <View style={[backgrounds.gray180, { width: 1, height: 14 }]} />
-        <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>
-          {profession}
-        </Text>
+      <View>
+        <View style={[layout.row, layout.justifyStart, gutters.gap_8]}>
+          <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
+            {'Profession'}
+          </Text>
+        </View>
+
+        {profession ? (
+          <Text
+            style={[
+              fontFamily._700_Bold,
+              fonts.size_14,
+              fonts.gray800,
+              gutters.marginTop_8,
+            ]}
+          >
+            {profession}
+          </Text>
+        ) : (
+        <EmptyIcon/>
+        )}
       </View>
-      <View style={[ gutters.marginTop_16 ]} >
-        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>About</Text>
-        <Text
-          style={[
-            fontFamily._400_Regular,
-            fonts.size_12,
-            fonts.gray800,
-            gutters.paddingVertical_10,
-          ]}
-        >
-          {renderTextWithHighlights(description)}
+      <View style={[gutters.marginTop_16]}>
+        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
+          About
         </Text>
+        {description && description.length >0 ?(
+          <Text
+            style={[
+              fontFamily._400_Regular,
+              fonts.size_12,
+              fonts.gray800,
+              gutters.paddingVertical_10,
+              fonts.alignCenter,
+            ]}
+          >
+            {renderTextWithHighlights(description)}
+          </Text>
+        ) : (
+          <EmptyIcon/>
+        )}
       </View>
     </View>
   );
 };
 
 interface IProfileSectionDescription {
-    name?: string;
-    profession?: string;
-    description?: string;
+  name?: string;
+  profession?: string;
+  description?: string;
 }
 export default ProfileSectionDescriptions;
