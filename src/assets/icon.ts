@@ -60,3 +60,4 @@ export { default as Envelop } from '@/assets/icons/envelop.svg';
 export { default as SettingsIcon } from '@/assets/icons/Setting_line_light.svg';
 export { default as WifiIcon } from "@/assets/icons/wifi.svg";
 export { default as BellIcon } from "@/assets/icons/bell.svg";
+export { default as ShopRemove } from "@/assets/icons/shop-remove.svg";

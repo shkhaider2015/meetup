@@ -4,6 +4,7 @@ import { fontFamily } from '@/theme/_config';
 import { widthInPercentage } from '@/utils';
 import _ from 'lodash';
 import { FlatList, Text, View } from 'react-native';
+import EmptyIcon from '@/components/EmptyIcon/EmptyIcon';
 
 const ProfileSectionActivites = (props: IProfileSectionActivities) => {
   const { activities = [] } = props;
@@ -12,12 +13,13 @@ const ProfileSectionActivites = (props: IProfileSectionActivities) => {
 
   return (
     <View style={[gutters.paddingHorizontal_32]}>
-        {
-            !_.isEmpty(activities) && <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
-            Activities
-          </Text>
-        }
-      
+      {_.isEmpty(activities) && <EmptyIcon />}
+      {!_.isEmpty(activities) && (
+        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
+          Activities
+        </Text>
+      )}
+
       <FlatList
         horizontal={true}
         data={activityData
