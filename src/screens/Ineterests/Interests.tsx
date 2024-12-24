@@ -100,13 +100,14 @@ const Interests = ({ navigation }: InterestsScreenType) => {
           Icon={
             <item.Icon
               color={item.isSelected ? colors.gray00 : colors.primary}
-              width={22}
-              height={22}
+              width={20}
+              height={20}
             />
           }
           type={item.isSelected ? 'PRIMARY' : 'SECONDARY'}
           onPress={() => _onSelect(item.id, !item.isSelected)}
           containerStyle={[{ height: 50 }]}
+          textStyle={[ { fontSize: 12, flexWrap: 'wrap', maxWidth: '70%', textAlign: 'center' } ]}
         />
       </View>
     );

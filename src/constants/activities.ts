@@ -31,17 +31,17 @@ export interface IActivity {
 export const activityData: IActivity[] = [
   {
     id: 'aa39b6c2-6d20-41dd-a805-8ee8a353ca05',
-    label: 'Charity',
+    label: 'Community Care', 
     Icon: Cat_Charity,
   },
   {
     id: 'c56f2417-b172-467a-84aa-e6c0da664612',
-    label: 'Cooking',
+    label: 'Cuisine',
     Icon: Cat_Cooking,
   },
   {
     id: '439b0f8e-6205-493f-bdd4-bf8b05b0e383',
-    label: 'Drinking',
+    label: 'Beverages',
     Icon: Cat_Drinking,
   },
   {
@@ -56,7 +56,7 @@ export const activityData: IActivity[] = [
   },
   {
     id: 'd4d73ba1-134f-4509-82aa-13c2698f5769',
-    label: 'Gaming',
+    label: 'Gameplay',
     Icon: Cat_Gaming,
   },
   {
@@ -106,7 +106,7 @@ export const activityData: IActivity[] = [
   },
   {
     id: '4d6fe6c9-70ad-4216-8262-193c0e46c569',
-    label: 'Sketboarding',
+    label: 'Skating',
     Icon: Cat_Skateboarding,
   },
   {
@@ -116,7 +116,7 @@ export const activityData: IActivity[] = [
   },
   {
     id: '7b0baa60-ca05-4182-8e10-0fa6c5448ace',
-    label: 'Sports',
+    label: 'Athletics',
     Icon: Cat_Sports,
   },
   {
