@@ -38,7 +38,7 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
             {'Profession'}
           </Text>
           <View style={{ width: 1, height: 20, backgroundColor: colors.gray300 }} />
-          {!profession ? (
+          {profession ? (
           <Text
             style={[
               fontFamily._700_Bold,
@@ -69,7 +69,7 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
         )} */}
       </View>
       <View style={[gutters.marginTop_16]}>
-        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800, gutters.marginBottom_10]}>
+        <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
           About
         </Text>
         {description && description.length >0 ?(
@@ -84,8 +84,8 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
           >
             {renderTextWithHighlights(description)}
           </Text>
-        ) : (
-          <EmptyIcon/>
+        ) : ( <View style={[ gutters.marginTop_10 ]} > <EmptyIcon/> </View>
+         
         )}
       </View>
     </View>
