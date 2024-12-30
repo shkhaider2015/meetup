@@ -77,11 +77,11 @@ export const editProfileSchema = yup.object().shape({
   interests: yup.string(),
   profession: yup.string(),
   socialLinks: yup.object().shape({
-    instagram: yup.string().matches(/^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/, 'Please enter valid instagram profile link'),
-    x: yup.string().matches(/^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/, 'Please enter valid instagram profile link'),
-    facebook: yup.string().matches(/^https?:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?$/, 'Please enter valid instagram profile link'),
-    snapchat: yup.string().matches(/^https?:\/\/(www\.)?snapchat\.com\/add\/[a-zA-Z0-9._]+\/?$/, 'Please enter valid instagram profile link'),
-    tiktok: yup.string().matches(/^https?:\/\/(www\.)?tiktok\.com\/@([a-zA-Z0-9._]+)\/?$/, 'Please enter valid instagram profile link'),
+    instagram: yup.string().matches(/^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?(?:\?.*)?$/, 'Please enter valid instagram profile link'),
+    x: yup.string().matches(/^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?(?:\?.*)?$/, 'Please enter valid instagram profile link'),
+    facebook: yup.string().matches(/^https?:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?(?:\?.*)?$/, 'Please enter valid instagram profile link'),
+    snapchat: yup.string().matches(/^https?:\/\/(www\.)?snapchat\.com\/add\/[a-zA-Z0-9._]+\/?(?:\?.*)?$/, 'Please enter valid instagram profile link'),
+    tiktok: yup.string().matches(/^https?:\/\/(www\.)?tiktok\.com\/@([a-zA-Z0-9._]+)\/?(?:\?.*)?$/, 'Please enter valid instagram profile link'),
   }),
 });
 

@@ -7,7 +7,7 @@ import EmptyIcon from "@/components/EmptyIcon/EmptyIcon";
 
 const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
   const { name, profession, description } = props;
-  const { layout, gutters, backgrounds, fonts } = useTheme();
+  const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
   const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
 
@@ -33,13 +33,27 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
   return (
     <View style={[gutters.paddingHorizontal_32, gutters.paddingVertical_24]}>
       <View>
-        <View style={[layout.row, layout.justifyStart, gutters.gap_8]}>
+        <View style={[layout.row, layout.justifyStart, gutters.gap_10]}>
           <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
             {'Profession'}
           </Text>
+          <View style={{ width: 1, height: 20, backgroundColor: colors.gray300 }} />
+          {profession ? (
+          <Text
+            style={[
+              fontFamily._700_Bold,
+              fonts.size_14,
+              fonts.gray800,
+            ]}
+          >
+            {profession}
+          </Text>
+        ) : (
+        <EmptyIcon/>
+        )}
         </View>
 
-        {profession ? (
+        {/* {profession ? (
           <Text
             style={[
               fontFamily._700_Bold,
@@ -52,7 +66,7 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
           </Text>
         ) : (
         <EmptyIcon/>
-        )}
+        )} */}
       </View>
       <View style={[gutters.marginTop_16]}>
         <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
@@ -70,8 +84,8 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
           >
             {renderTextWithHighlights(description)}
           </Text>
-        ) : (
-          <EmptyIcon/>
+        ) : ( <View style={[ gutters.marginTop_10 ]} > <EmptyIcon/> </View>
+         
         )}
       </View>
     </View>

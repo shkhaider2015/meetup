@@ -10,16 +10,12 @@ const ProfileSectionActivites = (props: IProfileSectionActivities) => {
   const { activities = [] } = props;
 
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
-
+  
   return (
     <View style={[gutters.paddingHorizontal_32]}>
-      {_.isEmpty(activities) && <EmptyIcon />}
-      {!_.isEmpty(activities) && (
         <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
           Activities
         </Text>
-      )}
-
       <FlatList
         horizontal={true}
         data={activityData
@@ -50,6 +46,7 @@ const ProfileSectionActivites = (props: IProfileSectionActivities) => {
           <View style={[backgrounds.gray100, { width: 2, height: 35 }]} />
         )}
         contentContainerStyle={[gutters.marginVertical_12]}
+        ListEmptyComponent={<EmptyIcon />}
       />
     </View>
   );

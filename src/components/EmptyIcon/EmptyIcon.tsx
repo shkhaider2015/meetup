@@ -9,7 +9,6 @@ const EmptyState: React.FC = () => {
   return (
     <View
       style={[
-        gutters.marginTop_8,
         layout.row,
         gutters.marginLeft_8,
       ]}
