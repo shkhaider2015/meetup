@@ -3,16 +3,14 @@ import { fontFamily } from '@/theme/_config';
 import _ from 'lodash';
 import { Text, View } from 'react-native';
 import { ShopRemove } from '@/assets/icon';
-import EmptyIcon from "@/components/EmptyIcon/EmptyIcon";
+import EmptyIcon from '@/components/EmptyIcon/EmptyIcon';
 
-const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
+const ProfileSectionDescriptions = (props: IProfileSectionDescription) => {
   const { name, profession, description } = props;
   const { layout, gutters, backgrounds, fonts, colors } = useTheme();
 
-  const text = `Inspiring you to live an active life ⚡️ \nAthlete — @nutrabay @athlab.in @royalsportnfitness \n“If something stands between you and your success, move it. Never be denied.”`;
-
   const renderTextWithHighlights = (text: string | undefined) => {
-    if(!text || _.isEmpty(text)) return 'Please update your profile'
+    if (!text || _.isEmpty(text)) return 'Please update your profile';
     // Split the text on spaces to process each word
     const words = text.split(' ');
 
@@ -37,20 +35,16 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
           <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
             {'Profession'}
           </Text>
-          <View style={{ width: 1, height: 20, backgroundColor: colors.gray300 }} />
+          <View
+            style={{ width: 1, height: 20, backgroundColor: colors.gray300 }}
+          />
           {profession ? (
-          <Text
-            style={[
-              fontFamily._700_Bold,
-              fonts.size_14,
-              fonts.gray800,
-            ]}
-          >
-            {profession}
-          </Text>
-        ) : (
-        <EmptyIcon/>
-        )}
+            <Text style={[fontFamily._700_Bold, fonts.size_14, fonts.gray800]}>
+              {profession}
+            </Text>
+          ) : (
+            <EmptyIcon />
+          )}
         </View>
 
         {/* {profession ? (
@@ -72,20 +66,21 @@ const ProfileSectionDescriptions = (props:IProfileSectionDescription) => {
         <Text style={[fontFamily._500_Medium, fonts.size_16, fonts.gray800]}>
           About
         </Text>
-        {description && description.length >0 ?(
+        {!_.isEmpty(description) ? (
           <Text
             style={[
               fontFamily._400_Regular,
               fonts.size_12,
               fonts.gray800,
               gutters.paddingVertical_10,
-              fonts.alignCenter,
             ]}
           >
             {renderTextWithHighlights(description)}
           </Text>
-        ) : ( <View style={[ gutters.marginTop_10 ]} > <EmptyIcon/> </View>
-         
+        ) : (
+          <View style={[gutters.marginTop_10]}>
+            <EmptyIcon />
+          </View>
         )}
       </View>
     </View>

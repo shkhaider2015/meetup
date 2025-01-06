@@ -302,7 +302,9 @@ export const updateProfile = async (userId: string, data: any) => {
     console.log("Form Data : ", formData.getParts());
     
     
-    const response: any = await instance
+    const response: any = await instance.extend({
+      timeout: 60000
+    })
       .post(`${END_POINTS.UPDATE_PROFILE}/${userId}`, {
         body: formData,
       })
