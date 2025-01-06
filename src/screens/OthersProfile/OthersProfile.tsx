@@ -22,7 +22,7 @@ import { convertImageURLforngRok, minimizeName } from '@/utils';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Dimensions,
   ScrollView,
