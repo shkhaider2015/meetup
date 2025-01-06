@@ -34,6 +34,7 @@ import {
   distanceBetweenTwoCoordinates,
   getIconByID,
   getRegionForCoordinates,
+  minimizeName,
   sharePost,
 } from '@/utils';
 import _ from 'lodash';
@@ -296,7 +297,7 @@ const Post = (props: IPost) => {
               style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}
               onPress={_goToProfile}
             >
-              <Text style={[fonts.size_16, fonts.gray800]}>{user.name}</Text>
+              <Text style={[fonts.size_16, fonts.gray800]}>{minimizeName(user.name, 20)}</Text>
               <Tick />
             </TouchableOpacity>
             <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>

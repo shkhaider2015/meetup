@@ -31,6 +31,7 @@ import {
   distanceBetweenTwoCoordinates,
   getIconByID,
   getRegionForCoordinates,
+  minimizeName,
   sharePost,
 } from '@/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -352,7 +353,7 @@ const PostDetails = ({ navigation, route }: PostDetailsScreenType) => {
       <View style={[layout.col, gutters.marginHorizontal_12]}>
         <View style={[layout.row, layout.itemsCenter, { columnGap: 5 }]}>
           <Text onPress={_goToProfile} style={[fonts.size_16, fonts.gray800]}>
-            {user.name}
+            {minimizeName(user.name, 20)}
           </Text>
           <Tick />
         </View>

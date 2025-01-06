@@ -18,7 +18,7 @@ import { useTheme } from '@/theme';
 import { fontFamily, heights } from '@/theme/_config';
 import { RootStackParamList } from '@/types/navigation';
 import { IPostReducer } from '@/types/reducer';
-import { convertImageURLforngRok } from '@/utils';
+import { convertImageURLforngRok, minimizeName } from '@/utils';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
@@ -129,20 +129,18 @@ const OthersProfile = ({ navigation, route }: OtherProfileScreenType) => {
                 gutters.marginTop_4,
               ]}
             >
-              {userInfo?.name}
+              {minimizeName(userInfo?.name, 20)}
             </Text>
             <Tick width={15} height={15} />
           </View>
         )}
       />
-      <ScrollView nestedScrollEnabled={true} >
+      <ScrollView nestedScrollEnabled={true}>
         <View
           style={[
             backgrounds.gray30,
             {
-              minHeight:
-                height -
-                (heights.bottomTabBarHeight + heights.tabNavigationHeader),
+              minHeight: height - heights.tabNavigationHeader,
             },
           ]}
         >
@@ -183,12 +181,12 @@ interface IUserInfo {
   activities: string[];
   chatStatus: EChatStatus;
   socialLinks: {
-    instagram: string,
-    x: string,
-    facebook: string,
-    snapchat: string,
-    tiktok: string
-  }
+    instagram: string;
+    x: string;
+    facebook: string;
+    snapchat: string;
+    tiktok: string;
+  };
 }
 
 type OtherProfileScreenType = NativeStackScreenProps<
